@@ -1,0 +1,524 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-18T20:25:52+00:00",
+  "title": "Design System: Battle Pass ROI Calculator",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Coated Paper",
+        "canonical": "oklch(96.9% 0.003 228.8)",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#232425",
+          "#3e4041",
+          "#5c5e5f",
+          "#7c7d7e",
+          "#9d9fa0",
+          "#c2c4c5",
+          "#edeff0"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Paper Tint",
+        "canonical": "oklch(93.5% 0.005 228.8)",
+        "tonalRamp": [
+          "#090c0d",
+          "#222526",
+          "#3d4042",
+          "#5b5e60",
+          "#7a7e80",
+          "#9b9fa1",
+          "#c1c5c7",
+          "#ebeff1"
+        ]
+      },
+      "paper-3": {
+        "role": "neutral",
+        "displayName": "Paper Shade",
+        "canonical": "oklch(89.1% 0.009 236.6)",
+        "tonalRamp": [
+          "#080c0e",
+          "#202528",
+          "#3c4044",
+          "#595e62",
+          "#797e82",
+          "#9a9fa3",
+          "#bfc5c9",
+          "#e9eff4"
+        ]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Rich Black Ink",
+        "canonical": "oklch(17.8% 0.006 271.0)",
+        "tonalRamp": [
+          "#0a0b0e",
+          "#232427",
+          "#3e4043",
+          "#5c5d61",
+          "#7c7d81",
+          "#9d9ea2",
+          "#c2c4c8",
+          "#edeef3"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink 2",
+        "canonical": "oklch(36.7% 0.015 264.4)",
+        "tonalRamp": [
+          "#080b11",
+          "#20242b",
+          "#3c4048",
+          "#595e66",
+          "#797d86",
+          "#9a9ea8",
+          "#bfc4ce",
+          "#e9eff9"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Ink 3",
+        "canonical": "oklch(47.4% 0.017 264.4)",
+        "tonalRamp": [
+          "#080b13",
+          "#20242d",
+          "#3b4049",
+          "#595e68",
+          "#787d88",
+          "#999faa",
+          "#bec4d0",
+          "#e9effb"
+        ]
+      },
+      "ink-lift": {
+        "role": "neutral",
+        "displayName": "Ink Lift",
+        "canonical": "oklch(29.4% 0.013 272.9)",
+        "tonalRamp": [
+          "#090b11",
+          "#22242a",
+          "#3d3f47",
+          "#5b5d65",
+          "#7a7d85",
+          "#9b9ea7",
+          "#c1c4cd",
+          "#ebeef8"
+        ]
+      },
+      "black-plate-muted": {
+        "role": "neutral",
+        "displayName": "Black Plate Muted",
+        "canonical": "oklch(83.7% 0.010 252.8)",
+        "tonalRamp": [
+          "#080b0f",
+          "#212429",
+          "#3c4045",
+          "#5a5e63",
+          "#797e83",
+          "#9a9fa5",
+          "#c0c5cb",
+          "#eaeff5"
+        ]
+      },
+      "process-cyan": {
+        "role": "primary",
+        "displayName": "Process Cyan",
+        "canonical": "oklch(68.3% 0.142 233.4)",
+        "tonalRamp": [
+          "#000d19",
+          "#00283b",
+          "#084660",
+          "#12668a",
+          "#0c88b9",
+          "#15ace8",
+          "#7dd0fc",
+          "#def2fe"
+        ]
+      },
+      "process-magenta": {
+        "role": "primary",
+        "displayName": "Process Magenta",
+        "canonical": "oklch(58.8% 0.239 358.8)",
+        "tonalRamp": [
+          "#20000b",
+          "#470123",
+          "#76073e",
+          "#a8115c",
+          "#e1027a",
+          "#fc5b9c",
+          "#fca8c3",
+          "#fee8ee"
+        ]
+      },
+      "magenta-ink": {
+        "role": "secondary",
+        "displayName": "Magenta Text Ink",
+        "canonical": "oklch(53.3% 0.217 358.4)",
+        "tonalRamp": [
+          "#20000b",
+          "#490023",
+          "#75093f",
+          "#a7155c",
+          "#d9287c",
+          "#fa5d9d",
+          "#ffa5c3",
+          "#ffe7ee"
+        ]
+      },
+      "on-magenta": {
+        "role": "neutral",
+        "displayName": "On Magenta White",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#7d7d7d",
+          "#9e9e9e",
+          "#c4c4c4",
+          "#eeeeee"
+        ]
+      },
+      "process-yellow": {
+        "role": "secondary",
+        "displayName": "Process Yellow",
+        "canonical": "oklch(91.5% 0.191 101.0)",
+        "tonalRamp": [
+          "#100b00",
+          "#2a2400",
+          "#494001",
+          "#6a5f06",
+          "#8c7f18",
+          "#b1a022",
+          "#dbc629",
+          "#fff194"
+        ]
+      },
+      "highlighter": {
+        "role": "tertiary",
+        "displayName": "Highlighter",
+        "canonical": "oklch(95.2% 0.204 116.4)",
+        "tonalRamp": [
+          "#0a0d00",
+          "#222700",
+          "#3d4505",
+          "#5b640d",
+          "#798604",
+          "#99aa0a",
+          "#bed204",
+          "#e7fe39"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The verdict word, fit to the main column (46-176px by script)."
+      },
+      "chapter-title": {
+        "displayName": "Chapter Title",
+        "purpose": "Chapter plate titles; wdth widens 52 to 125 on scroll."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section heads inside chapters."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Big read-out numerals, tabular."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Sub-heads and the stat block head."
+      },
+      "sentence": {
+        "displayName": "Sentence",
+        "purpose": "The sentence-form input line; inputs at 800."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Chapter deks and the verdict sentence."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text."
+      },
+      "table": {
+        "displayName": "Table",
+        "purpose": "Stat block and data tables, tabular lining figures."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Read-out labels, keys, threat lines."
+      },
+      "tag": {
+        "displayName": "Tag",
+        "purpose": "Provenance tags; uppercase."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Button and link-action labels; uppercase."
+      }
+    },
+    "shadows": [
+      {
+        "name": "ink-ring",
+        "value": "inset 0 0 0 2px currentColor",
+        "purpose": "Ghost button outline without layout shift."
+      },
+      {
+        "name": "hairline-ring",
+        "value": "inset 0 0 0 1.5px var(--ink)",
+        "purpose": "Ruler marker labels; 1px variants keyline paper and black tabs."
+      },
+      {
+        "name": "field-focus",
+        "value": "0 0 0 3px var(--ink)",
+        "purpose": "Focus on appendix tune inputs."
+      },
+      {
+        "name": "misregistration-flash",
+        "value": "-3px -1px 0 rgba(0,166,226,.85), 3px 1px 0 rgba(224,0,122,.8)",
+        "purpose": "Transient text-shadow keyframe (420ms to zero) when a figure changes; never at rest."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(.16, 1, .3, 1)",
+        "purpose": "Default curve (GSAP expo.out): entrances, rolls, tab slides, presses."
+      },
+      {
+        "name": "ease-io",
+        "value": "cubic-bezier(.77, 0, .175, 1)",
+        "purpose": "Plate travel and trims (GSAP expo.inOut): press-check registration, sheet trim, sticker strike."
+      },
+      {
+        "name": "press-check",
+        "value": "~2.3s timeline, once per session",
+        "purpose": "Crop marks and registration targets draw, Y/C/M plates slide 1.3s into register while wdth widens to 150, black prints, sheet trims upward via clip-path."
+      },
+      {
+        "name": "verdict-reprint",
+        "value": "0.7s expo.out",
+        "purpose": "Cyan and magenta copies of the verdict slip back into register while letters rise from line masks (0.028s stagger)."
+      },
+      {
+        "name": "number-roll",
+        "value": "0.6s expo.out + 420ms misregistration",
+        "purpose": "Changed figures count to their new value with the C/M flash."
+      },
+      {
+        "name": "highlighter-swipe",
+        "value": "0.62s ease-out, 110ms stagger",
+        "purpose": "Marker scales in from the left under the reader's inputs."
+      },
+      {
+        "name": "plate-wipe",
+        "value": "scroll-scrubbed clip-path, scrub 0.5",
+        "purpose": "Chapter plates wipe in from alternating sides; titles widen wdth 52 to 125."
+      },
+      {
+        "name": "walkthrough-pin",
+        "value": "pin +=140%, scrub 0.45",
+        "purpose": "At 900px+ wide and 720px+ tall the stage pins and scroll plays the season week by week."
+      },
+      {
+        "name": "ledger-print",
+        "value": "0.9s expo.out, 0.1s stagger",
+        "purpose": "Ledger and stat rows print left to right via clip-path."
+      },
+      {
+        "name": "tile-flip",
+        "value": "0.6s expo.out, 0.7s total stagger",
+        "purpose": "Item tiles flip in on rotateY."
+      },
+      {
+        "name": "flip-rerank",
+        "value": "0.75s expo.out",
+        "purpose": "Bestiary entries re-rank by threat with a FLIP translate."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "No press check, Lenis, pins or scroll scenes; highlighters pre-swiped, halftones drawn complete, numbers set instantly, CSS transitions 0.01ms."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stack",
+        "value": "1080px"
+      },
+      {
+        "name": "tabs",
+        "value": "900px"
+      },
+      {
+        "name": "notes",
+        "value": "860px"
+      },
+      {
+        "name": "narrow",
+        "value": "720px"
+      },
+      {
+        "name": "compact",
+        "value": "620px"
+      },
+      {
+        "name": "small",
+        "value": "480px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Solid ink slug in display type for actions such as playing the season or copying a link.",
+      "html": "<button class=\"ds-btn\" type=\"button\"><svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M6 4.2v11.6L15.5 10z\" fill=\"currentColor\"/></svg><span>Play the season</span></button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: .6em; border: 0; border-radius: 4px; background: var(--ink, #101114); color: var(--paper, #f3f5f6); padding: .8em 1.15em .78em; font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 800; text-transform: uppercase; font-variation-settings: \"wdth\" 115; font-size: .82rem; letter-spacing: .04em; cursor: pointer; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .2s ease; } .ds-btn svg { width: 1.1em; height: 1.1em; flex: none; } .ds-btn:hover { background: #2a2c33; } .ds-btn:active { transform: scale(.97); } .ds-btn:focus-visible { outline: 2px solid var(--ink, #101114); outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action drawn as an inset ink ring.",
+      "html": "<button class=\"ds-btn-ghost\" type=\"button\"><svg viewBox=\"0 0 20 20\" aria-hidden=\"true\"><path d=\"M4.5 9.5a6 6 0 1 0 1.9-4.4M4 3.5v3.8h3.8\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>Reset to estimates</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: .6em; border: 0; border-radius: 4px; background: transparent; color: var(--ink, #101114); box-shadow: inset 0 0 0 2px currentColor; padding: .8em 1.15em .78em; font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 800; text-transform: uppercase; font-variation-settings: \"wdth\" 115; font-size: .82rem; letter-spacing: .04em; cursor: pointer; transition: transform .16s cubic-bezier(.16,1,.3,1), background-color .2s ease; } .ds-btn-ghost svg { width: 1.1em; height: 1.1em; flex: none; } .ds-btn-ghost:hover { background: var(--paper-2, #e6eaec); } .ds-btn-ghost:active { transform: scale(.97); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--ink, #101114); outline-offset: 3px; }"
+    },
+    {
+      "name": "Provenance Tags",
+      "kind": "chip",
+      "refersTo": "tag-est",
+      "description": "Stamped origin tickets on every figure: yours, est., derived.",
+      "html": "<span class=\"ds-tag ds-tag-yours\">yours</span> <span class=\"ds-tag\">est.</span> <span class=\"ds-tag ds-tag-calc\">derived</span>",
+      "css": ".ds-tag { display: inline-block; font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: .6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; line-height: 1; padding: 3px 4px 2px; border: 1px solid var(--ink, #101114); border-radius: 2px; color: var(--ink, #101114); white-space: nowrap; vertical-align: middle; } .ds-tag-calc { border-style: dashed; border-color: var(--ink-3, #575c66); color: var(--ink-2, #3b3f47); } .ds-tag-yours { background: var(--hi, #e8ff3a); }"
+    },
+    {
+      "name": "Sentence Input",
+      "kind": "input",
+      "refersTo": "",
+      "description": "The primary control: a sentence whose blanks are highlighted inline inputs; the number is a role=slider scrub.",
+      "html": "<p class=\"ds-madlib\">I play <span class=\"ds-hl\">Fortnite</span> <span class=\"ds-hl ds-scrub\" role=\"slider\" tabindex=\"0\" aria-label=\"Hours a week\" aria-valuemin=\"1\" aria-valuemax=\"60\" aria-valuenow=\"10\">10</span> hours a week.</p>",
+      "css": ".ds-madlib { margin: 0; font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: clamp(1.32rem, 2.35vw, 2.1rem); line-height: 1.55; font-weight: 500; font-variation-settings: \"wdth\" 96; color: var(--ink, #101114); } .ds-hl { position: relative; isolation: isolate; white-space: nowrap; font-weight: 800; } .ds-hl::before { content: \"\"; position: absolute; z-index: -1; left: -.12em; right: -.12em; top: .14em; bottom: .02em; background: var(--hi, #e8ff3a); border-radius: .14em .26em .18em .3em; transform: skewX(-7deg) rotate(-.7deg); } .ds-scrub { display: inline-block; min-width: 1.4ch; text-align: center; font-variant-numeric: tabular-nums; cursor: ew-resize; outline-offset: 5px; } .ds-scrub::after { content: \"\"; position: absolute; left: 0; right: 0; bottom: -.32em; height: .22em; background: repeating-linear-gradient(90deg, var(--ink, #101114) 0 1px, transparent 1px 6px); opacity: 0; transform: scaleX(.6); transition: opacity .2s ease, transform .3s cubic-bezier(.16,1,.3,1); } .ds-scrub:hover::after, .ds-scrub:focus-visible::after { opacity: .9; transform: scaleX(1); } .ds-scrub:focus-visible { outline: 2px solid var(--ink, #101114); }"
+    },
+    {
+      "name": "Tune Field",
+      "kind": "input",
+      "refersTo": "tune-input",
+      "description": "Appendix assumption field; turns highlighter once the reader edits it.",
+      "html": "<input class=\"ds-field\" type=\"text\" inputmode=\"decimal\" value=\"9.99\" aria-label=\"Pass price\"> <input class=\"ds-field ds-field-edited\" type=\"text\" inputmode=\"decimal\" value=\"12\" aria-label=\"Season weeks\">",
+      "css": ".ds-field { width: 7.5em; padding: 7px 9px; border-radius: 3px; border: 1.5px solid var(--ink, #101114); background: var(--paper, #f3f5f6); color: var(--ink, #101114); font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; transition: background-color .25s ease, box-shadow .2s ease; } .ds-field:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ink, #101114); } .ds-field-edited { background: var(--hi, #e8ff3a); }"
+    },
+    {
+      "name": "Thumb-Index Tabs",
+      "kind": "nav",
+      "refersTo": "tab-walkthrough",
+      "description": "Chapter navigation as cut thumb tabs in each chapter's ink, overlapping by multiply.",
+      "html": "<nav class=\"ds-tabs\" aria-label=\"Chapters\"><a class=\"ds-tab ds-t-verdict\" href=\"#\" aria-current=\"true\">Verdict</a><a class=\"ds-tab ds-t-walk\" href=\"#\">Walkthrough</a><a class=\"ds-tab ds-t-shop\" href=\"#\">Shop math</a><a class=\"ds-tab ds-t-beast\" href=\"#\">Bestiary</a><a class=\"ds-tab ds-t-app\" href=\"#\">Appendix</a></nav>",
+      "css": ".ds-tabs { display: flex; flex-direction: column; align-items: flex-end; isolation: isolate; } .ds-tab { --bg: var(--paper-3, #d6dce0); --fg: var(--ink, #101114); display: block; writing-mode: vertical-rl; padding: 16px 9px 16px 10px; width: 40px; background: var(--bg); color: var(--fg); font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 800; text-transform: uppercase; font-size: .75rem; letter-spacing: .06em; font-variation-settings: \"wdth\" 112; text-decoration: none; border-radius: 7px 0 0 7px; transform: translateX(6px); transition: transform .32s cubic-bezier(.16,1,.3,1), width .32s cubic-bezier(.16,1,.3,1); mix-blend-mode: multiply; } .ds-tab + .ds-tab { margin-top: -9px; } .ds-tab:hover { transform: translateX(0); } .ds-tab:focus-visible { outline: 2px solid var(--ink, #101114); outline-offset: 3px; } .ds-tab[aria-current=\"true\"] { width: 46px; transform: translateX(0); } .ds-t-walk { --bg: var(--cyan, #00a6e2); } .ds-t-shop { --bg: var(--magenta, #e0007a); --fg: #ffffff; } .ds-t-beast { --bg: var(--ink, #101114); --fg: var(--paper, #f3f5f6); box-shadow: inset 0 0 0 1px #5d626b; } .ds-t-app { box-shadow: inset 0 0 0 1px var(--ink, #101114); } .ds-t-verdict { --bg: var(--paper-2, #e6eaec); box-shadow: inset 0 0 0 1px var(--ink, #101114); }"
+    },
+    {
+      "name": "Season Stat Block",
+      "kind": "card",
+      "refersTo": "",
+      "description": "Ruled table under a 7px ink rule; tabular values with provenance tags.",
+      "html": "<div class=\"ds-stats\"><h3 class=\"ds-block-h\">Season stat block</h3><table><tr><th>Tier at season end</th><td class=\"ds-v\">100<span class=\"ds-of\"> / 100</span></td><td class=\"ds-src\"><span class=\"ds-tg ds-tg-calc\">derived</span></td></tr><tr><th>Pass price</th><td class=\"ds-v\">$9.99</td><td class=\"ds-src\"><span class=\"ds-tg\">est.</span></td></tr><tr><th>Cost per hour of play</th><td class=\"ds-v\">$0.13</td><td class=\"ds-src\"><span class=\"ds-tg ds-tg-calc\">derived</span></td></tr></table></div>",
+      "css": ".ds-stats { max-width: 380px; color: var(--ink, #101114); font-family: var(--text, 'Archivo', system-ui, sans-serif); } .ds-block-h { margin: 0 0 4px; font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; text-transform: uppercase; font-variation-settings: \"wdth\" 130; font-size: 1.375rem; letter-spacing: .01em; border-top: 7px solid var(--ink, #101114); padding-top: 10px; } .ds-stats table { width: 100%; border-collapse: collapse; font-variation-settings: \"wdth\" 86; } .ds-stats th { text-align: left; font-weight: 500; color: var(--ink-2, #3b3f47); padding: 9px 8px 9px 0; border-bottom: 1px solid var(--ink, #101114); font-size: .9375rem; line-height: 1.35; } .ds-stats td { border-bottom: 1px solid var(--ink, #101114); padding: 9px 0; vertical-align: baseline; font-variant-numeric: tabular-nums lining-nums; } .ds-stats tr:last-child th, .ds-stats tr:last-child td { border-bottom-width: 3px; } .ds-v { text-align: right; font-weight: 800; font-size: 1.3rem; line-height: 1.1; white-space: nowrap; } .ds-of { font-weight: 500; color: var(--ink-3, #575c66); font-size: .78em; } .ds-src { width: 1%; padding-left: 10px; text-align: right; } .ds-tg { display: inline-block; font-size: .6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; line-height: 1; padding: 3px 4px 2px; border: 1px solid var(--ink, #101114); border-radius: 2px; } .ds-tg-calc { border-style: dashed; border-color: var(--ink-3, #575c66); color: var(--ink-2, #3b3f47); }"
+    },
+    {
+      "name": "Chapter Plate",
+      "kind": "custom",
+      "refersTo": "plate-shop",
+      "description": "Full-bleed process-ink plate opening a chapter, with extended title and dek.",
+      "html": "<section class=\"ds-plate ds-plate-magenta\"><h2 class=\"ds-ch-title\">Shop math</h2><p class=\"ds-ch-dek\">What the cosmetics are worth to you, not to the store.</p></section>",
+      "css": ".ds-plate { background: var(--cyan, #00a6e2); color: var(--ink, #101114); padding: 64px 32px 28px; } .ds-plate-magenta { background: var(--magenta, #e0007a); color: #ffffff; } .ds-ch-title { margin: 0 0 0 -.05em; font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; text-transform: uppercase; font-size: clamp(2.4rem, 8vw, 5.5rem); line-height: .82; letter-spacing: -.012em; font-variation-settings: \"wdth\" 125; } .ds-ch-dek { margin: 16px 0 0; max-width: 40ch; font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: 1.2rem; line-height: 1.42; font-weight: 500; }"
+    },
+    {
+      "name": "Bestiary Threat Pips",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Diamond threat pips on the black plate.",
+      "html": "<p class=\"ds-threat\"><span class=\"ds-pips\" aria-hidden=\"true\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i><i></i></span>High threat this season</p>",
+      "css": ".ds-threat { display: flex; align-items: center; gap: 10px; margin: 0; padding: 16px; background: var(--ink, #101114); color: #c5cad0; font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: .8125rem; font-weight: 600; font-variation-settings: \"wdth\" 90; } .ds-pips { display: flex; gap: 4px; } .ds-pips i { display: block; width: 14px; height: 14px; border: 2px solid var(--paper, #f3f5f6); border-radius: 2px; transform: rotate(45deg) scale(.82); transition: background-color .25s ease; } .ds-pips i.on { background: var(--paper, #f3f5f6); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Official Strategy Guide",
+    "overview": "The system is a printed strategy guide for the reader's own playtime: coated cool-white stock run through a four-color press. Cyan, magenta and rich black are not accents; each one owns a whole chapter as a full-bleed plate, and where two inks meet they overprint by multiply, exactly as wet ink would. Crop marks, registration targets, color control strips and halftone dot ramps are the printer's furniture, and they stay visible because they are the world, not decoration on top of it.\n\nDensity is a guidebook's density: enormous extended display words set against tight ruled stat tables in tabular figures. Scale courage carries the hierarchy; a single verdict word fits the full width of its column while the numbers beside it sit at table size. One fluorescent spot ink, the highlighter, marks only what is in the reader's hand: their inputs, their edits, their selection. Every figure carries a provenance tag (yours, est., derived) so no estimate passes as fact, and every state prints itself as a sentence in the guide's voice instead of as a pill or badge.\n\nThe world refuses the category default of a dark neon gaming dashboard with glass cards and gradient headings. Motion is a press run: plates slide into register, misregister when a figure changes, and snap back on an exponential ease-out.",
+    "keyCharacteristics": [
+      "Cool paper ground, rich-black ink, process cyan and magenta as chapter plates.",
+      "Multiply overprint wherever two inks meet, at rest and in motion.",
+      "Anybody 900 uppercase on a live width axis for display; Archivo with tabular figures for text and tables.",
+      "Ruled tables, hairline and heavy rules, almost no containers.",
+      "Highlighter yellow-green reserved for the reader's own numbers.",
+      "Provenance tags on every figure.",
+      "One 12-column grid that tabs, tables and plates all snap to."
+    ],
+    "rules": [
+      {
+        "name": "The Chapter Plate Rule",
+        "body": "Each chapter owns exactly one ink as a full-bleed plate: cyan for the Walkthrough, magenta for Shop Math, rich black for the Bestiary, paper shade for the Appendix. The same ink colors that chapter's thumb tab. A new chapter takes a plate; it does not invent a fifth ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Overprint Rule",
+        "body": "Where two inks meet they multiply (`mix-blend-mode: multiply`), never stack opaquely: thumb tabs overlap and overprint each other, the magenta season wall overprints the cyan trail, the press-check plates overprint into the title.",
+        "section": "colors"
+      },
+      {
+        "name": "The Reader's Ink Rule",
+        "body": "The highlighter marks only what the reader controls or has entered. A figure the guide derived or estimated never gets it, no matter how important.",
+        "section": "colors"
+      },
+      {
+        "name": "The Press Furniture Rule",
+        "body": "Process Yellow and the extra control-strip patches (the blue, red, green and gray swatches of the colophon color bar) live only in the press-check opening and the color control strips. They are never used as interface color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Width Axis Rule",
+        "body": "Display hierarchy is tuned on `wdth`, not just size: titles rest at 125, buttons at 115, tabs at 112, compact mobile tabs at 74, the press-check word at 150. Motion animates `wdth`; it never fakes width with scale.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Rule",
+        "body": "Every number column and every changing figure uses tabular lining figures, so values can roll in place without the column jittering.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ink Not Light Rule",
+        "body": "Depth comes from ink layering and rules, never from light. A surface that needs to feel separate gets a plate, a rule, or an overprint, not a shadow.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** give each chapter one process ink as a full-bleed plate and the matching thumb tab (cyan walkthrough, magenta shop math, rich black bestiary, paper shade appendix).",
+      "**Do** multiply wherever two inks meet: overlapping tabs, the wall over the trail, plates in register.",
+      "**Do** tag every figure with its provenance: `yours`, `est.`, or `derived`.",
+      "**Do** reserve the highlighter (#e8ff3a) for what the reader controls or has entered.",
+      "**Do** set magenta text in Magenta Text Ink (#c4006b) and white only on the magenta plate.",
+      "**Do** set every number in tabular lining figures and let changed numbers roll and misregister.",
+      "**Do** snap every new block to the 12-column grid inside `.wrap`, keeping the 46px tab reserve from 900px up.",
+      "**Do** separate with rules (1px hairline, 3px, 7px, double) rather than boxes.",
+      "**Do** design the reduced-motion state as a finished still page."
+    ],
+    "donts": [
+      "**Don't** build the dark neon gaming dashboard: no glass cards, no glows, no gradient headings or gradient text.",
+      "**Don't** put a small uppercase eyebrow or kicker above headings; uppercase micro-type is for provenance tags and table column heads only.",
+      "**Don't** print states as pills or badges; print them as sentences in the guide's voice.",
+      "**Don't** use the highlighter on derived or estimated figures, or as a general accent.",
+      "**Don't** use Process Yellow or the control-strip patches outside the press check and color bars.",
+      "**Don't** add drop or ambient shadows; depth is ink, rule and overprint.",
+      "**Don't** introduce a fifth ink or a second display face.",
+      "**Don't** use publisher logos, game art or trade dress."
+    ]
+  }
+}

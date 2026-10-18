@@ -1,1 +1,169 @@
-IyBCYXR0bGUgUGFzcyBST0kgQ2FsY3VsYXRvcgoKQSBzb3BoaXN0aWNhdGVkLCBpbnRlcmFjdGl2ZSBSZWFjdC1iYXNlZCB0b29sIGZvciBjYWxjdWxhdGluZyB0aGUgdHJ1ZSBlY29ub21pYyB2YWx1ZSBhbmQgYmVoYXZpb3JhbCBwc3ljaG9sb2d5IGJlaGluZCB2aWRlbyBnYW1lIGJhdHRsZSBwYXNzZXMuIEJ1aWx0IGFzIGEgcG9ydGZvbGlvIHBpZWNlIGV4cGxvcmluZyBnYW1lIGRlc2lnbiBlY29ub21pY3MsIHBsYXllciBkZWNpc2lvbi1tYWtpbmcsIGFuZCBmaW5hbmNpYWwgcmF0aW9uYWxpdHkgaW4gZ2FtaW5nLgoKIyMgT3ZlcnZpZXcKClRoaXMgY2FsY3VsYXRvciBoZWxwcyBwbGF5ZXJzIG1ha2UgZGF0YS1kcml2ZW4gZGVjaXNpb25zIGFib3V0IHdoZXRoZXIgcHVyY2hhc2luZyBhIGJhdHRsZSBwYXNzIG9mZmVycyBnZW51aW5lIHZhbHVlIG9yIHRyaWdnZXJzIHBzeWNob2xvZ2ljYWwgc3BlbmRpbmcgcGF0dGVybnMuIEl0IGNvbWJpbmVzIHF1YW50aXRhdGl2ZSBST0kgYW5hbHlzaXMgd2l0aCBiZWhhdmlvcmFsIGVjb25vbWljcyBpbnNpZ2h0cyB0byBwcm92aWRlIGNvbnRleHQgZm9yIHB1cmNoYXNpbmcgZGVjaXNpb25zLgoKIyMjIEtleSBGZWF0dXJlcwoKLSAqKkdhbWUgRGF0YWJhc2UqKjogUHJlLWxvYWRlZCBkYXRhIGZvciBGb3J0bml0ZSwgQXBleCBMZWdlbmRzLCBWYWxvcmFudCwgUm9ja2V0IExlYWd1ZSwgYW5kIENPRCBXYXJ6b25lCi0gKipDb21wbGV0aW9uIEZvcmVjYXN0aW5nKio6IEVzdGltYXRlcyB3aGV0aGVyIHlvdSdsbCBmaW5pc2ggdGhlIHBhc3MgYmFzZWQgb24gcGxheXRpbWUgaW5wdXQKLSAqKlJPSSBDYWxjdWxhdGlvbioqOiBDb21wYXJlcyBjb3N0LXBlci1pdGVtIHZpYSBiYXR0bGUgcGFzcyB2cy4gYnV5aW5nIGl0ZW1zIGluZGl2aWR1YWxseQotICoqSW50ZXJhY3RpdmUgVGltZWxpbmUqKjogVmlzdWFsaXplIHlvdXIgcHJvZ3Jlc3MgYWNyb3NzIHdlZWtzIHdpdGggY29tcGxldGlvbiB0cmFja2luZwotICoqQ29zdCBCcmVha2Rvd24qKjogU2lkZS1ieS1zaWRlIGNvbXBhcmlzb24gb2YgZGlmZmVyZW50IHB1cmNoYXNlIHN0cmF0ZWdpZXMKLSAqKkJlaGF2aW9yYWwgRWNvbm9taWNzIE1vZHVsZSoqOiBFZHVjYXRpb25hbCBpbnNpZ2h0cyBvbiBzdW5rIGNvc3QsIEZPTU8sIGFuZCBlbmRvd21lbnQgZWZmZWN0Ci0gKipSZXNwb25zaXZlIERlc2lnbioqOiBEYXJrIGdhbWluZyBhZXN0aGV0aWMsIG9wdGltaXplZCBmb3IgYWxsIGRldmljZXMKLSAqKlJlYWwtdGltZSBBbmFseXNpcyoqOiBVcGRhdGVzIGFsbCBtZXRyaWNzIGluc3RhbnRseSBhcyBpbnB1dHMgY2hhbmdlCgojIyBUZWNobmljYWwgU3RhY2sKCi0gKipSZWFjdCAxOCoqICh2aWEgQ0ROIGZvciB6ZXJvLWJ1aWxkIHNldHVwKQotICoqUmVjaGFydHMqKiBmb3IgZGF0YSB2aXN1YWxpemF0aW9uIChsaW5lIGNoYXJ0cywgYmFyIGNoYXJ0cykKLSAqKlZhbmlsbGEgQ1NTKiogd2l0aCBDU1MgR3JpZCBhbmQgRmxleGJveCAobm8gZnJhbWV3b3JrIGRlcGVuZGVuY3kpCi0gKipCYWJlbCBTdGFuZGFsb25lKiogZm9yIEpTWCB0cmFuc3BpbGF0aW9uCi0gKipTaW5nbGUgSFRNTCBmaWxlKiogZGVwbG95bWVudCAobm8gYnVpbGQgcHJvY2VzcyByZXF1aXJlZCkKCiMjIFVzYWdlCgpPcGVuIGBpbmRleC5odG1sYCBpbiBhbnkgbW9kZXJuIGJyb3dzZXIuIEFsbCBmdW5jdGlvbmFsaXR5IGlzIGNsaWVudC1zaWRlOyBubyBzZXJ2ZXIgb3IgQVBJIHJlcXVpcmVkLgoKIyMjIElucHV0IFBhcmFtZXRlcnMKCjEuICoqU2VsZWN0IEdhbWUqKjogQ2hvb3NlIGZyb20gRm9ydG5pdGUsIEFwZXggTGVnZW5kcywgVmFsb3JhbnQsIFJvY2tldCBMZWFndWUsIG9yIENPRCBXYXJ6b25lCjIuICoqSG91cnMgUGVyIFdlZWsqKjogRHJhZyBzbGlkZXIgdG8gc2V0IHdlZWtseSBwbGF5dGltZSAoMS01MCBob3VycykKMy4gKipQYXNzIFR5cGUqKjogVG9nZ2xlIGJldHdlZW4gZnJlZSBvciBwcmVtaXVtIChwYWlkKSBiYXR0bGUgcGFzcwo0LiAqKlByb2dyZXNzIFdlZWsqKjogQWRqdXN0IHRvIHZpZXcgcHJvamVjdGVkIGNvbXBsZXRpb24gYXQgYW55IHdlZWsgaW4gdGhlIHNlYXNvbgoKIyMjIE91dHB1dCBNZXRyaWNzCgoqKkNvbXBsZXRpb24gJiBST0kgQW5hbHlzaXMqKgotICoqQ29tcGxldGlvbiBGb3JlY2FzdCoqOiBQZXJjZW50YWdlIGNoYW5jZSB5b3UnbGwgZmluaXNoIHRoZSBwYXNzIGF0IHlvdXIgY3VycmVudCBwbGF5dGltZQotICoqV2Vla3MgdG8gQ29tcGxldGUqKjogVGltZSByZXF1aXJlZCB0byB1bmxvY2sgYWxsIHRpZXJzCi0gKipDdXJyZW50IFRpZXIgUHJvZ3Jlc3MqKjogUmVhbC10aW1lIHRpZXIgY291bnQgYXQgc2VsZWN0ZWQgd2VlawotICoqQ29zdCBQZXIgVGllcioqOiBZb3VyIGVmZmVjdGl2ZSBwZXItdGllciBzcGVuZGluZwotICoqUk9JIChSZXR1cm4gb24gSW52ZXN0bWVudCkqKjogUGVyY2VudGFnZSB2YWx1ZSBnYWluIHZzLiBidXlpbmcgaXRlbXMgaW5kaXZpZHVhbGx5Ci0gKipQb3RlbnRpYWwgU2F2aW5ncyoqOiBUb3RhbCBkb2xsYXIgYW1vdW50IHNhdmVkIGJ5IGJ1eWluZyBwYXNzIHZzLiBpbmRpdmlkdWFsIGl0ZW1zCgoqKlZpc3VhbGl6YXRpb25zKioKLSAqKkNvbXBsZXRpb24gVGltZWxpbmUqKjogTGluZSBjaGFydCBzaG93aW5nIGNvbXBsZXRpb24gJSBhbmQgdGllcnMgdW5sb2NrZWQgb3ZlciA1MiB3ZWVrcwotICoqQ29zdCBCcmVha2Rvd24qKjogQmFyIGNoYXJ0IGNvbXBhcmluZyBiYXR0bGUgcGFzcyBjb3N0IHZzLiBpbmRpdmlkdWFsIGl0ZW0gcHVyY2hhc2UgY29zdAotICoqUHJpY2UgQ29tcGFyaXNvbioqOiBJdGVtaXplZCBicmVha2Rvd25zIG9mIGJvdGggcHVyY2hhc2Ugc3RyYXRlZ2llcwoKKipCZWhhdmlvcmFsIEVjb25vbWljcyBTZWN0aW9uKioKLSBTdW5rIENvc3QgRmFsbGFjeTogSG93IHBhc3Qgc3BlbmRpbmcgaW5mbHVlbmNlcyBmdXR1cmUgZGVjaXNpb24tbWFraW5nCi0gRk9NTyBNZWNoYW5pY3M6IFRoZSBwc3ljaG9sb2d5IG9mIGxpbWl0ZWQtdGltZSBjb3NtZXRpY3MgYW5kIGFydGlmaWNpYWwgc2NhcmNpdHkKLSBFbmRvd21lbnQgRWZmZWN0OiBXaHkgdW5sb2NrZWQgaXRlbXMgZmVlbCBtb3JlIHZhbHVhYmxlIHRoYW4gdGhleSBhcmUKLSBWYWx1ZSBEZWZpbml0aW9uOiBIb3cgdG8gbWVhc3VyZSByZWFsIHZzLiBwZXJjZWl2ZWQgdmFsdWUKLSBSZWFsaXR5IENoZWNrOiBDb3N0LXBlci1ob3VyIGVudGVydGFpbm1lbnQgYW5hbHlzaXMKCiMjIEVjb25vbWljIE1ldGhvZG9sb2d5CgojIyMgUk9JIENhbGN1bGF0aW9uCgpUaGUgdG9vbCBjYWxjdWxhdGVzIFJPSSB1c2luZyB0aGlzIGZyYW1ld29yazoKCmBgYApST0klID0gKChUb3RhbCBJbmRpdmlkdWFsIEl0ZW0gVmFsdWUgLSBCYXR0bGUgUGFzcyBDb3N0KSAvIEJhdHRsZSBQYXNzIENvc3QpIMOXIDEwMApgYGAKCioqRXhhbXBsZSoqOiBJZiBGb3J0bml0ZSdzIDEwMC1pdGVtIHBhc3MgY29zdHMgJDkuOTkgYW5kIGluZGl2aWR1YWwgaXRlbXMgYXZlcmFnZSAkMS41MDoKLSBUb3RhbCB2YWx1ZSBpZiBidXlpbmcgaW5kaXZpZHVhbGx5OiAxMDAgw5cgJDEuNTAgPSAkMTUwCi0gUk9JOiAoKCQxNTAgLSAkOS45OSkgLyAkOS45OSkgw5cgMTAwID0gKioxLDQwNCUqKgoKIyMjIENvbXBsZXRpb24gUHJvYmFiaWxpdHkKCkJhc2VkIG9uIGEgdGltZS10by1jb21wbGV0aW9uIG1vZGVsOgoKYGBgCldlZWtzIHRvIENvbXBsZXRlID0gR2FtZSBFc3RpbWF0ZWQgVG90YWwgSG91cnMgLyBXZWVrbHkgSG91cnMKQ29tcGxldGlvbiAlID0gbWluKChXZWVrbHkgSG91cnMgw5cgQ3VycmVudCBXZWVrKSAvIEVzdGltYXRlZCBIb3VycywgMTAwJSkKYGBgCgpUaGlzIGFjY291bnRzIGZvcjoKLSBXZWVrbHkgY2hhbGxlbmdlIGJvbnVzZXMgKGFjY2VsZXJhdGUgcHJvZ3Jlc3Npb24gZWFybHkpCi0gRGltaW5pc2hpbmcgcmV0dXJucyAobGF0ZXIgdGllcnMgdGFrZSBsb25nZXIpCi0gUmVhbGlzdGljIHBsYXlldGltZSBkaXN0cmlidXRpb24gKG1vc3QgcGxheWVycyBmaW5pc2ggNzAtODAlIG9mIHBhc3NlcykKCiMjIyBDb3N0LVBlci1JdGVtIEFuYWx5c2lzCgpgYGAKQ29zdCBQZXIgSXRlbSA9IEJhdHRsZSBQYXNzIFByaWNlIC8gVG90YWwgSXRlbXMgVW5sb2NrZWQKYGBgCgpFbmFibGVzIGRpcmVjdCBjb21wYXJpc29uOiAkOS45OSBwYXNzIMO3IDEwMCBpdGVtcyA9ICQwLjEwIHBlciBpdGVtIHZzLiAkMS41MCBtYXJrZXQgcHJpY2UuCgojIyBCZWhhdmlvcmFsIEVjb25vbWljcyBGcmFtZXdvcmsKClRoaXMgdG9vbCBlZHVjYXRlcyB1c2VycyBvbiBmb3VyIGtleSBiZWhhdmlvcmFsIHRyYXBzOgoKIyMjIDEuIFN1bmsgQ29zdCBGYWxsYWN5ClBsYXllcnMgb2Z0ZW4gY29udGludWUgcGxheWluZyB0byAiZ2V0IHRoZWlyIG1vbmV5J3Mgd29ydGgiIGZyb20gYSBwdXJjaGFzZSwgZXZlbiB3aGVuIGNvbnRpbnVlZCBwbGF5IGRvZXNuJ3QgbWF4aW1pemUgZnV0dXJlIHV0aWxpdHkuIFRoZSBjYWxjdWxhdG9yIGhpZ2hsaWdodHMgdGhpcyB0cmFwIHdpdGggY29udGV4dHVhbCB3YXJuaW5ncy4KCiMjIyAyLiBGT01PIChGZWFyIG9mIE1pc3NpbmcgT3V0KQpCYXR0bGUgcGFzc2VzIGxldmVyYWdlIHRpbWUtc2NhcmNpdHkgKHNlYXNvbmFsIHJlc2V0cykgYW5kIHBlcmNlaXZlZCBpdGVtIHNjYXJjaXR5IChjb3NtZXRpY3MgYXJlICJsaW1pdGVkIGVkaXRpb24sIiB0aG91Z2ggc2ltaWxhciBpdGVtcyByZXR1cm4pLiBUaGUgY2FsY3VsYXRvciByZW1pbmRzIHVzZXJzIHRoYXQgaXRlbXMgcm90YXRlIGFuZCByZWN1ci4KCiMjIyAzLiBFbmRvd21lbnQgRWZmZWN0ClVubG9ja2VkIGl0ZW1zIGZlZWwgbW9yZSB2YWx1YWJsZSBwb3N0LXVubG9jayB0aGFuIHRoZSBzYW1lIGl0ZW0gYXQgbWFya2V0IHByaWNlLiBCeSBzZXBhcmF0aW5nICJwZXJjZXB0aW9uIG9mIHZhbHVlIiBmcm9tICJhY3R1YWwgcmVzYWxlIG9yIGZ1bmN0aW9uYWwgdmFsdWUsIiB0aGUgY2FsY3VsYXRvciBwcm92aWRlcyBncm91bmRpbmcuCgojIyMgNC4gTG9zcyBBdmVyc2lvbgpQbGF5ZXJzIGRpc3Byb3BvcnRpb25hdGVseSBmZWVsIHRoZSBwYWluIG9mICJsb3NpbmciIGEgbGltaXRlZC10aW1lIGNvc21ldGljIGNvbXBhcmVkIHRvIHRoZSBwbGVhc3VyZSBvZiBub3Qgc3BlbmRpbmcgdGhlIGNvc3QuIFRoZSBjYWxjdWxhdG9yIGZyYW1lcyB0aGlzIGV4cGxpY2l0bHk6ICJEbyB5b3Ugd2FudCB0aGlzIGl0ZW0sIG9yIGRvIHlvdSB3YW50IHRvIGF2b2lkIHJlZ3JldD8iCgojIyBQb3J0Zm9saW8gQ29udGV4dAoKVGhpcyBwcm9qZWN0IGlzIHBhcnQgb2YgYW4gZWNvbm9taWNzIHRoZXNpcyBleHBsb3Jpbmc6Cgo+ICoqVGhlIFRyYW5zaXRpb24gZnJvbSBMb290IEJveGVzIHRvIEJhdHRsZSBQYXNzZXMgaW4gVmlkZW8gR2FtZXM6IEVjb25vbWljIE1vZGVscywgUGxheWVyIEJlaGF2aW9yLCBhbmQgTG9uZy1UZXJtIE1vbmV0aXphdGlvbiBTdXN0YWluYWJpbGl0eSoqCj4gKlJlZWQgQ29sbGVnZSwgMjAyMyoKPiAqTWF0dGhldyBDcm9tYXoqCgojIyMgUmVzZWFyY2ggUXVlc3Rpb25zIEFkZHJlc3NlZAoKLSBIb3cgZG8gYmF0dGxlIHBhc3NlcyBsZXZlcmFnZSBiZWhhdmlvcmFsIGVjb25vbWljcyBjb21wYXJlZCB0byBsb290IGJveGVzPwotIFdoYXQgbWV0cmljcyBkbyBwbGF5ZXJzIHVzZSB0byBldmFsdWF0ZSAidmFsdWUiIGluIGNvc21ldGljIGl0ZW1zPwotIEhvdyBkb2VzIHRpbWUtdG8tY29tcGxldGlvbiBhZmZlY3QgcHVyY2hhc2luZyBiZWhhdmlvcj8KLSBDYW4gZWR1Y2F0aW9uICh0aGlzIHRvb2wpIHJlZHVjZSB2dWxuZXJhYmlsaXR5IHRvIEZPTU8gYW5kIHN1bmsgY29zdCBtZWNoYW5pY3M/CgojIyMgS2V5IEZpbmRpbmdzCgoxLiAqKlBlcmNlaXZlZCB2cy4gUmVhbCBWYWx1ZSBHYXAqKjogUGxheWVycyB0eXBpY2FsbHkgb3ZlcnZhbHVlIGNvc21ldGljcyBieSAyMDAtMzAwJSBhZnRlciB1bmxvY2tpbmcgdGhlbSAoZW5kb3dtZW50IGVmZmVjdCkuCgoyLiAqKlRpbWUtTG9jayBQcmVtaXVtKio6IFBsYXllcnMgcGF5IDQwLTYwJSBtb3JlIGZvciB0aW1lLWdhdGVkIGl0ZW1zIHZzLiBwZXJtYW5lbnRseSBhdmFpbGFibGUgY29zbWV0aWNzIHdpdGggaWRlbnRpY2FsIGFwcGVhcmFuY2UuCgozLiAqKkNvbXBsZXRpb24gSGV1cmlzdGljKio6IFBsYXllcnMgd2hvIGNvbXBsZXRlIDcwJSsgb2YgYSBwYXNzIHJlcG9ydCBoaWdoZXIgc2F0aXNmYWN0aW9uICgyNiUgaGlnaGVyIGluIHN1cnZleXMpIHJlZ2FyZGxlc3Mgb2Ygd2hldGhlciB0aGV5J2QgYnV5IGl0ZW1zIGluZGl2aWR1YWxseeKAlHN1Z2dlc3RpbmcgdGhlIHBhc3MgY3JlYXRlcyBiYXNlbGluZSBzYXRpc2ZhY3Rpb24gaW5kZXBlbmRlbnQgb2YgUk9JLgoKNC4gKipCZWhhdmlvcmFsIFNoaWZ0Kio6IEJhdHRsZSBwYXNzZXMgcmVkdWNlZCBpbXB1bHNpdmUgbG9vdCBib3ggc3BlbmRpbmcgYnkgfjM1JSBidXQgaW5jcmVhc2VkIHNlYXNvbmFsIHNwZW5kaW5nIGNvbnNpc3RlbmN5LCBzdWdnZXN0aW5nIHBsYXllcnMgdmlldyB0aGVtIGFzIGJ1ZGdldGVkIGVudGVydGFpbm1lbnQgcmF0aGVyIHRoYW4gZ2FtYmxpbmcuCgojIyBEYXRhIFNvdXJjZXMgJiBBc3N1bXB0aW9ucwoKIyMjIEdhbWUgRGF0YQotICoqVGllciBDb3VudHMgJiBQcmljZXMqKjogUHVibGljIHByaWNpbmcgZnJvbSBTdGVhbSBhbmQgb2ZmaWNpYWwgc3RvcmVmcm9udHMgKDIwMjMpCi0gKipFc3RpbWF0ZWQgSG91cnMgdG8gQ29tcGxldGlvbioqOiBDYWxjdWxhdGVkIGZyb20gYXZlcmFnZSB0aWVyIHVubG9jayByYXRlcyBhY3Jvc3MgcmFua2VkIHBsYXllcnMKICAtIEZvcnRuaXRlOiB+NzUgaG91cnMgKHNvdXJjZTogY29tbXVuaXR5IHRyYWNraW5nIHZpYSBFeHRlcm5hbExpbmtzL0Rpc2NvcmQpCiAgLSBBcGV4IExlZ2VuZHM6IH4xMDAgaG91cnMKICAtIFZhbG9yYW50OiB+NTAgaG91cnMgKHNtYWxsZXN0IHBhc3MpCiAgLSBSb2NrZXQgTGVhZ3VlOiB+NjAgaG91cnMKICAtIENPRCBXYXJ6b25lOiB+MTIwIGhvdXJzIChtb3N0IGNoYWxsZW5naW5nKQoKIyMjIENvc21ldGljIFByaWNpbmcKLSBBdmVyYWdlIGl0ZW0gcHJpY2VzIGRlcml2ZWQgZnJvbSBzZWFzb25hbCBjb3NtZXRpYyBkYXRhYmFzZXMKLSBBY2NvdW50cyBmb3IgcmFyaXR5IHRpZXJzOiBjb21tb24gKHNraW4pIHZzLiBsZWdlbmRhcnkgKHJhcmUgY29zbWV0aWNzKQotIENyb3NzLXJlZmVyZW5jZWQgYWdhaW5zdCBwbGF5ZXIgc3BlbmRpbmcgc3VydmV5cyAoTmV3em9vLCAyMDIyKQoKIyMjIEJlaGF2aW9yYWwgRWNvbm9taWNzIERhdGEKLSBTdW5rIENvc3QgRmFsbGFjeSBtZXRyaWNzOiBBcmtlcyAmIEJsdW1lciAoMTk4NSksIGJlaGF2aW9yYWwgZmluYW5jZSBsaXRlcmF0dXJlCi0gRk9NTyBtZWNoYW5pY3M6IGFkYXB0ZWQgZnJvbSBtb2JpbGUgZ2FtZSBVWCByZXNlYXJjaCAoWnVib2ZmLCAyMDE5KQotIEVuZG93bWVudCBFZmZlY3QgaW4gZ2FtaW5nOiBEdWhhY2hlayBldCBhbC4gKDIwMTIpIG9uIGRpZ2l0YWwgZ29vZHMKCiMjIEZ1dHVyZSBFbmhhbmNlbWVudHMKCiMjIyAxLiBMaXZlIEFQSSBJbnRlZ3JhdGlvbgotIENvbm5lY3QgdG8gb2ZmaWNpYWwgZ2FtZSBBUElzIChGb3J0bml0ZSwgQXBleCBMZWdlbmRzKSBmb3I6CiAgLSBSZWFsLXRpbWUgY29zbWV0aWMgcHJpY2luZyBhbmQgcm90YXRpb24KICAtIEFjdHVhbCB0aWVyIHVubG9jayByYXRlcyBwZXIgcmVnaW9uCiAgLSBDdXJyZW50LXNlYXNvbiBiYXR0bGUgcGFzcyBzdHJ1Y3R1cmUKICAtIFBsYXllciBwcm9ncmVzc2lvbiBkYXRhIChpZiBBUElzIHN1cHBvcnQpCgojIyMgMi4gUGVyc29uYWwgQW5hbHl0aWNzCi0gTG9naW4gaW50ZWdyYXRpb24gdG8gZmV0Y2ggeW91ciBhY3R1YWwgcGxheXRpbWUKLSBQcmVkaWN0aW9uIGJhc2VkIG9uIGhpc3RvcmljYWwgcHJvZ3Jlc3Npb24KLSBBbGVydHMgd2hlbiB5b3UgaGl0IGNvbXBsZXRpb24gdGhyZXNob2xkcwotIENvbXBhcmlzb24gdG8gcGVlciBjb21wbGV0aW9uIHJhdGVzCgojIyMgMy4gQWR2YW5jZWQgRWNvbm9taWNzCi0gTW9udGUgQ2FybG8gc2ltdWxhdGlvbnMgZm9yIHZhcmlhYmxlIHBsYXl0aW1lCi0gU2Vhc29uYWwgdHJlbmQgYW5hbHlzaXMgKGRvIHBsYXllcnMgc3BlbmQgbW9yZSBtaWQtc2Vhc29uPykKLSBQZWVyIGNvbXBhcmlzb246ICJZb3VyIGVmZmVjdGl2ZSBjb3N0IHBlciBpdGVtIHZzLiBhdmVyYWdlIHBsYXllciIKLSBSZWZ1bmQgdmFsdWUgZXN0aW1hdGlvbiAodGltZS13ZWlnaHRlZCBkZXByZWNpYXRpb24pCgojIyMgNC4gRXhwYW5kZWQgR2FtZSBDb3ZlcmFnZQotIEluY2x1ZGUgZnJlZS10by1wbGF5IGdhbWVzIChHZW5zaGluIEltcGFjdCwgSG9ua2FpIFN0YXIgUmFpbCwgZXRjLikKLSBNTU8gYmF0dGxlIHBhc3NlcyAoRmluYWwgRmFudGFzeSBYSVYsIFdvVyBTZWFzb25zKQotIE1vYmlsZSBnYW1pbmcgKENhbGwgb2YgRHV0eSBNb2JpbGUsIERpYWJsbyBJbW1vcnRhbCkKLSBBc2lhbiBtYXJrZXRzIChQZXJmZWN0IFdvcmxkLCBMb3N0IEFyaykKCiMjIyA1LiBCZWhhdmlvcmFsIFRyYWNraW5nCi0gQS9CIHRlc3Q6IERvZXMgc2hvd2luZyBiZWhhdmlvcmFsIGVjb25vbWljcyBpbmZvIHJlZHVjZSBwdXJjaGFzZSByYXRlcz8KLSBTdXJ2ZXkgaW50ZWdyYXRpb246ICJXYXMgdGhpcyBjYWxjdWxhdG9yIHVzZWZ1bCBpbiB5b3VyIGRlY2lzaW9uPyIKLSBMb25naXR1ZGluYWwgc3R1ZHk6IERvIGluZm9ybWVkIHBsYXllcnMgY29tcGxldGUgbW9yZSBvciBmZXdlciBwYXNzZXM/CgojIyMgNi4gRmluYW5jaWFsIExpdGVyYWN5IEludGVncmF0aW9uCi0gTm9ybWFsaXplIGNvc21ldGljIHNwZW5kaW5nIGFnYWluc3QgbW9udGhseSBidWRnZXQKLSBUaW1lLXZhbHVlLW9mLW1vbmV5IGNhbGN1bGF0aW9ucyAob3Bwb3J0dW5pdHkgY29zdCkKLSBDb21wYXJpc29uIHRvIG90aGVyIGVudGVydGFpbm1lbnQgc3BlbmRpbmcgKG1vdmllcywgY29uY2VydHMsIHN1YnNjcmlwdGlvbnMpCi0gU2F2aW5ncyBpbXBhY3Q6ICJZb3UnZCBzYXZlICRYL3llYXIgYnkgZGVjbGluaW5nIGJhdHRsZSBwYXNzZXMiCgojIyBEZXNpZ24gUGhpbG9zb3BoeQoKIyMjIFRyYW5zcGFyZW5jeSBPdmVyIFBlcnN1YXNpb24KVGhlIGNhbGN1bGF0b3IgaW50ZW50aW9uYWxseSBhdm9pZHM6Ci0g4pyXIEdyZWVuICJCVVkgTk9XIiBidXR0b25zCi0g4pyXIEhpZ2hsaWdodGluZyBjb21wbGV0aW9uIGFzICJhY2hpZXZlbWVudCIKLSDinJcgRnJhbWluZyBpbmNvbXBsZXRlIHBhc3NlcyBhcyAiZmFpbHVyZSIKCkluc3RlYWQsIGl0OgotIOKckyBOZXV0cmFsbHkgcHJlc2VudHMgY29tcGxldGlvbiBwcm9iYWJpbGl0eQotIOKckyBFeHBsYWlucyBiZWhhdmlvcmFsIHRyYXBzIGV4cGxpY2l0bHkKLSDinJMgUHJvdmlkZXMgY29zdC1wZXItaG91ciBmcmFtaW5nIChub24tanVkZ21lbnRhbCkKLSDinJMgQ29udGV4dHVhbGl6ZXMgdmFsdWUgcmVsYXRpdmUgdG8gb3RoZXIgZW50ZXJ0YWlubWVudAoKIyMjIERhcmsgR2FtaW5nIEFlc3RoZXRpYwpUaGUgdmlzdWFsIGRlc2lnbiBtaXJyb3JzIG1vZGVybiBnYW1lIFVJIChWYWxvcmFudCwgQXBleCwgQ2FsbCBvZiBEdXR5KSB0bzoKLSBNYWtlIHRoZSB0b29sIGZlZWwgY3JlZGlibGUgd2l0aGluIGdhbWluZyBjb250ZXh0Ci0gUmVkdWNlIGZyaWN0aW9uIGZvciB0YXJnZXQgYXVkaWVuY2UKLSBEZW1vbnN0cmF0ZSByZXNwb25zaXZlIGRlc2lnbiBtYXN0ZXJ5IChwb3J0Zm9saW8gcGllY2UpCgojIyMgRWR1Y2F0aW9uYWwgRnJhbWluZwpUaGUgYmVoYXZpb3JhbCBlY29ub21pY3Mgc2VjdGlvbiBpcyBpbnRlbnRpb25hbGx5IG5vbi1hY2FkZW1pYzoKLSBVc2VzIHBsYWluIGxhbmd1YWdlLCBub3QgamFyZ29uCi0gSW5jbHVkZXMgcmVhbCBleGFtcGxlcyBhbmQgd2FybmluZ3MKLSBDb25uZWN0cyB0aGVvcnkgdG8gdGhlIHVzZXIncyBzcGVjaWZpYyBzaXR1YXRpb24KLSBFbmRzIHdpdGggYSAicmVhbGl0eSBjaGVjayIgdGhhdCByZWZyYW1lcyB0aGUgbWV0cmljCgojIyBEZXBsb3ltZW50CgojIyMgU3RhbmRhbG9uZSBEZXBsb3ltZW50CmBgYGJhc2gKIyBTaW1wbHkgc2VydmUgdGhlIHNpbmdsZSBIVE1MIGZpbGUKcHl0aG9uIC1tIGh0dHAuc2VydmVyIDgwMDAKIyBvcgpucHggaHR0cC1zZXJ2ZXIKIyBvciB1cGxvYWQgdG8gR2l0SHViIFBhZ2VzLCBOZXRsaWZ5LCBWZXJjZWwsIGV0Yy4KYGBgCgojIyMgRW1iZWRkaW5nCkVtYmVkIGludG8gZXhpc3Rpbmcgd2Vic2l0ZXM6CmBgYGh0bWwKPGlmcmFtZSBzcmM9Imh0dHBzOi8veW91ci1kb21haW4uY29tL2JhdHRsZS1wYXNzLXJvaS9pbmRleC5odG1sIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMjAwcHgiPjwvaWZyYW1lPgpgYGAKCiMjIyBObyBCdWlsZCBSZXF1aXJlZApUaGUgZW50aXJlIGFwcCBpcyBhIHNpbmdsZSBIVE1MIGZpbGUgd2l0aDoKLSBSZWFjdCBmcm9tIENETiAocHJvZHVjdGlvbiBidWlsZCkKLSBSZWNoYXJ0cyBmcm9tIENETgotIEJhYmVsIFN0YW5kYWxvbmUgZm9yIEpTWAotIElubGluZSBDU1MgKG5vIGV4dGVybmFsIHN0eWxlc2hlZXRzKQoKVGhpcyBtZWFucyB6ZXJvIGJ1aWxkIHByb2Nlc3MsIGluc3RhbnQgZGVwbG95bWVudCwgYW5kIGF1dG9tYXRpYyB1cGRhdGVzIGZyb20gQ0ROLgoKIyMgQnJvd3NlciBDb21wYXRpYmlsaXR5CgotIENocm9tZS9FZGdlOiDinJMgRnVsbCBzdXBwb3J0Ci0gRmlyZWZveDog4pyTIEZ1bGwgc3VwcG9ydAotIFNhZmFyaTog4pyTIEZ1bGwgc3VwcG9ydCAoaU9TIDE0KykKLSBNb2JpbGUgYnJvd3NlcnM6IOKckyBGdWxseSByZXNwb25zaXZlCgojIyBGaWxlIFN0cnVjdHVyZQoKYGBgCi9iYXR0bGUtcGFzcy1yb2kvCuKUnOKUgOKUgCBpbmRleC5odG1sICAgICAgICAgICMgQ29tcGxldGUgYXBwIChlbWJlZGRlZCBSZWFjdCwgQ1NTLCBKUykK4pSU4pSA4pSAIFJFQURNRS5tZCAgICAgICAgICAgIyBUaGlzIGZpbGUKYGBgCgpObyBkZXBlbmRlbmNpZXMsIG5vIGJ1aWxkIHRvb2xzLCBubyBzZXJ2ZXIgcmVxdWlyZWQuCgojIyBDcmVkaXRzICYgQWNrbm93bGVkZ21lbnRzCgoqKkF1dGhvcioqOiBNYXR0aGV3IENyb21hegoqKk9yaWdpbmFsIFRoZXNpcyoqOiBSZWVkIENvbGxlZ2UgRWNvbm9taWNzIERlcGFydG1lbnQsIDIwMjMKCiMjIyBSZXNlYXJjaCBSZWZlcmVuY2VzCgotIEFya2VzLCBILiBSLiwgJiBCbHVtZXIsIEMuICgxOTg1KS4gIlRoZSBwc3ljaG9sb2d5IG9mIHN1bmsgY29zdC4iIE9yZ2FuaXphdGlvbmFsIEJlaGF2aW9yIGFuZCBIdW1hbiBEZWNpc2lvbiBQZXJmb3JtYW5jZS4KLSBadWJvZmYsIFMuICgyMDE5KS4gIlRoZSBBZ2Ugb2YgU3VydmVpbGxhbmNlIENhcGl0YWxpc20uIgotIER1aGFjaGVrLCBBLiwgZXQgYWwuICgyMDEyKS4gIkVtb3Rpb25hbCByZXNwb25zZXMgdG8gdW5hdHRhaW5lZCBnb2FscyBhbmQgaW1wbGljYXRpb25zIGZvciBjb25zdW1lciBjaG9pY2UuIgotIE5ld3pvbyBHbG9iYWwgR2FtZXMgTWFya2V0IFJlcG9ydCAoMjAyMikKCiMjIyBHYW1lIERlc2lnbiBSZWZlcmVuY2VzCgotIEdEQyBUYWxrOiAiTW9uZXRpemF0aW9uIFBzeWNob2xvZ3kgaW4gRnJlZS10by1QbGF5IEdhbWVzIgotIERhdmlkIFBlcnJ5J3MgYW5hbHlzaXMgb2YgYmF0dGxlIHBhc3MgZGVzaWduIHBhdHRlcm5zICgyMDIwLTIwMjMpCgojIyBMaWNlbnNlCgpUaGlzIHByb2plY3QgaXMgcHJvdmlkZWQgYXMgYSBwb3J0Zm9saW8gYW5kIGVkdWNhdGlvbmFsIHBpZWNlLiBVc2UgZnJlZWx5IGZvciBub24tY29tbWVyY2lhbCBwdXJwb3NlcywgcGVyc29uYWwgYW5hbHlzaXMsIGFuZCBlZHVjYXRpb25hbCBjb250ZXh0cy4KCi0tLQoKKipQb3J0Zm9saW8gTm90ZSoqOiBUaGlzIGNhbGN1bGF0b3IgZGVtb25zdHJhdGVzOgotIFJlYWN0IHByb2ZpY2llbmN5IChzdGF0ZSBtYW5hZ2VtZW50LCBob29rcywgbWVtb2l6YXRpb24pCi0gRGF0YSB2aXN1YWxpemF0aW9uIChSZWNoYXJ0cyBpbnRlZ3JhdGlvbikKLSBSZXNwb25zaXZlIGRlc2lnbiAoQ1NTIEdyaWQsIG1vYmlsZSBvcHRpbWl6YXRpb24pCi0gRWNvbm9taWMgbW9kZWxpbmcgKHJlYWwtd29ybGQgZmluYW5jaWFsIGNhbGN1bGF0aW9ucykKLSBVWC9VSSB0aGlua2luZyAoZGFyayB0aGVtZSwgYWNjZXNzaWJpbGl0eSwgY2xhcml0eSkKLSBFZHVjYXRpb25hbCBjb21tdW5pY2F0aW9uIChleHBsYWluaW5nIGNvbXBsZXggYmVoYXZpb3JhbCBlY29ub21pY3MpCgpJdCdzIGJvdGggYSBmdW5jdGlvbmFsIHRvb2wgYW5kIGEgcG9ydGZvbGlvIGFydGlmYWN0IHNob3djYXNpbmcgZnVsbC1zdGFjayB0aGlua2luZy4K
+# Battle Pass ROI Calculator
+
+**Is this season's battle pass worth it for you?** An interactive, unofficial *season value guide*. Pick your game, say how much you actually play, and it tells you whether you'll finish the pass before the season ends, what the cosmetics are really worth to you, what each hour of play costs, and which behavioral traps are working on you.
+
+It's a portfolio piece built from an economics thesis on the move from loot boxes to battle passes, and it's designed as a working tool rather than a slide.
+
+> Open `index.html` in any modern browser. No build, no server, no account.
+
+## What it does
+
+- **A verdict in one sentence.** *Worth it*, *Close call*, *Probably not*, or *No spend* for the free track, with the reason written out in plain language.
+- **Sentence-style inputs.** "I play **[game]** about **[10]** hours a week. I'd **[buy the premium pass]** and actually use **[25%]** of its cosmetics." Drag the highlighted numbers sideways, use the arrow keys, or tap − / + on touch screens.
+- **Walkthrough.** The whole pass laid out as a route map, one node per tier. Scroll (or press *Play the season*) to watch your playhead move week by week. The season-end wall shows exactly which tiers expire unclaimed.
+- **Shop math.** A line-by-line ledger that turns *sticker value* (every item at store price) into *real value* (only what you unlock this season and would actually use), next to the "ROI on the box" the pass is marketed on.
+- **Cost per hour of play** on a log-scale ruler, compared with a movie ticket.
+- **Bestiary.** The four behavioral traps (sunk cost, FOMO, endowment effect, loss aversion), each with a threat level calculated from your numbers. The list re-ranks live as your inputs change.
+- **Clear conditions.** A four-point checklist for "good value": three are calculated, and the fourth is your call.
+- **Appendix.** All five games run at your pace side by side, every preset editable (your edits are highlighted as *yours*), plus the method and sources.
+- **Shareable links.** Your game, hours, want-rate and edits live in the URL, so *Copy a link to your numbers* reproduces your exact verdict.
+
+## Design
+
+The visual world is a **printed strategy guide**, the glossy official-guide tradition gamers grew up with, not another dark neon dashboard:
+
+- Coated-paper ground printed in process ink. **Cyan**, **magenta** and **rich black** each own a chapter as full-bleed plates and as thumb-index tabs on the page edge.
+- **Highlighter yellow belongs only to your own numbers.** Anything you typed or edited is marked, and nothing else is.
+- Every figure carries a provenance ticket: `yours`, `est.` (a preset estimate) or `calc` (derived), so an estimate never passes as fact.
+- Heavy extended display type ([Anybody](https://fonts.google.com/specimen/Anybody)) on a variable width axis, set against dense ruled tables in [Archivo](https://fonts.google.com/specimen/Archivo) with tabular figures.
+
+### Motion
+
+The motion comes from print itself, choreographed with GSAP:
+
+- **Press check opening.** Cyan, magenta and yellow plates drift in out of register, snap together into black while the title widens, then the sheet trims away. It plays once per session, and any key or click skips it.
+- **Reprints.** When your verdict changes, the color plates slip and snap back into register and the new word rises from below. Changed numbers roll and flash out of register.
+- **Scroll-driven chapters.** Plates wipe in like an ink pass, titles stretch along the variable width axis, and halftone ramps dissolve each plate into the paper.
+- **Pinned walkthrough** (desktop). Scrolling plays the season: tiers light up and the season-end wall slams down.
+- **Live re-ranking.** Bestiary entries reorder with FLIP animation, and item tiles flip when your want-rate changes.
+- **Reduced motion is designed in, not bolted on.** With `prefers-reduced-motion`, the opening, pinning and smooth scrolling are skipped and values update instantly, while color and state changes are kept.
+
+## Economic methodology
+
+| Quantity | Formula |
+| --- | --- |
+| Hours per tier | hours to finish ÷ tiers |
+| Tier at season end | min(tiers, ⌊hours a week × season weeks ÷ hours per tier⌋) |
+| Sticker value | cosmetics × average item price |
+| Real value | cosmetics unlocked by season end × average item price × share you'd use |
+| Your ROI | (real value − pass price) ÷ pass price |
+| ROI on the box | (sticker value − pass price) ÷ pass price |
+| Cost per hour | pass price ÷ hours played while the pass still pays out |
+
+**Verdict:** *Worth it* when you finish the pass and the real value covers the price, *Probably not* when neither holds, and *Close call* otherwise.
+
+**Example.** Fortnite's 100-item pass at $9.99 with items averaging $1.50 has a sticker value of $150 and an "ROI on the box" of **+1,402%**. Playing 10 hours a week and using a quarter of the cosmetics, you finish in week 8 of a 12-week season and the real value is $37.50: **+275%**. At 4 hours a week you only reach tier 64, the real value drops to $24.00, and the ROI falls to **+140%**.
+
+Progress is modeled as steady per hour of play. XP events and weekly challenges usually speed it up, so treat the forecast as a floor.
+
+## Behavioral economics framework
+
+1. **Sunk cost fallacy.** Players keep playing "to get their money's worth" after the money is already spent. The calculator shows how many hours short you'd finish the season, which is exactly the gap sunk cost asks you to fill.
+2. **FOMO.** Battle passes lean on time scarcity (seasonal resets) and perceived item scarcity, though similar items come back. The calculator counts the tiers that expire at season end, the moment tier-skip offers are aimed at.
+3. **Endowment effect.** Unlocked items feel worth more than the same items in a store. Separating *sticker* value from *real* value is the counterweight.
+4. **Loss aversion.** Missing a tier you could have had stings more than keeping the money feels good. The prompt: *do I want this item, or do I just want to avoid the regret?*
+
+## Portfolio context
+
+This project grows out of an economics thesis:
+
+> **The Transition from Loot Boxes to Battle Passes in Video Games: Economic Models, Player Behavior, and Long-Term Monetization Sustainability**
+> *Matthew Cromaz, Reed College, 2023*
+
+### Research questions
+
+- How do battle passes use behavioral economics compared with loot boxes?
+- What metrics do players use to judge "value" in cosmetic items?
+- How does time-to-completion affect purchasing behavior?
+- Can education (this tool) reduce vulnerability to FOMO and sunk-cost mechanics?
+
+### Key findings
+
+1. **Perceived vs. real value gap:** players typically overvalue cosmetics by 200–300% after unlocking them (endowment effect).
+2. **Time-lock premium:** players pay 40–60% more for time-gated items than for permanently available cosmetics that look the same.
+3. **Completion heuristic:** players who complete 70%+ of a pass report 26% higher satisfaction, regardless of ROI.
+4. **Behavioral shift:** battle passes cut impulsive loot box spending by ~35% while making seasonal spending steadier, which suggests players treat them as budgeted entertainment rather than gambling.
+
+## Data sources and assumptions
+
+All presets are **estimates** and every one is editable in the appendix.
+
+| Game | Price | Tiers | Hours to finish | Season (weeks)* | Items | Avg. item price |
+| --- | --- | --- | --- | --- | --- | --- |
+| Fortnite | $9.99 | 100 | 75 | 12 | 100 | $1.50 |
+| Apex Legends | $9.99 | 110 | 100 | 13 | 110 | $1.45 |
+| Valorant | $10.00 | 50 | 50 | 8 | 50 | $2.40 |
+| Rocket League | $9.99 | 70 | 60 | 13 | 70 | $1.43 |
+| COD Warzone | $19.99 | 100 | 120 | 9 | 100 | $2.00 |
+
+\*Season length is a typical-season estimate added in this version. The other columns come from the 2023 thesis dataset: tier counts and prices from public storefronts, hours to finish from community tier-unlock tracking, and item prices from seasonal cosmetic databases cross-referenced with Newzoo (2022) spending surveys.
+
+Behavioral references: sunk cost from Arkes & Blumer (1985), FOMO mechanics adapted from Zuboff (2019), and the endowment effect for digital goods from Duhachek et al. (2012).
+
+## Technical stack
+
+- **Vanilla JavaScript** in a single `index.html`: no framework, no build step, no in-browser transpiling.
+- **[GSAP 3.13](https://gsap.com/)** with **ScrollTrigger** for timelines and scroll-driven scenes, and **[Lenis](https://github.com/darkroomengineering/lenis)** for smooth scrolling. All three load from jsDelivr.
+- Hand-built **SVG** for the route map, **canvas** for halftone ramps, and **CSS Grid** for everything else.
+- **Google Fonts:** Anybody (display, variable width) and Archivo (text and tables).
+
+This replaces the first version's React + ReactDOM + Babel Standalone + Recharts stack, which shipped several megabytes and transpiled JSX in the browser on every visit. The page now needs about 130 KB of script.
+
+### Accessibility
+
+- Every control works from the keyboard. The custom number scrubbers are ARIA `slider`s with arrow, Page Up/Down, Home and End keys.
+- The verdict is announced through a polite live region, and the route map has a descriptive label.
+- Text contrast meets WCAG AA, focus rings and text selection are themed, and there is a skip link.
+- `prefers-reduced-motion` is fully supported (see *Motion*).
+
+## Run it locally
+
+```bash
+npx http-server .
+```
+
+Or open `index.html` directly, or host it on GitHub Pages, Netlify or Vercel.
+
+### Embed it
+
+```html
+<iframe src="https://your-domain.com/battle-pass-roi/index.html" width="100%" height="1200"></iframe>
+```
+
+## File structure
+
+```
+battle-pass-roi-calculator/
+├── index.html      # the whole app: markup, styles, logic, motion
+├── README.md       # this file
+├── PRODUCT.md      # product record (users, purpose, principles)
+├── DESIGN.md       # the visual system: tokens, type, components, motion
+└── .impeccable/    # design-process records (direction contract, detector config)
+```
+
+## Future enhancements
+
+- Live game APIs for current-season pass structure and cosmetic pricing
+- Currency refunds per pass (many passes pay back premium currency)
+- Monte Carlo playtime simulation in place of the steady-pace model
+- More games: Genshin Impact, Honkai: Star Rail, FFXIV, WoW seasons, CoD Mobile
+- Budget framing: cosmetic spend against a monthly entertainment budget
+
+## Credits
+
+**Author:** Matthew Cromaz. **Original thesis:** Reed College Economics Department, 2023.
+
+### References
+
+- Arkes, H. R., & Blumer, C. (1985). The psychology of sunk cost. *Organizational Behavior and Human Decision Processes.*
+- Zuboff, S. (2019). *The Age of Surveillance Capitalism.*
+- Duhachek, A., et al. (2012). Emotional responses to unattained goals and implications for consumer choice.
+- Newzoo (2022). *Global Games Market Report.*
+- GDC talk: "Monetization Psychology in Free-to-Play Games"
+- David Perry's analysis of battle pass design patterns (2020–2023)
+
+Unofficial and unaffiliated: game names belong to their publishers. Nothing here is financial advice.
+
+## License
+
+Provided as a portfolio and educational piece. Use freely for non-commercial purposes, personal analysis and education.

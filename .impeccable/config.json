@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "repeating-stripes-gradient",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-18T19:57:15.446Z",
+        "reason": "Claude: the repeating gradient is the scrub control's measuring-tick ruler, a functional affordance in the print world"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-18T19:57:23.687Z",
+        "reason": "Claude, per direction contract: the only thick borders are 7px ink rules over full-column blocks (stat block, ROI columns), the strategy-guide world's typographic rules, not card side-tabs"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-18T19:57:34.076Z",
+        "reason": "Claude: all hits are full-bleed plates/chapter bands whose content is inset by the .wrap gutter, plus the ruler whose ticks stand on its baseline by design; verified in browser screenshots"
+      }
+    ]
+  }
+}
