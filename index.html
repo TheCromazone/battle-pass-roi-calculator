@@ -48,6 +48,8 @@
   --tabs: 0px;
   --gap: clamp(14px, 1.8vw, 28px);
   --v-size: clamp(3.4rem, 10vw, 8.5rem);
+  /* a black screen at 45 degrees, about a 25% tint: what expires with the season prints in it */
+  --screen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Ccircle cx='1.5' cy='1.5' r='1.15' fill='%23575c66'/%3E%3Ccircle cx='4.5' cy='4.5' r='1.15' fill='%23575c66'/%3E%3C/svg%3E") 0 0 / 6px 6px;
 }
 @media (min-width: 900px) { :root { --tabs: 46px; } }
 
@@ -235,7 +237,7 @@ table { border-collapse: collapse; }
     text-align: center; padding: 9px 10px 8px;
     border-radius: 0 0 7px 7px;
     transform: translateY(-4px);
-    font-size: .72rem;
+    font-size: .75rem;
     padding-inline: 8px;
     font-variation-settings: "wdth" 74;
     letter-spacing: .03em;
@@ -291,7 +293,8 @@ table { border-collapse: collapse; }
 .v-probe {
   position: fixed; left: 0; top: 0; visibility: hidden; white-space: nowrap; pointer-events: none;
   font-family: var(--disp); font-weight: 900; text-transform: uppercase;
-  font-variation-settings: "wdth" 125; letter-spacing: -.012em; font-size: 100px;
+  font-variation-settings: "wdth" 125; letter-spacing: -.012em;
+  font-size: 100px; /* impeccable-disable-line design-system-font-size -- hidden probe that measures the verdict word, never shown */
 }
 .verdict-copy {
   margin-top: clamp(18px, 2.2vw, 28px);
@@ -340,7 +343,7 @@ table { border-collapse: collapse; }
   cursor: pointer;
   line-height: inherit;
 }
-.sel option { font-size: 1rem; font-weight: 500; }
+.sel option { font-size: 1.0625rem; font-weight: 500; }
 .scrub-group { display: inline-flex; align-items: baseline; gap: .12em; white-space: nowrap; }
 .scrub {
   position: relative;
@@ -434,7 +437,7 @@ table { border-collapse: collapse; }
   display: inline-flex; align-items: center; gap: .6em;
   margin-top: clamp(30px, 4vw, 52px);
   font-family: var(--disp); font-weight: 800; text-transform: uppercase;
-  font-variation-settings: "wdth" 120; font-size: .9rem; letter-spacing: .03em;
+  font-variation-settings: "wdth" 120; font-size: .875rem; letter-spacing: .03em;
   text-decoration: none;
   border-bottom: 3px solid var(--ink); padding-bottom: 4px;
 }
@@ -448,7 +451,7 @@ table { border-collapse: collapse; }
   position: relative;
   background: var(--plate);
   color: var(--plate-ink);
-  padding-block: clamp(56px, 9vw, 132px) clamp(24px, 3vw, 40px);
+  padding-block: clamp(14px, 1.8vw, 24px) clamp(30px, 3.6vw, 52px);
 }
 .ch-cyan .plate { --plate: var(--cyan); }
 .ch-magenta .plate { --plate: var(--magenta); --plate-ink: var(--on-magenta); }
@@ -463,7 +466,6 @@ table { border-collapse: collapse; }
   margin-left: -.05em;
 }
 .ch-dek {
-  margin-top: clamp(14px, 1.6vw, 22px);
   max-width: 40ch;
   font-size: clamp(1.1rem, 1.5vw, 1.35rem);
   line-height: 1.42;
@@ -471,6 +473,77 @@ table { border-collapse: collapse; }
 }
 .ht { display: block; width: 100%; height: clamp(44px, 6vw, 84px); }
 .ch-body { padding-block: clamp(36px, 5vw, 72px) clamp(64px, 9vw, 128px); }
+
+/* running head: each opening plate is a spread, with a folio at both outer corners */
+.rh {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  margin: 0 0 clamp(40px, 7.2vw, 108px);
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--plate-ink);
+  font-size: .8125rem; font-weight: 700; line-height: 1.2;
+  font-variation-settings: "wdth" 88;
+}
+.rh > span { display: inline-flex; align-items: baseline; gap: 12px; min-width: 0; }
+.rh-f {
+  font-family: var(--disp); font-weight: 900; font-size: 1.0625rem; line-height: 1;
+  font-variation-settings: "wdth" 110;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* a phone shows one page of the spread: the recto */
+@media (max-width: 620px) { .rh-v .rh-f, .rh-guide { display: none; } }
+
+/* chapter opener: the dek beside an "in this chapter" block ruled like the stat block */
+.opener {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap); row-gap: clamp(28px, 4vw, 40px);
+  margin-top: clamp(16px, 1.8vw, 26px);
+  align-items: start;
+}
+.opener .ch-dek { grid-column: 1 / span 5; }
+.toc { grid-column: 7 / -1; }
+@media (max-width: 1080px) { .opener .ch-dek { grid-column: 1 / span 8; } .toc { grid-column: 1 / span 9; } }
+@media (max-width: 720px) { .opener .ch-dek, .toc { grid-column: 1 / -1; } }
+.toc-h {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-variation-settings: "wdth" 130;
+  font-size: 1.375rem; letter-spacing: .01em;
+  border-top: 7px solid var(--plate-ink);
+  padding-top: 10px; margin-bottom: 4px;
+}
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc li { border-bottom: 1px solid var(--plate-ink); }
+.toc li:last-child { border-bottom-width: 3px; }
+.toc a {
+  display: grid;
+  grid-template-columns: auto minmax(1.5em, 1fr) auto 4.6em;
+  align-items: baseline; column-gap: 10px;
+  padding: 9px 0;
+  color: inherit; text-decoration: none;
+  font-size: 1.0625rem; line-height: 1.3;
+}
+@media (max-width: 620px) { .toc a { font-size: .9375rem; column-gap: 8px; grid-template-columns: auto minmax(1em, 1fr) auto 4.6em; } }
+.toc-n { font-weight: 600; font-variation-settings: "wdth" 96; }
+.toc a:hover .toc-n, .toc a:focus-visible .toc-n { text-decoration: underline; text-decoration-thickness: .07em; text-underline-offset: .2em; }
+.toc-lead { align-self: end; margin-bottom: .42em; border-bottom: 2px dotted var(--plate-ink); }
+.toc-v { font-weight: 800; white-space: nowrap; text-align: right; font-variation-settings: "wdth" 90; font-variant-numeric: tabular-nums lining-nums; }
+.toc a > .tag { justify-self: end; }
+.plate .tag { border-color: var(--plate-ink); }
+.plate .tag-calc { color: inherit; }
+.toc .pips { display: inline-flex; gap: 3px; vertical-align: -.05em; }
+.toc .pips i { width: 11px; height: 11px; border-color: var(--plate-ink); }
+
+/* numbered callouts key the route map to the notes beneath it */
+.co {
+  display: inline-grid; place-items: center;
+  width: 1.75em; height: 1.75em; margin-right: .5em;
+  border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--disp); font-weight: 900; font-size: .8125rem; line-height: 1;
+  font-variation-settings: "wdth" 110;
+  font-variant-numeric: tabular-nums lining-nums;
+  vertical-align: .14em;
+}
 
 /* ---------- walkthrough ---------- */
 .stage {
@@ -524,7 +597,13 @@ table { border-collapse: collapse; }
 .route .node { fill: var(--paper); stroke: var(--ink); stroke-width: 2; transform-box: fill-box; transform-origin: center; transition: fill .25s ease, opacity .3s ease; }
 .route .node.reach { fill: var(--cyan); }
 .route .node.on { fill: var(--ink); }
-.route .node.miss { fill: url(#hatch); stroke-dasharray: 2 2.5; opacity: .75; }
+.route .node.miss { fill: var(--paper); stroke: var(--ink-3); stroke-dasharray: 2 2.5; }
+/* the stretch past the wall prints in a halftone screen, overprinting whatever it crosses */
+.route .r-miss { fill: none; stroke: url(#screen); mix-blend-mode: multiply; }
+.route .scr { fill: var(--ink); }
+.route .co-s { stroke: var(--ink); }
+.route .co-c { fill: var(--ink); }
+.route .co-t { fill: var(--paper); font-family: var(--disp); font-weight: 900; font-variation-settings: "wdth" 110; font-variant-numeric: tabular-nums; }
 .route .ms-label { font-weight: 700; fill: var(--ink-2); font-variant-numeric: tabular-nums; }
 .route .wk { font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
 .route .wk-tick { stroke: var(--ink); stroke-width: 1.5; }
@@ -610,13 +689,13 @@ table { border-collapse: collapse; }
 .tiles i { display: block; aspect-ratio: 1; border-radius: 3px; border: 1.5px solid var(--ink); background: var(--paper); }
 .tiles i.want { background: var(--magenta); border-color: var(--magenta); }
 .tiles i.unused { background: linear-gradient(135deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)); }
-.tiles i.lock { border-style: dotted; border-color: var(--ink-3); background: transparent; transform: scale(.78); }
+.tiles i.lock { border-color: transparent; background: var(--screen); transform: scale(.78); }
 .tiles-key { display: grid; gap: 7px; margin-top: 16px; font-size: .875rem; color: var(--ink-2); font-variation-settings: "wdth" 90; }
 .tiles-key span { display: flex; align-items: center; gap: 9px; }
 .tiles-key i { flex: none; width: 15px; height: 15px; border-radius: 3px; border: 1.5px solid var(--ink); display: block; }
 .k-want { background: var(--magenta); border-color: var(--magenta) !important; }
 .k-skip { background: linear-gradient(135deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)); }
-.k-lock { border-style: dotted !important; border-color: var(--ink-3) !important; }
+.k-lock { border-color: transparent !important; background: var(--screen); }
 
 .roi-pair {
   margin-top: clamp(48px, 6vw, 84px);
@@ -694,7 +773,7 @@ table { border-collapse: collapse; }
 .pips i { width: 14px; height: 14px; border: 2px solid var(--paper); border-radius: 2px; transform: rotate(45deg) scale(.82); transition: background-color .25s ease; }
 .pips i.on { background: var(--paper); }
 .beast dl { grid-column: 6 / span 4; margin: 0; display: grid; gap: 12px; }
-.beast dt { font-family: var(--disp); font-weight: 800; text-transform: uppercase; font-size: .78rem; letter-spacing: .05em; font-variation-settings: "wdth" 115; color: #c5cad0; }
+.beast dt { font-family: var(--disp); font-weight: 800; text-transform: uppercase; font-size: .8125rem; letter-spacing: .05em; font-variation-settings: "wdth" 115; color: #c5cad0; }
 .beast dd { margin: 2px 0 0; line-height: 1.45; }
 .beast-you { grid-column: 10 / span 3; font-weight: 600; line-height: 1.45; }
 /* in running text the marker has to survive line breaks, so it is painted on the inline box itself */
@@ -942,8 +1021,20 @@ table { border-collapse: collapse; }
 <section class="chapter ch-cyan" id="walkthrough" aria-labelledby="wt-h">
   <div class="plate">
     <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">4</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Walkthrough</span><span class="rh-f">5</span></span></p>
       <h2 class="ch-title" id="wt-h">Walkthrough</h2>
-      <p class="ch-dek" id="wt-dek">Week by week through the season at the hours you actually play.</p>
+      <div class="opener">
+        <p class="ch-dek" id="wt-dek">Week by week through the season at the hours you actually play.</p>
+        <nav class="toc" aria-labelledby="wt-toc wt-h">
+          <h3 class="toc-h" id="wt-toc">In this chapter</h3>
+          <ol>
+            <li><a href="#stage"><span class="toc-n">Route map</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-route">100 tiers, 12 weeks</span><span class="tag" id="toc-route-tag">est.</span></a></li>
+            <li><a href="#note-pace"><span class="toc-n"><span class="co" aria-hidden="true">1</span>Pace</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-pace">6.3 h a week</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#note-end"><span class="toc-n"><span class="co" aria-hidden="true">2</span>Season end</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-end">Done in week 8</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#note-skip"><span class="toc-n"><span class="co" aria-hidden="true">3</span>Tier skips</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-skip">None to buy</span><span class="tag tag-calc">derived</span></a></li>
+          </ol>
+        </nav>
+      </div>
     </div>
   </div>
   <canvas class="ht" aria-hidden="true"></canvas>
@@ -965,9 +1056,9 @@ table { border-collapse: collapse; }
       </div>
     </div>
     <div class="notes">
-      <div class="note"><h3>Pace</h3><p id="n-pace"></p></div>
-      <div class="note"><h3>Season end</h3><p id="n-end"></p></div>
-      <div class="note"><h3>Tier skips</h3><p id="n-skip"></p></div>
+      <div class="note" id="note-pace"><h3><span class="co" aria-hidden="true">1</span>Pace</h3><p id="n-pace"></p></div>
+      <div class="note" id="note-end"><h3><span class="co" aria-hidden="true">2</span>Season end</h3><p id="n-end"></p></div>
+      <div class="note" id="note-skip"><h3><span class="co" aria-hidden="true">3</span>Tier skips</h3><p id="n-skip"></p></div>
     </div>
   </div>
 </section>
@@ -975,8 +1066,20 @@ table { border-collapse: collapse; }
 <section class="chapter ch-magenta" id="shop" aria-labelledby="shop-h">
   <div class="plate">
     <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">10</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Shop math</span><span class="rh-f">11</span></span></p>
       <h2 class="ch-title" id="shop-h">Shop math</h2>
-      <p class="ch-dek">What the cosmetics are worth to you, not to the store.</p>
+      <div class="opener">
+        <p class="ch-dek">What the cosmetics are worth to you, not to the store.</p>
+        <nav class="toc" aria-labelledby="shop-toc shop-h">
+          <h3 class="toc-h" id="shop-toc">In this chapter</h3>
+          <ol>
+            <li><a href="#ledger"><span class="toc-n">The ledger</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-ledger">$37.50 of $150.00</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#tiles-fig"><span class="toc-n">Item tiles</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-tiles">25 of 100 you’d use</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#roi"><span class="toc-n">Return</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-roi">+275% for you</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#cph"><span class="toc-n">Cost per hour</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-cph">$0.13 an hour</span><span class="tag tag-calc">derived</span></a></li>
+          </ol>
+        </nav>
+      </div>
     </div>
   </div>
   <canvas class="ht" aria-hidden="true"></canvas>
@@ -993,7 +1096,7 @@ table { border-collapse: collapse; }
           <tr class="sum"><td class="op" aria-hidden="true">=</td><td class="lbl" id="l-sum-l">You come out ahead</td><td class="amt"><span class="num" id="l-net">+$27.51</span><span class="pct" id="l-pct">+275% return</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
         </tbody>
       </table>
-      <figure class="tiles-fig">
+      <figure class="tiles-fig" id="tiles-fig">
         <div class="tiles" id="tiles" aria-hidden="true"></div>
         <figcaption class="tiles-key">
           <span><i class="k-want"></i>Unlocked, and you'd use it</span>
@@ -1002,7 +1105,7 @@ table { border-collapse: collapse; }
         </figcaption>
       </figure>
     </div>
-    <div class="roi-pair">
+    <div class="roi-pair" id="roi">
       <div class="roi roi-box">
         <h3 class="sub-h">On the box <span class="tag tag-calc">derived</span></h3>
         <p class="roi-n"><span class="num" id="roi-sticker">+1,402%</span><span class="strike" id="strike" aria-hidden="true"></span></p>
@@ -1014,7 +1117,7 @@ table { border-collapse: collapse; }
         <p class="roi-c" id="roi-you-c">Only what you unlock this season and would actually equip.</p>
       </div>
     </div>
-    <div class="ruler-block">
+    <div class="ruler-block" id="cph">
       <h3 class="sub-h">Cost per hour of play</h3>
       <p class="rb-dek" id="rb-dek">Games aren't investments. The honest metric is what each hour of fun costs, next to what you'd pay for other entertainment.</p>
       <div class="ruler" id="ruler" role="img" aria-label="Cost per hour comparison">
@@ -1029,8 +1132,21 @@ table { border-collapse: collapse; }
 <section class="chapter ch-black" id="bestiary" aria-labelledby="best-h">
   <div class="plate">
     <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">16</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Bestiary</span><span class="rh-f">17</span></span></p>
       <h2 class="ch-title" id="best-h">Bestiary</h2>
-      <p class="ch-dek">Four traps live in every battle pass. They're ranked by how hard each one hits your season.</p>
+      <div class="opener">
+        <p class="ch-dek">Four traps live in every battle pass. They're ranked by how hard each one hits your season.</p>
+        <nav class="toc" aria-labelledby="best-toc best-h">
+          <h3 class="toc-h" id="best-toc">In this chapter</h3>
+          <ol id="toc-beasts">
+            <li data-key="sunk"><a href="#trap-sunk"><span class="toc-n">Sunk cost fallacy</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li data-key="fomo"><a href="#trap-fomo"><span class="toc-n">Fear of missing out</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li data-key="endow"><a href="#trap-endow"><span class="toc-n">Endowment effect</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li data-key="loss"><a href="#trap-loss"><span class="toc-n">Loss aversion</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li class="toc-clear"><a href="#clear"><span class="toc-n">Clear conditions</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-clear">2 of 3 met</span><span class="tag tag-calc">derived</span></a></li>
+          </ol>
+        </nav>
+      </div>
     </div>
   </div>
   <div class="wrap ch-body">
@@ -1039,7 +1155,7 @@ table { border-collapse: collapse; }
   <canvas class="ht" aria-hidden="true"></canvas>
 </section>
 
-<section class="clear" aria-labelledby="clear-h">
+<section class="clear" id="clear" aria-labelledby="clear-h">
   <div class="wrap">
     <div class="clear-grid">
       <div class="clear-intro">
@@ -1054,13 +1170,26 @@ table { border-collapse: collapse; }
 <section class="chapter ch-gray" id="appendix" aria-labelledby="app-h">
   <div class="plate">
     <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">24</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Appendix</span><span class="rh-f">25</span></span></p>
       <h2 class="ch-title" id="app-h">Appendix</h2>
-      <p class="ch-dek">Every number in this guide, where it came from, and how to change it.</p>
+      <div class="opener">
+        <p class="ch-dek">Every number in this guide, where it came from, and how to change it.</p>
+        <nav class="toc" aria-labelledby="app-toc app-h">
+          <h3 class="toc-h" id="app-toc">In this chapter</h3>
+          <ol>
+            <li><a href="#all-games"><span class="toc-n">All five games</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-games">2 of 5 worth it</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#tune-block"><span class="toc-n">Tune the estimates</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-tune">As printed</span><span class="tag" id="toc-tune-tag">est.</span></a></li>
+            <li><a href="#findings"><span class="toc-n">From the thesis</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v">4 findings</span></a></li>
+            <li><a href="#method"><span class="toc-n">Method</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v">8 formulas</span></a></li>
+            <li><a href="#sources"><span class="toc-n">Sources</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v">5 works</span></a></li>
+          </ol>
+        </nav>
+      </div>
     </div>
   </div>
   <canvas class="ht" aria-hidden="true"></canvas>
   <div class="wrap ch-body app-grid">
-    <div class="app-block app-compare">
+    <div class="app-block app-compare" id="all-games">
       <h3>All five games at your pace</h3>
       <p id="cmp-dek">Your hours and want-rate, run through every preset. Select a game to load it.</p>
       <div class="table-scroll">
@@ -1071,7 +1200,7 @@ table { border-collapse: collapse; }
       </div>
       <p class="cmp-prov">Season length is an estimate. Every other column is derived from it and your numbers. Swipe the table for more.</p>
     </div>
-    <div class="app-block app-tune">
+    <div class="app-block app-tune" id="tune-block">
       <h3>Tune the estimates</h3>
       <p id="tune-dek">Presets are 2023 estimates. If your season differs, change it. Edited numbers turn into yours.</p>
       <div class="table-scroll">
@@ -1084,7 +1213,7 @@ table { border-collapse: collapse; }
         <button class="btn btn-ghost" type="button" id="reset"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 9.5a6 6 0 1 0 1.9-4.4M4 3.5v3.8h3.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reset to estimates</button>
       </div>
     </div>
-    <div class="app-block app-findings">
+    <div class="app-block app-findings" id="findings">
       <h3>From the thesis</h3>
       <ul class="findings">
         <li><b>200–300%</b>How much players typically overvalue a cosmetic once they've unlocked it (endowment effect).</li>
@@ -1093,7 +1222,7 @@ table { border-collapse: collapse; }
         <li><b>~35%</b>Drop in impulsive loot box spending after battle passes arrived, with steadier seasonal spending in its place.</li>
       </ul>
     </div>
-    <div class="app-block app-method">
+    <div class="app-block app-method" id="method">
       <h3>Method</h3>
       <dl class="method">
         <dt>Hours per tier</dt><dd>Hours to finish ÷ tiers</dd>
@@ -1107,7 +1236,7 @@ table { border-collapse: collapse; }
       </dl>
       <p style="margin-top:14px;color:var(--ink-3);font-size:.875rem;max-width:62ch">Progress is modeled as steady per hour of play. XP events and weekly challenges usually speed it up, so read the forecast as a floor.</p>
     </div>
-    <div class="app-block app-sources">
+    <div class="app-block app-sources" id="sources">
       <h3>Sources</h3>
       <ol class="sources">
         <li>Cromaz, M. (2023). <cite>The Transition from Loot Boxes to Battle Passes in Video Games: Economic Models, Player Behavior, and Long-Term Monetization Sustainability.</cite> Reed College.</li>
@@ -1537,18 +1666,21 @@ table { border-collapse: collapse; }
     var cols = width < 560 ? 10 : 20;
     if (!force && cols === route.cols && r.T === route.T) return false;
     route.cols = cols; route.T = r.T;
-    var S = 40, RG = 74, padX = 54, padTop = 52, padBot = 40;
+    var S = 40, RG = 74, padX = 54, padTop = 52;
     var rows = Math.ceil(r.T / cols);
     var vbW = padX * 2 + (cols - 1) * S;
-    var vbH = padTop + padBot + (rows - 1) * RG;
     var scale = width / vbW;
-    route.font = 12.5 / scale;
+    var u = route.u = 1 / scale;   // one screen pixel, in route units
+    var padBot = 30 + 18 * u;      // room for callouts hanging under the last row
+    var vbH = padTop + padBot + (rows - 1) * RG;
+    route.font = 12.5 * u;
     svg.setAttribute('viewBox', '0 0 ' + vbW + ' ' + vbH);
     svg.innerHTML = '';
     var defs = el('defs', {}, svg);
-    var pat = el('pattern', { id: 'hatch', width: 5, height: 5, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
-    el('rect', { width: 5, height: 5, fill: 'var(--paper)' }, pat);
-    el('line', { x1: 0, y1: 0, x2: 0, y2: 5, stroke: 'var(--ink-3)', 'stroke-width': 1.6 }, pat);
+    // a real halftone screen: round dots on a 45 degree grid, at a fixed pitch on screen
+    var pitch = 4.4 * u;
+    var pat = el('pattern', { id: 'screen', width: pitch, height: pitch, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    el('circle', { cx: pitch / 2, cy: pitch / 2, r: 1.25 * u, class: 'scr' }, pat);
 
     // node positions (snake rows), plus a start point before tier 1
     var pts = [{ x: padX - 30, y: padTop }];
@@ -1570,6 +1702,7 @@ table { border-collapse: collapse; }
       lens.push(total);
     }
     route.pts = pts; route.lens = lens; route.total = total; route.vbW = vbW; route.vbH = vbH; route.S = S; route.RG = RG;
+    route.miss = el('path', { d: d, class: 'r-miss', 'stroke-width': 24 * u }, svg);
     el('path', { d: d, class: 'r-base' }, svg);
     route.reach = el('path', { d: d, class: 'r-reach', 'stroke-dasharray': total + ' ' + total, 'stroke-dashoffset': total }, svg);
     route.done = el('path', { d: d, class: 'r-done', 'stroke-dasharray': total + ' ' + total, 'stroke-dashoffset': total }, svg);
@@ -1621,28 +1754,22 @@ table { border-collapse: collapse; }
     var x = parseFloat(t.getAttribute('x'));
     t.setAttribute('x', clamp(x, w / 2 + 4, route.vbW - w / 2 - 4));
   }
+  function boxOf(t) {
+    try { var b = t.getBBox(); return b.width ? [b.x, b.y, b.x + b.width, b.y + b.height] : null; } catch (_) { return null; }
+  }
   function renderOverlay(r) {
     var o = route.overlay;
     o.innerHTML = '';
-    var fs = route.font;
-    // week flags
-    var lastT = -99;
-    for (var w = 1; w <= r.W; w++) {
-      var tw = Math.floor(tierAt(r, w) + 1e-6);
-      if (tw < 1 || tw - lastT < 2.6 || (tw >= r.T && lastT >= r.T)) continue;
-      // leave room for the season wall / finish flag label
-      if (Math.abs(tw - (r.finishes ? r.T : r.tiersEnd)) < 3.5) continue;
-      lastT = tw;
-      var p = route.pts[tw];
-      var up = p.y - 11;
-      el('line', { x1: p.x, y1: up, x2: p.x, y2: up - 9, class: 'wk-tick' }, o);
-      var t = el('text', { x: p.x, y: up - 12, 'text-anchor': 'middle', class: 'wk', 'font-size': fs * 0.92 }, o);
-      t.textContent = 'W' + w;
-    }
+    var fs = route.font, u = route.u;
+    var boxes = [];   // everything already printed on the map, as [x0, y0, x1, y1] in route units
+    var hits = function (b) { return boxes.some(function (a) { return b[0] < a[2] && b[2] > a[0] && b[1] < a[3] && b[3] > a[1]; }); };
     // season wall or finish flag
     if (r.tiersEnd < r.T) {
       var len = Math.max(6, lengthAt(tierAt(r, r.W)));
       var q = pointAt(len);
+      route.miss.setAttribute('stroke-dasharray', (route.total - len) + ' ' + route.total);
+      route.miss.setAttribute('stroke-dashoffset', -len);
+      route.miss.style.display = '';
       var wall = el('g', { class: 'wallg' }, o);
       // the wall stands across the route: along the path's normal
       el('line', { x1: q.x - q.nx * 22, y1: q.y - q.ny * 22, x2: q.x + q.nx * 22, y2: q.y + q.ny * 22, class: 'wall' }, wall);
@@ -1650,9 +1777,11 @@ table { border-collapse: collapse; }
       var lab = el('text', { x: lx, y: q.y - 28, 'text-anchor': 'middle', class: 'wall-l', 'font-size': fs * 1.02 }, wall);
       lab.textContent = 'Season ends';
       keepInside(lab);
+      boxes.push([q.x - 4, q.y - 22, q.x + 4, q.y + 22]);
       route.wall = wall;
       route.wallPt = q;
     } else {
+      route.miss.style.display = 'none';
       var fp = route.pts[r.T];
       var flag = el('g', { class: 'wallg' }, o);
       el('line', { x1: fp.x, y1: fp.y - 8, x2: fp.x, y2: fp.y - 38, class: 'wk-tick', 'stroke-width': 2.4 }, flag);
@@ -1660,10 +1789,67 @@ table { border-collapse: collapse; }
       var fl = el('text', { x: clamp(fp.x, 60, route.vbW - 60), y: fp.y - 44, 'text-anchor': 'middle', class: 'wall-l', 'font-size': fs * 1.02 }, flag);
       fl.textContent = 'Done in week ' + r.finishWk;
       keepInside(fl);
+      var fb = boxOf(fl);
+      if (fb) boxes.push(fb);
       route.wall = flag;
       route.wallPt = fp;
     }
-    svg.setAttribute('aria-label', r.name + ' season route: ' + r.T + ' tiers over ' + r.W + ' weeks. ' + (r.finishes ? 'You finish in week ' + r.finishWk + '.' : 'The season ends at tier ' + r.tiersEnd + '; ' + r.missed + ' tiers expire.'));
+    if (lab) { var lb = boxOf(lab); if (lb) boxes.push(lb); }
+    // milestone numbers sit under every tenth node
+    for (var m = 1; m <= r.T; m++) {
+      if (m % 10 && m !== r.T) continue;
+      var mp = route.pts[m], mw = String(m).length * 0.62 * fs;
+      boxes.push([mp.x - mw / 2, mp.y + 15, mp.x + mw / 2, mp.y + 17 + fs]);
+    }
+    // numbered callouts hang under the route; the notes beneath the map carry the same numbers
+    var rr = 10.5 * u, stem = 8 * u, pad = 2 * u;
+    var spots = [
+      { k: 1, n: clamp(Math.floor(tierAt(r, 1) + 1e-6), 1, r.T) },
+      { k: 2, n: r.finishes ? r.T : Math.max(1, r.tiersEnd) },
+      { k: 3, n: r.finishes ? Math.max(1, Math.round(r.T / 2)) : Math.round((r.tiersEnd + 1 + r.T) / 2) }
+    ];
+    var rowOf = function (n) { return Math.floor((n - 1) / route.cols); };
+    spots.forEach(function (s) {
+      var at = null, first = null;
+      // nearest free node, staying on the anchor's own row when it can
+      var near = [0, 1, -1, 2, -2, 3, -3, 4, -4]
+        .map(function (d) { return s.n + d; })
+        .filter(function (n) { return n >= 1 && n <= r.T; })
+        .sort(function (a, b) { return (rowOf(a) !== rowOf(s.n)) - (rowOf(b) !== rowOf(s.n)); });
+      near.some(function (n) {
+        var p = route.pts[n], cy = p.y + 6 + stem + rr;
+        var c = { p: p, cy: cy, b: [p.x - rr - pad, cy - rr - pad, p.x + rr + pad, cy + rr + pad] };
+        if (!first) first = c;
+        if (hits(c.b)) return false;
+        at = c;
+        return true;
+      });
+      at = at || first;
+      boxes.push(at.b);
+      var g = el('g', { class: 'co-g' }, o);
+      el('line', { x1: at.p.x, y1: at.p.y + 7, x2: at.p.x, y2: at.cy - rr, class: 'co-s', 'stroke-width': 1.5 * u }, g);
+      el('circle', { cx: at.p.x, cy: at.cy, r: rr, class: 'co-c' }, g);
+      var ct = el('text', { x: at.p.x, y: at.cy, dy: '.36em', 'text-anchor': 'middle', class: 'co-t', 'font-size': 12.5 * u }, g);
+      ct.textContent = s.k;
+    });
+    // week flags, skipping any that would print over a label or a callout
+    var lastT = -99;
+    for (var w = 1; w <= r.W; w++) {
+      var tw = Math.floor(tierAt(r, w) + 1e-6);
+      if (tw < 1 || tw - lastT < 2.6 || (tw >= r.T && lastT >= r.T)) continue;
+      // leave room for the season wall / finish flag label
+      if (Math.abs(tw - (r.finishes ? r.T : r.tiersEnd)) < 3.5) continue;
+      var p = route.pts[tw];
+      var up = p.y - 11, ww = String(w).length * 0.62 * fs + 0.7 * fs;
+      if (hits([p.x - ww / 2, up - 12 - fs, p.x + ww / 2, up])) continue;
+      lastT = tw;
+      el('line', { x1: p.x, y1: up, x2: p.x, y2: up - 9, class: 'wk-tick' }, o);
+      var t = el('text', { x: p.x, y: up - 12, 'text-anchor': 'middle', class: 'wk', 'font-size': fs * 0.92 }, o);
+      t.textContent = 'W' + w;
+    }
+    svg.setAttribute('aria-label', r.name + ' season route: ' + r.T + ' tiers over ' + r.W + ' weeks. ' +
+      (r.finishes ? 'You finish in week ' + r.finishWk + '.' : 'The season ends at tier ' + r.tiersEnd + '; ' + r.missed + ' tiers expire in the shaded stretch.') +
+      ' Callout 1 marks your first week, 2 ' + (r.finishes ? 'the week you finish' : 'where the season ends') + ', 3 ' + (r.finishes ? 'the middle of the pass' : 'the tiers left to buy') + '.');
   }
   function setWeek(w, opts) {
     if (!R || !route.nodes) return;
@@ -1839,7 +2025,7 @@ table { border-collapse: collapse; }
   var beastsHost = $('#beasts');
   function buildBeasts() {
     beastsHost.innerHTML = BEASTS.map(function (b) {
-      return '<article class="beast" data-key="' + b.key + '" aria-labelledby="b-' + b.key + '">' +
+      return '<article class="beast" id="trap-' + b.key + '" data-key="' + b.key + '" aria-labelledby="b-' + b.key + '">' +
         '<span class="beast-rule" aria-hidden="true"></span>' +
         '<div class="beast-head">' +
           '<svg class="beast-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + b.icon + '</svg>' +
@@ -1856,8 +2042,10 @@ table { border-collapse: collapse; }
     var scored = BEASTS.map(function (b, i) { return { b: b, i: i, t: b.threat(r) }; });
     scored.forEach(function (s) {
       var a = $('.beast[data-key="' + s.b.key + '"]', beastsHost);
-      $$('.pips i', a).forEach(function (p, k) { p.classList.toggle('on', k < s.t); });
+      var row = $('#toc-beasts li[data-key="' + s.b.key + '"]');
+      $$('.pips i', a).concat($$('.pips i', row)).forEach(function (p, k) { p.classList.toggle('on', k % 5 < s.t); });
       $('.threat-t', a).textContent = 'Threat to you: ' + s.t + ' of 5';
+      $('.sr-only', row).textContent = 'threat ' + s.t + ' of 5';
       var you = 'In your season: ' + s.b.you(r);
       var yp = $('.beast-you', a);
       if (yp._h !== you) { yp.innerHTML = you; yp._h = you; }
@@ -1868,6 +2056,9 @@ table { border-collapse: collapse; }
   function reorderBeasts(scored) {
     scored.sort(function (x, y) { return y.t - x.t || x.i - y.i; });
     var els = scored.map(function (s) { return $('.beast[data-key="' + s.b.key + '"]', beastsHost); });
+    var toc = $('#toc-beasts');
+    scored.forEach(function (s) { toc.appendChild($('li[data-key="' + s.b.key + '"]', toc)); });
+    toc.appendChild($('.toc-clear', toc));
     var current = $$('.beast', beastsHost);
     var same = els.every(function (e, i) { return current[i] === e; });
     if (same) return;
@@ -1899,6 +2090,8 @@ table { border-collapse: collapse; }
           ? { met: true, text: 'an hour of play costs ' + money(r.cph) + ', under a movie ticket\u2019s $6.00.' }
           : { met: false, text: 'an hour of play costs ' + money(r.cph) + ', more than a movie ticket\u2019s $6.00.' }
     ];
+    var met = list.filter(function (c) { return c.met; }).length;
+    setText($('#toc-clear'), met + ' of ' + list.length + ' met');
     var host = $('#conds');
     var html = list.map(function (c) {
       return '<li class="cond ' + (c.met ? 'met' : 'unmet') + '"><p class="c-text"><b class="c-state">' + (c.met ? 'Met:' : 'Not met:') + '</b> ' + c.text + '</p></li>';
@@ -1912,9 +2105,10 @@ table { border-collapse: collapse; }
 
   /* ================= appendix ================= */
   function renderCompare(r) {
-    var body = $('#compare tbody');
+    var body = $('#compare tbody'), worth = 0;
     body.innerHTML = ORDER.map(function (k) {
       var c = compute(k, r.hpw, r.wantPct, r.premium);
+      if (c.verdict === 'worth') worth++;
       return '<tr data-game="' + k + '" class="' + (k === r.key ? 'cur' : '') + '">' +
         '<td class="g"><button type="button" aria-pressed="' + (k === r.key) + '">' + c.name + '</button></td>' +
         '<td class="vd ' + c.verdict + '">' + VERDICT_LABEL[c.verdict] + '</td>' +
@@ -1924,6 +2118,7 @@ table { border-collapse: collapse; }
         '<td class="r">' + (c.finishes ? 'Week ' + c.finishWk : 'No') + '</td>' +
         '<td class="r">' + c.W + ' wk</td></tr>';
     }).join('');
+    setText($('#toc-games'), r.premium ? worth + ' of ' + ORDER.length + ' worth it' : 'All on the free track');
     $('#cmp-dek').textContent = 'Your ' + hrs(r.hpw) + ' hours a week and ' + r.wantPct + '% want-rate, run through every preset' + (r.premium ? '' : ' on the free track') + '. Select a game to load it.';
   }
   function renderTune(r) {
@@ -1947,6 +2142,31 @@ table { border-collapse: collapse; }
     $('#tune-dek').textContent = r.name + ' presets are estimates from the 2023 thesis set; season length is a typical season. Edited numbers turn into yours.';
   }
 
+  /* ================= chapter openers ================= */
+  function renderOpeners(r) {
+    $$('.rh-game').forEach(function (g) { g.textContent = r.name; });
+    var e = edits[r.key] || {};
+    var mine = 'tiers' in e || 'weeks' in e;
+    setText($('#toc-route'), r.T + ' tiers, ' + r.W + ' weeks');
+    var rt = $('#toc-route-tag');
+    rt.textContent = mine ? 'yours' : 'est.';
+    rt.className = 'tag' + (mine ? ' tag-yours' : '');
+    setText($('#toc-pace'), hrs(r.H / r.W) + ' h a week');
+    setText($('#toc-end'), r.finishes ? 'Done in week ' + r.finishWk : 'Ends at tier ' + r.tiersEnd);
+    setText($('#toc-skip'), r.finishes ? 'None to buy' : r.missed + ' ' + plural(r.missed, 'tier', 'tiers') + ' to buy');
+    var s = r.premium ? r : compute(r.key, r.hpw, r.wantPct, true);
+    var used = 0;
+    for (var i = 0; i < s.itemsUnlocked; i++) if (wanted(i, s.want)) used++;
+    setText($('#toc-ledger'), money(s.real) + ' of ' + money(s.sticker));
+    setText($('#toc-tiles'), used + ' of ' + s.items + ' you’d use');
+    setText($('#toc-roi'), pct(s.roi) + ' for you');
+    setText($('#toc-cph'), r.premium ? money(r.cph) + ' an hour' : 'Free');
+    var n = Object.keys(e).length, tt = $('#toc-tune-tag');
+    setText($('#toc-tune'), n ? n + ' ' + plural(n, 'edit', 'edits') : 'As printed');
+    tt.textContent = n ? 'yours' : 'est.';
+    tt.className = 'tag' + (n ? ' tag-yours' : '');
+  }
+
   /* ================= render ================= */
   var liveTimer = 0;
   function render(why) {
@@ -1959,6 +2179,7 @@ table { border-collapse: collapse; }
     renderConds(R);
     renderCompare(R);
     renderTune(R);
+    renderOpeners(R);
     hoursCtl.sync(); wantCtl.sync();
     writeHash();
     clearTimeout(liveTimer);
@@ -2044,7 +2265,14 @@ table { border-collapse: collapse; }
   function goTo(id) {
     var t = document.getElementById(id);
     if (!t) return;
-    if (lenis) lenis.scrollTo(t, { offset: 0, duration: 1.2, easing: function (x) { return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); } });
+    // the pinned stage starts 9% down the viewport: land there, on day one of the season.
+    // Measure from its pin spacer, which stays in the flow while the stage is pinned.
+    var off = 0;
+    if (id === 'stage' && pinned) {
+      if (t.parentNode.classList.contains('pin-spacer')) t = t.parentNode;
+      off = -Math.round(window.innerHeight * 0.09);
+    }
+    if (lenis) lenis.scrollTo(t, { offset: off, duration: 1.2, easing: function (x) { return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); } });
     else t.scrollIntoView({ behavior: reduceQ.matches ? 'auto' : 'smooth' });
   }
   $$('a[href^="#"]').forEach(function (a) {
@@ -2184,13 +2412,13 @@ table { border-collapse: collapse; }
 
       // chapter plates roll in like an ink pass; titles widen on the variable axis
       $$('.chapter').forEach(function (ch, i) {
-        var plate = $('.plate', ch), title = $('.ch-title', ch), dek = $('.ch-dek', ch);
+        var plate = $('.plate', ch), title = $('.ch-title', ch), opener = $$('.opener > *', ch);
         if (!ch.classList.contains('ch-black')) {
           G.fromTo(plate, { clipPath: i % 2 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)' },
             { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: { trigger: plate, start: 'top 94%', end: 'top 42%', scrub: 0.5 } });
         }
         G.fromTo(title, { '--wd': 52 }, { '--wd': 125, ease: 'none', scrollTrigger: { trigger: plate, start: 'top 90%', end: 'top 28%', scrub: 0.5 } });
-        if (dek) G.from(dek, { opacity: 0, y: 18, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: plate, start: 'top 58%', toggleActions: 'play none none reverse' } });
+        G.from(opener, { opacity: 0, y: 18, duration: 0.8, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: plate, start: 'top 58%', toggleActions: 'play none none reverse' } });
       });
 
       // halftone ramps dissolve each plate into the paper

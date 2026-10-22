@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-18T20:25:52+00:00",
+  "generatedAt": "2026-10-22T00:53:05+00:00",
   "title": "Design System: Battle Pass ROI Calculator",
   "extensions": {
     "colorMeta": {
@@ -213,6 +213,96 @@
           "#bed204",
           "#e7fe39"
         ]
+      },
+      "strip-blue": {
+        "role": "secondary",
+        "displayName": "Control Strip Blue",
+        "canonical": "oklch(51.3% 0.143 263.8)",
+        "tonalRamp": [
+          "#000036",
+          "#001567",
+          "#15378a",
+          "#3258ad",
+          "#5079d2",
+          "#709cf7",
+          "#a6c4ff",
+          "#e6efff"
+        ]
+      },
+      "strip-red": {
+        "role": "secondary",
+        "displayName": "Control Strip Red",
+        "canonical": "oklch(60.1% 0.216 26.9)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4b0003",
+          "#7d0008",
+          "#b20011",
+          "#e12b2b",
+          "#ff645a",
+          "#ffaba1",
+          "#ffe9e6"
+        ]
+      },
+      "strip-green": {
+        "role": "secondary",
+        "displayName": "Control Strip Green",
+        "canonical": "oklch(62.0% 0.164 149.0)",
+        "tonalRamp": [
+          "#001003",
+          "#002d0e",
+          "#004e1d",
+          "#00712e",
+          "#089741",
+          "#42ba62",
+          "#6de187",
+          "#c8ffd0"
+        ]
+      },
+      "strip-gray-dark": {
+        "role": "secondary",
+        "displayName": "Control Strip Gray 75",
+        "canonical": "oklch(41.7% 0.010 271.2)",
+        "tonalRamp": [
+          "#090b10",
+          "#222429",
+          "#3e4045",
+          "#5b5d64",
+          "#7b7d84",
+          "#9c9ea5",
+          "#c1c4cb",
+          "#eceef6"
+        ]
+      },
+      "strip-gray": {
+        "role": "secondary",
+        "displayName": "Control Strip Gray 50",
+        "canonical": "oklch(64.3% 0.010 264.5)",
+        "tonalRamp": [
+          "#090b0f",
+          "#222429",
+          "#3d4045",
+          "#5b5e63",
+          "#7a7d83",
+          "#9b9ea5",
+          "#c1c4ca",
+          "#ebeef5"
+        ]
+      },
+      "strip-gray-light": {
+        "role": "secondary",
+        "displayName": "Control Strip Gray 25",
+        "canonical": "oklch(82.5% 0.006 255.5)",
+        "tonalRamp": [
+          "#090b0e",
+          "#222427",
+          "#3d4043",
+          "#5b5e61",
+          "#7b7d81",
+          "#9c9fa2",
+          "#c1c4c8",
+          "#eceff3"
+        ]
       }
     },
     "typographyMeta": {
@@ -228,13 +318,41 @@
         "displayName": "Headline",
         "purpose": "Section heads inside chapters."
       },
+      "entry-name": {
+        "displayName": "Entry Name",
+        "purpose": "Bestiary trap names."
+      },
       "figure": {
         "displayName": "Figure",
         "purpose": "Big read-out numerals, tabular."
       },
+      "roi-figure": {
+        "displayName": "ROI Figure",
+        "purpose": "Sticker and for-you ROI numerals, tabular."
+      },
+      "ledger-total": {
+        "displayName": "Ledger Total",
+        "purpose": "Ledger total amount above the double rule, tabular."
+      },
+      "ledger-amount": {
+        "displayName": "Ledger Amount",
+        "purpose": "Ledger amounts column, tabular."
+      },
+      "ledger-operator": {
+        "displayName": "Ledger Operator",
+        "purpose": "Magenta ×, − and = in the ledger."
+      },
       "title": {
         "displayName": "Title",
-        "purpose": "Sub-heads and the stat block head."
+        "purpose": "Sub-heads, the stat block head and the contents head."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Masthead wordmark beside the registration target."
+      },
+      "folio": {
+        "displayName": "Folio",
+        "purpose": "Running-head page numbers, tabular."
       },
       "sentence": {
         "displayName": "Sentence",
@@ -244,9 +362,21 @@
         "displayName": "Lede",
         "purpose": "Chapter deks and the verdict sentence."
       },
+      "condition": {
+        "displayName": "Condition",
+        "purpose": "Clear-condition sentences."
+      },
+      "ledger-label": {
+        "displayName": "Ledger Label",
+        "purpose": "Ledger row labels."
+      },
       "body": {
         "displayName": "Body",
         "purpose": "Running text."
+      },
+      "unit": {
+        "displayName": "Unit",
+        "purpose": "Read-out \"of\" units, ledger percent line, colophon wordmark."
       },
       "table": {
         "displayName": "Table",
@@ -254,7 +384,15 @@
       },
       "label": {
         "displayName": "Label",
-        "purpose": "Read-out labels, keys, threat lines."
+        "purpose": "Read-out labels, keys, threat lines, running heads."
+      },
+      "small": {
+        "displayName": "Small",
+        "purpose": "Hints, keys, captions, ruler marker labels."
+      },
+      "callout": {
+        "displayName": "Callout",
+        "purpose": "Numerals in route callout discs, tabular."
       },
       "tag": {
         "displayName": "Tag",
@@ -263,6 +401,10 @@
       "button": {
         "displayName": "Button",
         "purpose": "Button and link-action labels; uppercase."
+      },
+      "tab": {
+        "displayName": "Tab",
+        "purpose": "Thumb-tab labels; uppercase."
       }
     },
     "shadows": [
@@ -442,6 +584,30 @@
       "css": ".ds-plate { background: var(--cyan, #00a6e2); color: var(--ink, #101114); padding: 64px 32px 28px; } .ds-plate-magenta { background: var(--magenta, #e0007a); color: #ffffff; } .ds-ch-title { margin: 0 0 0 -.05em; font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; text-transform: uppercase; font-size: clamp(2.4rem, 8vw, 5.5rem); line-height: .82; letter-spacing: -.012em; font-variation-settings: \"wdth\" 125; } .ds-ch-dek { margin: 16px 0 0; max-width: 40ch; font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: 1.2rem; line-height: 1.42; font-weight: 500; }"
     },
     {
+      "name": "Running Head",
+      "kind": "custom",
+      "refersTo": "running-head",
+      "description": "Spread-style running head opening each chapter plate: verso folio and guide title, recto chapter name and folio, over a 1px plate-ink rule.",
+      "html": "<div class=\"ds-rh-plate\"><p class=\"ds-rh\" aria-hidden=\"true\"><span class=\"ds-rh-v\"><span class=\"ds-rh-f\">4</span><span><span class=\"ds-rh-guide\">Battle Pass ROI, </span>Fortnite season</span></span><span><span>Walkthrough</span><span class=\"ds-rh-f\">5</span></span></p></div>",
+      "css": ".ds-rh-plate { --plate-ink: var(--ink, #101114); background: var(--cyan, #00a6e2); color: var(--plate-ink); padding: 20px 24px 40px; } .ds-rh { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin: 0; padding-bottom: 7px; border-bottom: 1px solid var(--plate-ink); font-family: var(--text, 'Archivo', system-ui, sans-serif); font-size: .8125rem; font-weight: 700; line-height: 1.2; font-variation-settings: \"wdth\" 88; } .ds-rh > span { display: inline-flex; align-items: baseline; gap: 12px; min-width: 0; } .ds-rh-f { font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; font-size: 1.0625rem; line-height: 1; font-variation-settings: \"wdth\" 110; font-variant-numeric: tabular-nums lining-nums; } @media (max-width: 620px) { .ds-rh-v .ds-rh-f, .ds-rh-guide { display: none; } }"
+    },
+    {
+      "name": "Chapter Contents",
+      "kind": "nav",
+      "refersTo": "contents-row",
+      "description": "\"In this chapter\" block beside the dek, ruled like the stat block: name, dotted leader, live figure, provenance tag.",
+      "html": "<nav class=\"ds-toc\" aria-label=\"In this chapter\"><h3 class=\"ds-toc-h\">In this chapter</h3><ol><li><a href=\"#\"><span class=\"ds-toc-n\"><span class=\"ds-co\" aria-hidden=\"true\">1</span>Pace</span><span class=\"ds-toc-lead\" aria-hidden=\"true\"></span><span class=\"ds-toc-v\">6.3 h a week</span><span class=\"ds-tg ds-tg-calc\">derived</span></a></li><li><a href=\"#\"><span class=\"ds-toc-n\"><span class=\"ds-co\" aria-hidden=\"true\">2</span>Season end</span><span class=\"ds-toc-lead\" aria-hidden=\"true\"></span><span class=\"ds-toc-v\">Done in week 8</span><span class=\"ds-tg ds-tg-calc\">derived</span></a></li><li><a href=\"#\"><span class=\"ds-toc-n\">Route map</span><span class=\"ds-toc-lead\" aria-hidden=\"true\"></span><span class=\"ds-toc-v\">100 tiers, 12 weeks</span><span class=\"ds-tg\">est.</span></a></li></ol></nav>",
+      "css": ".ds-toc { --plate-ink: var(--ink, #101114); max-width: 520px; padding: 20px 24px; background: var(--cyan, #00a6e2); color: var(--plate-ink); font-family: var(--text, 'Archivo', system-ui, sans-serif); } .ds-toc-h { margin: 0 0 4px; padding-top: 10px; border-top: 7px solid var(--plate-ink); font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; text-transform: uppercase; font-variation-settings: \"wdth\" 130; font-size: 1.375rem; letter-spacing: .01em; } .ds-toc ol { list-style: none; margin: 0; padding: 0; } .ds-toc li { border-bottom: 1px solid var(--plate-ink); } .ds-toc li:last-child { border-bottom-width: 3px; } .ds-toc a { display: grid; grid-template-columns: auto minmax(1.5em, 1fr) auto 4.6em; align-items: baseline; column-gap: 10px; padding: 9px 0; color: inherit; text-decoration: none; font-size: 1.0625rem; line-height: 1.3; } .ds-toc-n { font-weight: 600; font-variation-settings: \"wdth\" 96; } .ds-toc a:hover .ds-toc-n, .ds-toc a:focus-visible .ds-toc-n { text-decoration: underline; text-decoration-thickness: .07em; text-underline-offset: .2em; } .ds-toc a:focus-visible { outline: 2px solid var(--plate-ink); outline-offset: 3px; } .ds-toc-lead { align-self: end; margin-bottom: .42em; border-bottom: 2px dotted var(--plate-ink); } .ds-toc-v { font-weight: 800; white-space: nowrap; text-align: right; font-variation-settings: \"wdth\" 90; font-variant-numeric: tabular-nums lining-nums; } .ds-tg { justify-self: end; display: inline-block; font-size: .6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; line-height: 1; padding: 3px 4px 2px; border: 1px solid var(--plate-ink); border-radius: 2px; } .ds-tg-calc { border-style: dashed; } .ds-co { display: inline-grid; place-items: center; width: 1.75em; height: 1.75em; margin-right: .5em; border-radius: 50%; background: var(--ink, #101114); color: var(--paper, #f3f5f6); font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; font-size: .8125rem; line-height: 1; font-variation-settings: \"wdth\" 110; font-variant-numeric: tabular-nums lining-nums; vertical-align: .14em; } @media (max-width: 620px) { .ds-toc a { font-size: .9375rem; column-gap: 8px; grid-template-columns: auto minmax(1em, 1fr) auto 4.6em; } }"
+    },
+    {
+      "name": "Route Callout",
+      "kind": "custom",
+      "refersTo": "route-callout",
+      "description": "Numbered ink disc keying the route map to its notes; the same disc opens the note headings and walkthrough contents rows.",
+      "html": "<div class=\"ds-notes\"><h3><span class=\"ds-co\" aria-hidden=\"true\">1</span>Pace</h3><h3><span class=\"ds-co\" aria-hidden=\"true\">2</span>Season end</h3><h3><span class=\"ds-co\" aria-hidden=\"true\">3</span>Tier skips</h3></div>",
+      "css": ".ds-notes { display: flex; gap: 28px; flex-wrap: wrap; color: var(--ink, #101114); } .ds-notes h3 { margin: 0; font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; text-transform: uppercase; font-size: 1.375rem; letter-spacing: .01em; font-variation-settings: \"wdth\" 125; } .ds-co { display: inline-grid; place-items: center; width: 1.75em; height: 1.75em; margin-right: .5em; border-radius: 50%; background: var(--ink, #101114); color: var(--paper, #f3f5f6); font-family: var(--disp, 'Anybody', 'Archivo', system-ui, sans-serif); font-weight: 900; font-size: .8125rem; line-height: 1; font-variation-settings: \"wdth\" 110; font-variant-numeric: tabular-nums lining-nums; vertical-align: .14em; }"
+    },
+    {
       "name": "Bestiary Threat Pips",
       "kind": "custom",
       "refersTo": "",
@@ -460,7 +626,8 @@
       "Ruled tables, hairline and heavy rules, almost no containers.",
       "Highlighter yellow-green reserved for the reader's own numbers.",
       "Provenance tags on every figure.",
-      "One 12-column grid that tabs, tables and plates all snap to."
+      "One 12-column grid that tabs, tables and plates all snap to.",
+      "Book furniture on every chapter opener: a running head with spread folios and an \"In this chapter\" contents block."
     ],
     "rules": [
       {
