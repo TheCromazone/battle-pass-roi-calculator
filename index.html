@@ -1,959 +1,2524 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battle Pass ROI Calculator</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/recharts@2.10.3/dist/Recharts.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Battle Pass ROI Calculator</title>
+<meta name="description" content="Is this season's battle pass worth it for you? An unofficial value guide: completion forecast, real ROI, cost per hour of play, and the behavioral traps built into every pass.">
+<meta name="theme-color" content="#f3f5f6">
+<meta property="og:title" content="Battle Pass ROI Calculator">
+<meta property="og:description" content="An unofficial season value guide. Find out if the pass is worth it at the hours you actually play.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23101114' stroke-width='2.5'/%3E%3Cpath d='M16 2v28M2 16h28' stroke='%23101114' stroke-width='2.5'/%3E%3Cpath d='M16 7a9 9 0 0 1 9 9h-9zM16 25a9 9 0 0 1-9-9h9z' fill='%23101114'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,500..900&family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<script>
+(function () {
+  var d = document.documentElement;
+  d.classList.add('js');
+  try {
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      d.classList.add('motion');
+      if (!sessionStorage.getItem('bp-press')) d.classList.add('press-on');
+    }
+  } catch (e) {}
+})();
+</script>
+<style>
+:root {
+  --paper: #f3f5f6;
+  --paper-2: #e6eaec;
+  --paper-3: #d6dce0;
+  --ink: #101114;
+  --ink-2: #3b3f47;
+  --ink-3: #575c66;
+  --cyan: #00a6e2;
+  --magenta: #e0007a;
+  --magenta-ink: #c4006b;
+  --yellow: #ffe500;
+  --hi: #e8ff3a;
+  --on-magenta: #ffffff;
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #2d1b69 100%);
-            color: #e2e8f0;
-            min-height: 100vh;
-            padding: 20px;
-        }
+  --disp: 'Anybody', 'Archivo', system-ui, sans-serif;
+  --text: 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-io: cubic-bezier(.77, 0, .175, 1);
 
-        #root {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+  --gutter: clamp(16px, 3.6vw, 56px);
+  --tabs: 0px;
+  --gap: clamp(14px, 1.8vw, 28px);
+  --v-size: clamp(3.4rem, 10vw, 8.5rem);
+  /* a black screen at 45 degrees, about a 25% tint: what expires with the season prints in it */
+  --screen: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Ccircle cx='1.5' cy='1.5' r='1.15' fill='%23575c66'/%3E%3Ccircle cx='4.5' cy='4.5' r='1.15' fill='%23575c66'/%3E%3C/svg%3E") 0 0 / 6px 6px;
+}
+@media (min-width: 900px) { :root { --tabs: 46px; } }
 
-        .container {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 16px;
-            padding: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: var(--ink) var(--paper-2);
+}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--hi); color: var(--ink); }
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--paper-2); }
+::-webkit-scrollbar-thumb { background: var(--ink); border: 3px solid var(--paper-2); border-radius: 8px; }
+a { color: inherit; text-underline-offset: .2em; text-decoration-thickness: .07em; }
+a:hover { text-decoration-color: var(--magenta); }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.ch-black :focus-visible { outline-color: var(--hi); }
+button, input, select { font: inherit; color: inherit; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-weight: 800; }
+p { margin: 0; text-wrap: pretty; }
+table { border-collapse: collapse; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skiplink {
+  position: absolute; left: 12px; top: -60px; z-index: 200;
+  background: var(--ink); color: var(--paper); padding: 10px 14px; border-radius: 4px;
+  font-weight: 700; text-decoration: none;
+}
+.skiplink:focus { top: 12px; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid rgba(139, 92, 246, 0.3);
-            padding-bottom: 30px;
-        }
+.wrap {
+  width: 100%;
+  max-width: 1400px;
+  margin-inline: auto;
+  padding-left: var(--gutter);
+  padding-right: calc(var(--gutter) + var(--tabs));
+}
+.disp {
+  font-family: var(--disp);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-variation-settings: "wdth" var(--wd, 125);
+  line-height: .86;
+  letter-spacing: -.005em;
+}
+.num, .data td, .stats td { font-variant-numeric: tabular-nums lining-nums; }
 
-        .header h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
+/* ---------- press check (opening) ---------- */
+.press { display: none; }
+.press-on .press {
+  display: grid;
+  position: fixed; inset: 0; z-index: 100;
+  place-items: center;
+  background: var(--paper);
+  animation: press-failsafe 0s linear 6s forwards;
+}
+@keyframes press-failsafe { to { visibility: hidden; pointer-events: none; } }
+.press-sheet { position: relative; text-align: center; padding: 0 6vw; }
+.press-word {
+  position: relative;
+  display: inline-grid;
+  font-family: var(--disp);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: min(7.1vw, 14vh);
+  line-height: .88;
+  white-space: nowrap;
+  letter-spacing: -.01em;
+  font-variation-settings: "wdth" var(--wd, 150);
+  opacity: 0;
+}
+.pw { grid-area: 1 / 1; mix-blend-mode: multiply; }
+.pw-c { color: var(--cyan); }
+.pw-m { color: var(--magenta); }
+.pw-y { color: var(--yellow); }
+.pw-k { color: var(--ink); opacity: 0; }
+.press-sub {
+  margin-top: 1.1rem;
+  font-weight: 600;
+  font-size: clamp(.8rem, 1.3vw, 1.05rem);
+  letter-spacing: .02em;
+  color: var(--ink-2);
+  font-variation-settings: "wdth" 110;
+  opacity: 0;
+}
+.press-crop { position: absolute; width: 34px; height: 34px; }
+.press-crop::before, .press-crop::after { content: ""; position: absolute; background: var(--ink); }
+.press-crop::before { width: 100%; height: 1px; }
+.press-crop::after { width: 1px; height: 100%; }
+.pc-tl { top: 7vh; left: 6vw; } .pc-tl::before { top: 100%; right: 100%; } .pc-tl::after { bottom: 100%; left: 100%; }
+.pc-tr { top: 7vh; right: 6vw; } .pc-tr::before { top: 100%; left: 100%; } .pc-tr::after { bottom: 100%; right: 100%; }
+.pc-bl { bottom: 7vh; left: 6vw; } .pc-bl::before { bottom: 100%; right: 100%; } .pc-bl::after { top: 100%; left: 100%; }
+.pc-br { bottom: 7vh; right: 6vw; } .pc-br::before { bottom: 100%; left: 100%; } .pc-br::after { top: 100%; right: 100%; }
+.press-reg { position: absolute; width: 30px; height: 30px; color: var(--ink); }
+.pr-t { top: calc(7vh - 15px); left: calc(50% - 15px); }
+.pr-b { bottom: calc(7vh - 15px); left: calc(50% - 15px); }
+.pr-l { left: calc(6vw - 15px); top: calc(50% - 15px); }
+.pr-r { right: calc(6vw - 15px); top: calc(50% - 15px); }
+.press-bar {
+  position: absolute; left: 50%; bottom: calc(7vh + 26px);
+  transform: translateX(-50%);
+  display: flex; gap: 0;
+}
+.press-bar i { display: block; width: clamp(16px, 2.4vw, 30px); height: 14px; }
 
-        .header p {
-            color: #cbd5e1;
-            font-size: 1.1rem;
-        }
+/* ---------- masthead + thumb tabs ---------- */
+.mast { position: relative; border-bottom: 3px solid var(--ink); }
+.mast::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 1px; background: var(--ink); }
+.mast-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px 12px; }
+.wordmark {
+  display: inline-flex; align-items: center; gap: .55rem;
+  text-decoration: none;
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(.95rem, 1.4vw, 1.15rem);
+  font-variation-settings: "wdth" 150;
+  letter-spacing: .01em;
+}
+.wordmark svg { width: 1.45em; height: 1.45em; flex: none; }
+.mast-meta {
+  font-size: .8125rem; color: var(--ink-2);
+  font-variation-settings: "wdth" 88;
+  display: flex; gap: 10px; align-items: center; text-align: right;
+}
+.mast-meta .dot { width: 5px; height: 5px; background: var(--ink); border-radius: 50%; }
+@media (max-width: 620px) { .mast-meta .m2, .mast-meta .dot { display: none; } }
+@media (max-width: 480px) { .mast-meta { display: none; } }
+.wordmark span { white-space: nowrap; }
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
+.tabs {
+  position: fixed; right: 0; top: 50%; z-index: 60;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 0;
+  isolation: isolate;
+}
+.tab {
+  --bg: var(--paper-3); --fg: var(--ink);
+  display: block;
+  writing-mode: vertical-rl;
+  padding: 16px 9px 16px 10px;
+  width: 40px;
+  background: var(--bg); color: var(--fg);
+  font-family: var(--disp); font-weight: 800; text-transform: uppercase;
+  font-size: .75rem; letter-spacing: .06em;
+  font-variation-settings: "wdth" 112;
+  text-decoration: none;
+  border-radius: 7px 0 0 7px;
+  transform: translateX(6px);
+  transition: transform .32s var(--ease-out), width .32s var(--ease-out);
+  mix-blend-mode: multiply;
+}
+.tab + .tab { margin-top: -9px; }
+.tab:hover { transform: translateX(0); }
+.tab[aria-current="true"] { width: 46px; transform: translateX(0); }
+.t-walk { --bg: var(--cyan); }
+.t-shop { --bg: var(--magenta); --fg: var(--on-magenta); }
+.t-beast { --bg: var(--ink); --fg: var(--paper); box-shadow: inset 0 0 0 1px #5d626b; }
+.t-app { --bg: var(--paper-3); box-shadow: inset 0 0 0 1px var(--ink); }
+.t-verdict { --bg: var(--paper-2); box-shadow: inset 0 0 0 1px var(--ink); }
+@media (max-width: 899px) {
+  .tabs {
+    position: sticky; top: 0; right: auto; transform: none;
+    flex-direction: row; gap: 0;
+    padding: 0 var(--gutter);
+    background: var(--paper);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    writing-mode: horizontal-tb; width: auto; flex: 1 0 auto;
+    text-align: center; padding: 9px 10px 8px;
+    border-radius: 0 0 7px 7px;
+    transform: translateY(-4px);
+    font-size: .75rem;
+    padding-inline: 8px;
+    font-variation-settings: "wdth" 74;
+    letter-spacing: .03em;
+  }
+  .tab:hover { transform: translateY(-2px); }
+  .tab + .tab { margin-top: 0; margin-left: -7px; }
+  .tab[aria-current="true"] { width: auto; transform: translateY(0); padding-top: 12px; }
+}
 
-        @media (max-width: 1024px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+/* ---------- title page ---------- */
+.title-page { padding-block: clamp(26px, 4.4vw, 64px) clamp(40px, 6vw, 88px); }
+.sheet { position: relative; padding: clamp(18px, 2.4vw, 34px) 0; }
+/* crop marks: two hairlines pointing out from each trim corner, held off it by a small gap */
+.crop { position: absolute; width: 0; height: 0; pointer-events: none; --cm: clamp(8px, 2vw, 22px); --g: 4px; }
+.crop::before, .crop::after { content: ""; position: absolute; background: var(--ink); }
+.crop::before { width: var(--cm); height: 1px; }
+.crop::after { width: 1px; height: var(--cm); }
+.crop-tl { top: 0; left: 0; } .crop-tl::before { top: 0; right: var(--g); } .crop-tl::after { left: 0; bottom: var(--g); }
+.crop-tr { top: 0; right: 0; } .crop-tr::before { top: 0; left: var(--g); } .crop-tr::after { right: 0; bottom: var(--g); }
+.crop-bl { bottom: 0; left: 0; } .crop-bl::before { bottom: 0; right: var(--g); } .crop-bl::after { left: 0; top: var(--g); }
+.crop-br { bottom: 0; right: 0; } .crop-br::before { bottom: 0; left: var(--g); } .crop-br::after { right: 0; top: var(--g); }
+.tp-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: clamp(28px, 4vw, 48px);
+  align-items: start;
+}
+.tp-main { grid-column: 1 / span 8; min-width: 0; }
+.tp-side { grid-column: 9 / span 4; min-width: 0; }
+@media (max-width: 1080px) { .tp-main, .tp-side { grid-column: 1 / -1; } }
+.motion .tp-grid { visibility: hidden; animation: show-failsafe 0s linear 4s forwards; }
+@keyframes show-failsafe { to { visibility: visible; } }
 
-        .section {
-            background: rgba(30, 27, 75, 0.5);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s ease;
-        }
+.verdict {
+  position: relative;
+  font-family: var(--disp);
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: var(--v-size);
+  line-height: .84;
+  letter-spacing: -.012em;
+  font-variation-settings: "wdth" 125;
+  margin-left: -.04em;
+}
+.v-k, .v-plate { display: block; }
+.v-plate { position: absolute; inset: 0; mix-blend-mode: multiply; opacity: 0; pointer-events: none; }
+.v-c { color: var(--cyan); }
+.v-m { color: var(--magenta); }
+.v-line { display: block; overflow: hidden; overflow: clip; padding-top: .04em; padding-bottom: .02em; }
+.v-in { display: inline-block; white-space: nowrap; }
+.ch { display: inline-block; }
+.v-probe {
+  position: fixed; left: 0; top: 0; visibility: hidden; white-space: nowrap; pointer-events: none;
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-variation-settings: "wdth" 125; letter-spacing: -.012em;
+  font-size: 100px; /* impeccable-disable-line design-system-font-size -- hidden probe that measures the verdict word, never shown */
+}
+.verdict-copy {
+  margin-top: clamp(18px, 2.2vw, 28px);
+  max-width: 44ch;
+  font-size: clamp(1.1rem, 1.55vw, 1.4rem);
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--ink);
+}
+.madlib {
+  margin-top: clamp(26px, 3.4vw, 44px);
+  padding-top: clamp(18px, 2vw, 24px);
+  border-top: 3px solid var(--ink);
+  font-size: clamp(1.32rem, 2.35vw, 2.1rem);
+  line-height: 1.55;
+  font-weight: 500;
+  font-variation-settings: "wdth" 96;
+  max-width: 30em;
+}
+.hint {
+  margin-top: 12px;
+  font-size: .875rem;
+  color: var(--ink-3);
+  font-variation-settings: "wdth" 88;
+}
 
-        .section:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
-        }
+/* highlighter: the reader's own numbers, and nothing else */
+.hl { position: relative; isolation: isolate; white-space: nowrap; }
+.hl::before {
+  content: "";
+  position: absolute; z-index: -1;
+  left: -.12em; right: -.12em; top: .14em; bottom: .02em;
+  background: var(--hi);
+  border-radius: .14em .26em .18em .3em;
+  transform: skewX(-7deg) rotate(-.7deg);
+  transform-origin: 0 50%;
+  transition: transform .62s var(--ease-out);
+}
+.motion .hl:not(.swiped)::before { transform: skewX(-7deg) rotate(-.7deg) scaleX(0); }
+.sel {
+  appearance: none; -webkit-appearance: none;
+  border: 0; border-radius: 0; margin: 0;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23101114' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right .08em center / .5em;
+  padding: 0 .82em 0 0;
+  font-weight: 800;
+  cursor: pointer;
+  line-height: inherit;
+}
+.sel option { font-size: 1.0625rem; font-weight: 500; }
+.scrub-group { display: inline-flex; align-items: baseline; gap: .12em; white-space: nowrap; }
+.scrub {
+  position: relative;
+  display: inline-block;
+  min-width: 1.4ch;
+  text-align: center;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none; -webkit-user-select: none;
+  outline-offset: 5px;
+}
+.scrub::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -.32em; height: .22em;
+  background: repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 6px);
+  opacity: 0;
+  transform: scaleX(.6);
+  transition: opacity .2s ease, transform .3s var(--ease-out);
+}
+.scrub:hover::after, .scrub:focus-visible::after, .scrub.is-drag::after { opacity: .9; transform: scaleX(1); }
+.is-scrubbing, .is-scrubbing * { cursor: ew-resize !important; }
+.step {
+  display: none;
+  width: 1.15em; height: 1.15em;
+  border: 2px solid var(--ink); border-radius: 50%;
+  background: var(--paper); padding: 0;
+  align-self: center;
+  cursor: pointer;
+  transition: transform .16s var(--ease-out);
+}
+.step svg { width: 100%; height: 100%; display: block; }
+.step:active { transform: scale(.92); }
+@media (pointer: coarse) { .step { display: inline-block; } }
+.switch {
+  border: 0; background: transparent; padding: 0;
+  font-weight: 800; cursor: pointer;
+  line-height: inherit;
+}
+.switch-v { display: inline-block; }
 
-        .section h2 {
-            color: #a78bfa;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* stat block */
+.block-h {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-variation-settings: "wdth" 130;
+  font-size: 1.375rem; letter-spacing: .01em;
+  border-top: 7px solid var(--ink);
+  padding-top: 10px; margin-bottom: 4px;
+}
+.stats { width: 100%; font-variation-settings: "wdth" 86; }
+.stats th {
+  text-align: left; font-weight: 500; color: var(--ink-2);
+  padding: 9px 8px 9px 0; border-bottom: 1px solid var(--ink);
+  font-size: .9375rem; line-height: 1.35;
+}
+.stats td { border-bottom: 1px solid var(--ink); padding: 9px 0; vertical-align: baseline; }
+.stats .v { text-align: right; font-weight: 800; font-size: clamp(1.15rem, 1.5vw, 1.4rem); line-height: 1.1; white-space: nowrap; }
+.stats .v .of { font-weight: 500; color: var(--ink-3); font-size: .78em; }
+.stats .v small { display: block; font-size: .62em; font-weight: 500; color: var(--ink-3); margin-top: 3px; }
+.stats .src { width: 1%; padding-left: 10px; text-align: right; }
+.stats tr:last-child th, .stats tr:last-child td { border-bottom-width: 3px; }
+.tag {
+  display: inline-block;
+  font-size: .6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  line-height: 1; padding: 3px 4px 2px;
+  border: 1px solid var(--ink); border-radius: 2px;
+  font-variation-settings: "wdth" 100;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.tag-calc { border-style: dashed; color: var(--ink-2); border-color: var(--ink-3); }
+.tag-yours { background: var(--hi); color: var(--ink); }
+.tier-sheet {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  gap: 4px;
+}
+.tier-sheet i {
+  display: block; aspect-ratio: 1; border-radius: 50%;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  transition: background-color .3s ease, transform .4s var(--ease-out), border-color .3s ease;
+  transition-delay: var(--d, 0ms);
+}
+.tier-sheet i.on { background: var(--ink); }
+.tier-sheet i.miss { border-style: dotted; border-color: var(--ink-3); transform: scale(.72); }
+.tier-key { margin-top: 10px; font-size: .8125rem; color: var(--ink-3); font-variation-settings: "wdth" 88; }
+.next {
+  display: inline-flex; align-items: center; gap: .6em;
+  margin-top: clamp(30px, 4vw, 52px);
+  font-family: var(--disp); font-weight: 800; text-transform: uppercase;
+  font-variation-settings: "wdth" 120; font-size: .875rem; letter-spacing: .03em;
+  text-decoration: none;
+  border-bottom: 3px solid var(--ink); padding-bottom: 4px;
+}
+.next svg { width: 1.2em; height: 1.2em; transition: transform .3s var(--ease-out); }
+.next:hover svg { transform: translateY(3px); }
 
-        .section h2::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: linear-gradient(180deg, #a78bfa 0%, #60a5fa 100%);
-            border-radius: 2px;
-        }
+/* ---------- chapters ---------- */
+.chapter { position: relative; }
+.plate {
+  --plate: var(--paper-3); --plate-ink: var(--ink);
+  position: relative;
+  background: var(--plate);
+  color: var(--plate-ink);
+  padding-block: clamp(14px, 1.8vw, 24px) clamp(30px, 3.6vw, 52px);
+}
+.ch-cyan .plate { --plate: var(--cyan); }
+.ch-magenta .plate { --plate: var(--magenta); --plate-ink: var(--on-magenta); }
+.ch-black { background: var(--ink); color: var(--paper); }
+.ch-black .plate { --plate: var(--ink); --plate-ink: var(--paper); }
+.ch-title {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(1.9rem, 8.4vw, 9rem);
+  line-height: .82;
+  letter-spacing: -.012em;
+  font-variation-settings: "wdth" var(--wd, 125);
+  margin-left: -.05em;
+}
+.ch-dek {
+  max-width: 40ch;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  line-height: 1.42;
+  font-weight: 500;
+}
+.ht { display: block; width: 100%; height: clamp(44px, 6vw, 84px); }
+.ch-body { padding-block: clamp(36px, 5vw, 72px) clamp(64px, 9vw, 128px); }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+/* running head: each opening plate is a spread, with a folio at both outer corners */
+.rh {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+  margin: 0 0 clamp(40px, 7.2vw, 108px);
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--plate-ink);
+  font-size: .8125rem; font-weight: 700; line-height: 1.2;
+  font-variation-settings: "wdth" 88;
+}
+.rh > span { display: inline-flex; align-items: baseline; gap: 12px; min-width: 0; }
+.rh-f {
+  font-family: var(--disp); font-weight: 900; font-size: 1.0625rem; line-height: 1;
+  font-variation-settings: "wdth" 110;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+/* a phone shows one page of the spread: the recto */
+@media (max-width: 620px) { .rh-v .rh-f, .rh-guide { display: none; } }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #cbd5e1;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
+/* chapter opener: the dek beside an "in this chapter" block ruled like the stat block */
+.opener {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap); row-gap: clamp(28px, 4vw, 40px);
+  margin-top: clamp(16px, 1.8vw, 26px);
+  align-items: start;
+}
+.opener .ch-dek { grid-column: 1 / span 5; }
+.toc { grid-column: 7 / -1; }
+@media (max-width: 1080px) { .opener .ch-dek { grid-column: 1 / span 8; } .toc { grid-column: 1 / span 9; } }
+@media (max-width: 720px) { .opener .ch-dek, .toc { grid-column: 1 / -1; } }
+.toc-h {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-variation-settings: "wdth" 130;
+  font-size: 1.375rem; letter-spacing: .01em;
+  border-top: 7px solid var(--plate-ink);
+  padding-top: 10px; margin-bottom: 4px;
+}
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc li { border-bottom: 1px solid var(--plate-ink); }
+.toc li:last-child { border-bottom-width: 3px; }
+.toc a {
+  display: grid;
+  grid-template-columns: auto minmax(1.5em, 1fr) auto 4.6em;
+  align-items: baseline; column-gap: 10px;
+  padding: 9px 0;
+  color: inherit; text-decoration: none;
+  font-size: 1.0625rem; line-height: 1.3;
+}
+@media (max-width: 620px) { .toc a { font-size: .9375rem; column-gap: 8px; grid-template-columns: auto minmax(1em, 1fr) auto 4.6em; } }
+.toc-n { font-weight: 600; font-variation-settings: "wdth" 96; }
+.toc a:hover .toc-n, .toc a:focus-visible .toc-n { text-decoration: underline; text-decoration-thickness: .07em; text-underline-offset: .2em; }
+.toc-lead { align-self: end; margin-bottom: .42em; border-bottom: 2px dotted var(--plate-ink); }
+.toc-v { font-weight: 800; white-space: nowrap; text-align: right; font-variation-settings: "wdth" 90; font-variant-numeric: tabular-nums lining-nums; }
+.toc a > .tag { justify-self: end; }
+.plate .tag { border-color: var(--plate-ink); }
+.plate .tag-calc { color: inherit; }
+.toc .pips { display: inline-flex; gap: 3px; vertical-align: -.05em; }
+.toc .pips i { width: 11px; height: 11px; border-color: var(--plate-ink); }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 8px;
-            color: #e2e8f0;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
+/* numbered callouts key the route map to the notes beneath it */
+.co {
+  display: inline-grid; place-items: center;
+  width: 1.75em; height: 1.75em; margin-right: .5em;
+  border-radius: 50%;
+  background: var(--ink); color: var(--paper);
+  font-family: var(--disp); font-weight: 900; font-size: .8125rem; line-height: 1;
+  font-variation-settings: "wdth" 110;
+  font-variant-numeric: tabular-nums lining-nums;
+  vertical-align: .14em;
+}
 
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #a78bfa;
-            box-shadow: 0 0 15px rgba(167, 139, 250, 0.3);
-            background: rgba(15, 23, 42, 0.8);
-        }
+/* ---------- walkthrough ---------- */
+.stage {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  row-gap: 24px;
+  align-items: start;
+  background: var(--paper);
+}
+.readout { grid-column: 1 / span 3; display: grid; gap: 18px; }
+.map { grid-column: 4 / span 9; min-width: 0; }
+@media (max-width: 1080px) {
+  .readout { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }
+  .map { grid-column: 1 / -1; }
+  .ro-note, .readout .btn { grid-column: span 2; justify-self: start; }
+}
+.ro { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 10px; border-top: 3px solid var(--ink); padding-top: 8px; }
+.ro-l { grid-column: 1 / -1; font-size: .8125rem; font-weight: 700; color: var(--ink-2); font-variation-settings: "wdth" 90; }
+.ro-n {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(3rem, 5.4vw, 5.2rem); line-height: .9;
+  font-variation-settings: "wdth" 110;
+  font-variant-numeric: tabular-nums;
+}
+.ro-of { font-weight: 600; color: var(--ink-3); font-size: 1rem; }
+.ro-note { font-size: 1.0625rem; line-height: 1.4; max-width: 26ch; font-weight: 500; }
+.btn {
+  display: inline-flex; align-items: center; gap: .6em;
+  border: 0; border-radius: 4px;
+  background: var(--ink); color: var(--paper);
+  padding: .8em 1.15em .78em;
+  font-family: var(--disp); font-weight: 800; text-transform: uppercase;
+  font-variation-settings: "wdth" 115; font-size: .82rem; letter-spacing: .04em;
+  cursor: pointer;
+  transition: transform .16s var(--ease-out), background-color .2s ease;
+  justify-self: start;
+}
+.btn svg { width: 1.1em; height: 1.1em; flex: none; }
+.btn:active { transform: scale(.97); }
+@media (hover: hover) and (pointer: fine) { .btn:hover { background: #2a2c33; } }
+.btn-ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 2px currentColor; }
+@media (hover: hover) and (pointer: fine) { .btn-ghost:hover { background: var(--paper-2); } }
+.ch-black .btn { background: var(--paper); color: var(--ink); }
+.btn[disabled] { opacity: .45; cursor: default; }
 
-        .form-group input::placeholder {
-            color: #64748b;
-        }
+.route { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--text); }
+.route .r-base { fill: none; stroke: var(--ink); stroke-width: 2; stroke-dasharray: 1 7; stroke-linecap: round; }
+.route .r-done { fill: none; stroke: var(--ink); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.route .r-reach { fill: none; stroke: var(--cyan); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+.route .node { fill: var(--paper); stroke: var(--ink); stroke-width: 2; transform-box: fill-box; transform-origin: center; transition: fill .25s ease, opacity .3s ease; }
+.route .node.reach { fill: var(--cyan); }
+.route .node.on { fill: var(--ink); }
+.route .node.miss { fill: var(--paper); stroke: var(--ink-3); stroke-dasharray: 2 2.5; }
+/* the stretch past the wall prints in a halftone screen, overprinting whatever it crosses */
+.route .r-miss { fill: none; stroke: url(#screen); mix-blend-mode: multiply; }
+.route .scr { fill: var(--ink); }
+.route .co-s { stroke: var(--ink); }
+.route .co-c { fill: var(--ink); }
+.route .co-t { fill: var(--paper); font-family: var(--disp); font-weight: 900; font-variation-settings: "wdth" 110; font-variant-numeric: tabular-nums; }
+.route .ms-label { font-weight: 700; fill: var(--ink-2); font-variant-numeric: tabular-nums; }
+.route .wk { font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.route .wk-tick { stroke: var(--ink); stroke-width: 1.5; }
+.route .wall { stroke: var(--magenta); stroke-width: 7; stroke-linecap: square; mix-blend-mode: multiply; }
+.route .wall-l { font-family: var(--disp); font-weight: 900; text-transform: uppercase; fill: var(--magenta-ink); font-variation-settings: "wdth" 115; letter-spacing: .03em; }
+.route .flag { fill: var(--ink); }
+.route .head-hi { fill: var(--hi); stroke: var(--ink); stroke-width: 2; }
+.route .head-dot { fill: var(--ink); }
+.weekbar { margin-top: 18px; }
+.wb-l { display: block; font-size: .875rem; font-weight: 700; color: var(--ink-2); margin-bottom: 8px; font-variation-settings: "wdth" 90; }
+.range {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 34px; margin: 0; background: transparent; cursor: pointer;
+  --p: 100%;
+}
+.range::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--ink) var(--p), var(--paper-3) var(--p));
+}
+.range::-moz-range-track { height: 6px; border-radius: 3px; background: var(--paper-3); }
+.range::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--ink); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 26px; height: 26px; margin-top: -10px; border-radius: 50%;
+  background: var(--hi); border: 2px solid var(--ink);
+  transition: transform .16s var(--ease-out);
+}
+.range::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--hi); border: 2px solid var(--ink); }
+.range:active::-webkit-slider-thumb { transform: scale(1.12); }
+.wb-ticks { position: relative; height: 22px; font-size: .75rem; font-weight: 600; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.wb-ticks span { position: absolute; top: 2px; transform: translateX(-50%); }
+.wb-ticks span::before { content: ""; position: absolute; left: 50%; top: -6px; width: 1px; height: 5px; background: var(--ink-3); }
+.wb-ticks span[style*="transform:none"]::before { left: 0; }
+.wb-ticks span[style*="-100%"]::before { left: auto; right: 0; }
 
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
+.notes {
+  margin-top: clamp(40px, 5vw, 64px);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap);
+}
+@media (max-width: 860px) { .notes { grid-template-columns: 1fr; } }
+.note { border-top: 1px solid var(--ink); padding-top: 12px; }
+.sub-h .tag, .data thead .tag, .ro-l .tag { margin-left: 6px; vertical-align: .15em; letter-spacing: .06em; }
+.note h3, .sub-h {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-variation-settings: "wdth" 125; font-size: 1.375rem; letter-spacing: .01em;
+  margin-bottom: 8px;
+}
+.note p { max-width: 38ch; color: var(--ink-2); }
+.note b, .ro-note b, .verdict-copy b { color: var(--ink); font-weight: 800; }
 
-        @media (max-width: 768px) {
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+/* ---------- shop math ---------- */
+.free-note { font-size: 1.125rem; font-weight: 600; margin-bottom: 28px; max-width: 52ch; }
+.free-note[hidden] { display: none; }
+.shop-grid {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap); row-gap: 36px; align-items: start;
+}
+.ledger { grid-column: 1 / span 7; width: 100%; font-variation-settings: "wdth" 90; }
+.tiles-fig { grid-column: 9 / span 4; margin: 0; }
+@media (max-width: 1080px) { .ledger, .tiles-fig { grid-column: 1 / -1; } }
+.ledger td { padding: 13px 0; border-bottom: 1px solid var(--ink); vertical-align: baseline; }
+.ledger .op {
+  width: 1.6em;
+  font-family: var(--disp); font-weight: 900; font-size: 1.6rem; line-height: 1;
+  font-variation-settings: "wdth" 100; color: var(--magenta);
+}
+.ledger .lbl { font-size: clamp(1rem, 1.35vw, 1.2rem); font-weight: 500; padding-right: 12px; }
+.ledger .lbl small { display: block; font-size: .8rem; color: var(--ink-3); font-weight: 500; margin-top: 2px; }
+.ledger .amt {
+  text-align: right; white-space: nowrap;
+  font-family: var(--disp); font-weight: 900;
+  font-size: clamp(1.35rem, 2.3vw, 2.15rem); line-height: 1;
+  font-variation-settings: "wdth" 105;
+  font-variant-numeric: tabular-nums;
+}
+.ledger .src { width: 1%; padding-left: 12px; text-align: right; }
+.ledger tr.sum td { border-bottom: 0; border-top: 4px double var(--ink); padding-top: 16px; }
+.ledger tr.sum .amt { font-size: clamp(1.8rem, 3.4vw, 3rem); }
+.ledger tr.sum .pct { display: block; font-size: 1rem; margin-top: 8px; color: var(--ink-2); font-variation-settings: "wdth" 100; }
+.ledger tr.real .amt span { position: relative; isolation: isolate; }
+.tiles { display: grid; grid-template-columns: repeat(var(--tc, 10), minmax(0, 1fr)); gap: 4px; perspective: 600px; }
+@media (max-width: 1080px) { .tiles { grid-template-columns: repeat(var(--tc2, 20), minmax(0, 1fr)); gap: 3px; } }
+.tiles i { display: block; aspect-ratio: 1; border-radius: 3px; border: 1.5px solid var(--ink); background: var(--paper); }
+.tiles i.want { background: var(--magenta); border-color: var(--magenta); }
+.tiles i.unused { background: linear-gradient(135deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)); }
+.tiles i.lock { border-color: transparent; background: var(--screen); transform: scale(.78); }
+.tiles-key { display: grid; gap: 7px; margin-top: 16px; font-size: .875rem; color: var(--ink-2); font-variation-settings: "wdth" 90; }
+.tiles-key span { display: flex; align-items: center; gap: 9px; }
+.tiles-key i { flex: none; width: 15px; height: 15px; border-radius: 3px; border: 1.5px solid var(--ink); display: block; }
+.k-want { background: var(--magenta); border-color: var(--magenta) !important; }
+.k-skip { background: linear-gradient(135deg, transparent calc(50% - 1px), var(--ink) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)); }
+.k-lock { border-color: transparent !important; background: var(--screen); }
 
-        .metric {
-            background: rgba(15, 23, 42, 0.7);
-            border-left: 3px solid #a78bfa;
-            padding: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
+.roi-pair {
+  margin-top: clamp(48px, 6vw, 84px);
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap); row-gap: 32px;
+}
+@media (max-width: 720px) { .roi-pair { grid-template-columns: 1fr; } }
+.roi { border-top: 7px solid var(--ink); padding-top: 12px; }
+.roi-you { border-top-color: var(--magenta); }
+.roi h3 { margin-bottom: 4px; }
+.roi-n {
+  position: relative; display: inline-block;
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(3.2rem, 8.4vw, 8rem); line-height: .9;
+  font-variation-settings: "wdth" 100;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+}
+.roi-box .roi-n { color: var(--ink-3); }
+.roi-n .strike {
+  position: absolute; left: -3%; right: -3%; top: 47%; height: .085em;
+  background: var(--magenta); border-radius: .05em;
+  transform: rotate(-3.5deg); transform-origin: 0 50%;
+  pointer-events: none;
+}
+.roi-c { margin-top: 12px; max-width: 34ch; color: var(--ink-2); }
 
-        .metric:hover {
-            background: rgba(15, 23, 42, 0.9);
-            transform: translateX(5px);
-        }
+.ruler-block { margin-top: clamp(56px, 7vw, 96px); }
+.rb-dek { max-width: 60ch; color: var(--ink-2); margin-bottom: 64px; }
+.ruler { position: relative; height: 34px; border-bottom: 3px solid var(--ink); margin-bottom: 72px; }
+.ruler-ticks span { position: absolute; bottom: 0; width: 1px; background: var(--ink); height: 9px; }
+.ruler-ticks span.major { height: 20px; width: 2px; }
+.ruler-ticks em {
+  position: absolute; top: calc(100% + 8px); transform: translateX(-50%);
+  font-style: normal; font-size: .8125rem; font-weight: 700; color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.mk { position: absolute; left: var(--x, 0%); top: 0; width: 0; height: 100%; pointer-events: none; transition: left .7s var(--ease-out); }
+.mk-pin { position: absolute; left: -1px; width: 3px; background: var(--ink); }
+.mk-l {
+  position: absolute; left: 0; transform: translateX(-50%);
+  white-space: nowrap; font-size: .875rem; font-weight: 600;
+  padding: 3px 7px; border-radius: 3px;
+}
+.mk-l b { font-weight: 800; }
+.mk-you .mk-pin { bottom: 0; height: 52px; }
+.mk-you .mk-l { bottom: 52px; }
+.mk-you .mk-l { background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.mk-l .tag { margin-left: 6px; }
+.mk-movie .mk-pin { top: 100%; height: 40px; background: var(--ink-3); }
+.mk-movie .mk-l { top: calc(100% + 40px); box-shadow: inset 0 0 0 1.5px var(--ink-3); color: var(--ink-2); }
+.mk.edge-l .mk-l { transform: translateX(-8px); }
+.mk.edge-r .mk-l { transform: translateX(calc(-100% + 8px)); }
 
-        .metric-label {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+/* ---------- bestiary ---------- */
+.beasts { display: grid; gap: 0; }
+.beast {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap); row-gap: 14px;
+  padding: 26px 0 30px;
+}
+.beast-rule { position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--paper); transform-origin: 0 50%; }
+.beast-head { grid-column: 1 / span 5; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: start; }
+.beast-icon { width: 46px; height: 46px; color: var(--paper); grid-row: span 2; }
+.beast h3 {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(1.6rem, 3vw, 2.7rem); line-height: .9;
+  --wd: 118;
+  font-variation-settings: "wdth" var(--wd);
+}
+.threat { display: flex; align-items: center; gap: 10px; font-size: .8125rem; font-weight: 600; color: #c5cad0; font-variation-settings: "wdth" 90; }
+.pips { display: flex; gap: 4px; }
+.pips i { width: 14px; height: 14px; border: 2px solid var(--paper); border-radius: 2px; transform: rotate(45deg) scale(.82); transition: background-color .25s ease; }
+.pips i.on { background: var(--paper); }
+.beast dl { grid-column: 6 / span 4; margin: 0; display: grid; gap: 12px; }
+.beast dt { font-family: var(--disp); font-weight: 800; text-transform: uppercase; font-size: .8125rem; letter-spacing: .05em; font-variation-settings: "wdth" 115; color: #c5cad0; }
+.beast dd { margin: 2px 0 0; line-height: 1.45; }
+.beast-you { grid-column: 10 / span 3; font-weight: 600; line-height: 1.45; }
+/* in running text the marker has to survive line breaks, so it is painted on the inline box itself */
+.beast-you .hl {
+  white-space: normal; color: var(--ink);
+  background: var(--hi); padding: .02em .22em; border-radius: 2px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.beast-you .hl::before { display: none; }
+.beast-you b { font-weight: 800; color: #fff; }
+@media (max-width: 1080px) {
+  .beast-head { grid-column: 1 / -1; }
+  .beast dl { grid-column: 1 / span 7; }
+  .beast-you { grid-column: 8 / span 5; }
+}
+@media (max-width: 720px) {
+  .beast dl, .beast-you { grid-column: 1 / -1; }
+}
+.ch-black .ch-body { padding-bottom: clamp(40px, 5vw, 72px); }
 
-        .metric-value {
-            color: #a78bfa;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
+.clear { padding-block: clamp(48px, 6vw, 88px) clamp(64px, 8vw, 112px); }
+.clear-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 24px; }
+.clear-intro { grid-column: 1 / span 4; }
+.clear-intro h2 {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(2rem, 4.2vw, 3.8rem); line-height: .86;
+  font-variation-settings: "wdth" 125; margin-bottom: 14px;
+}
+.clear-intro p { color: var(--ink-2); max-width: 34ch; }
+.conds { grid-column: 6 / span 7; list-style: none; margin: 0; padding: 0; }
+@media (max-width: 1080px) { .clear-intro, .conds { grid-column: 1 / -1; } }
+.cond { padding: 15px 0; border-bottom: 1px solid var(--ink); }
+.cond:first-child { border-top: 3px solid var(--ink); }
+.cond .c-text { font-size: clamp(1.05rem, 1.45vw, 1.25rem); font-weight: 500; line-height: 1.45; max-width: 46ch; }
+.cond .c-state { font-weight: 800; }
+.cond.unmet .c-state { color: var(--magenta-ink); }
+.cond .hl::before { top: .18em; bottom: .06em; }
+.cond-you { display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: center; }
+.cond input[type="checkbox"] {
+  -webkit-appearance: none; appearance: none; margin: 0;
+  width: 30px; height: 30px; border: 2px solid var(--ink); border-radius: 4px; cursor: pointer;
+  display: grid; place-items: center; background: var(--paper);
+  transition: background-color .2s ease, transform .16s var(--ease-out);
+}
+.cond input[type="checkbox"]:active { transform: scale(.94); }
+.cond input[type="checkbox"]:checked { background: var(--hi); }
+.cond input[type="checkbox"]:checked::after {
+  content: ""; width: 14px; height: 8px; border-left: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+  transform: translateY(-2px) rotate(-45deg);
+}
 
-        .metric-subtext {
-            color: #64748b;
-            font-size: 0.8rem;
-            margin-top: 5px;
-        }
+/* ---------- appendix ---------- */
+.app-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: clamp(48px, 6vw, 80px); }
+.app-block h3 {
+  font-family: var(--disp); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem); line-height: .92;
+  font-variation-settings: "wdth" 122; margin-bottom: 10px;
+}
+.app-block > p { color: var(--ink-2); max-width: 60ch; margin-bottom: 18px; }
+.app-compare { grid-column: 1 / -1; }
+.app-tune { grid-column: 1 / span 7; }
+.app-findings { grid-column: 9 / span 4; }
+.app-method { grid-column: 1 / span 7; }
+.app-sources { grid-column: 9 / span 4; }
+@media (max-width: 1080px) { .app-tune, .app-findings, .app-method, .app-sources { grid-column: 1 / -1; } }
+.table-scroll { overflow-x: auto; }
+.data { width: 100%; font-variation-settings: "wdth" 88; font-size: .9375rem; }
+.data th, .data td { padding: 11px 12px 11px 0; text-align: left; border-bottom: 1px solid var(--ink); vertical-align: baseline; }
+.data thead th { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; color: var(--ink-2); border-bottom: 3px solid var(--ink); white-space: nowrap; }
+.data td.r, .data th.r { text-align: right; }
+.compare tbody tr { cursor: pointer; transition: background-color .2s ease; }
+.cmp-prov { display: none; margin-top: 10px; font-size: .875rem; color: var(--ink-3); }
+@media (max-width: 720px) {
+  .compare thead .tag { display: none; }
+  .compare th, .compare td { padding-right: 9px; }
+  .cmp-prov { display: block; }
+}
+@media (hover: hover) and (pointer: fine) { .compare tbody tr:hover { background: var(--paper-2); } }
+.compare .g { font-weight: 800; }
+.compare .g button {
+  border: 0; background: none; padding: 0; font-weight: 800; cursor: pointer; text-align: left;
+}
+.compare tr.cur .g button { position: relative; isolation: isolate; }
+.compare tr.cur .g button::before {
+  content: ""; position: absolute; z-index: -1; left: -.25em; right: -.25em; top: .05em; bottom: -.05em;
+  background: var(--hi); border-radius: 3px; transform: skewX(-7deg);
+}
+.compare .vd { font-family: var(--disp); font-weight: 900; text-transform: uppercase; font-variation-settings: "wdth" 115; letter-spacing: .02em; white-space: nowrap; }
+.compare .vd.not { color: var(--magenta-ink); }
+.tune td { padding-block: 7px; white-space: nowrap; }
+.tune input {
+  width: 7.5em; padding: 7px 9px; border-radius: 3px;
+  border: 1.5px solid var(--ink); background: var(--paper);
+  font-weight: 700; font-variant-numeric: tabular-nums;
+  transition: background-color .25s ease, box-shadow .2s ease;
+}
+.tune input:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--ink); }
+.tune tr.edited input { background: var(--hi); }
+.tune .unit { display: inline-block; width: 1.1em; color: var(--ink-3); font-weight: 600; }
+.tune .srcnote { color: var(--ink-3); font-size: .8125rem; }
+.tune-actions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.findings { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.findings li { border-top: 1px solid var(--ink); padding-top: 12px; line-height: 1.45; color: var(--ink-2); }
+.findings b {
+  display: block; color: var(--ink);
+  font-family: var(--disp); font-weight: 900; font-size: 2rem; line-height: 1;
+  font-variation-settings: "wdth" 110; margin-bottom: 6px;
+}
+.method { margin: 0; display: grid; grid-template-columns: minmax(0, 15em) 1fr; }
+.method dt, .method dd { padding: 11px 0; border-bottom: 1px solid var(--ink); margin: 0; }
+.method dt { font-weight: 700; padding-right: 16px; }
+.method dd { font-variant-numeric: tabular-nums; color: var(--ink-2); }
+@media (max-width: 620px) { .method { grid-template-columns: 1fr; } .method dt { border-bottom: 0; padding-bottom: 0; } }
+.sources { margin: 0; padding-left: 1.2em; display: grid; gap: 10px; color: var(--ink-2); font-size: .9375rem; }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(100, 116, 139, 0.3);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
+/* ---------- colophon ---------- */
+.colophon { border-top: 3px solid var(--ink); padding-block: 28px 56px; position: relative; }
+.colophon::before { content: ""; position: absolute; left: 0; right: 0; top: 4px; height: 1px; background: var(--ink); }
+.colorbar { display: flex; margin-bottom: 30px; }
+.colorbar i { display: block; height: 12px; flex: 1; max-width: 46px; }
+.col-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 20px; }
+.col-mark { grid-column: 1 / span 3; }
+.col-mark .wordmark { font-size: 1rem; }
+.col-credit { grid-column: 4 / span 5; color: var(--ink-2); }
+.col-credit p + p { margin-top: 10px; }
+.col-actions { grid-column: 9 / span 4; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+@media (max-width: 900px) { .col-mark, .col-credit, .col-actions { grid-column: 1 / -1; } }
+.share-status { font-size: .875rem; font-weight: 600; min-height: 1.4em; }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #a78bfa 0%, #60a5fa 100%);
-            transition: width 0.3s ease;
-            border-radius: 4px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-badge.good {
-            background: rgba(34, 197, 94, 0.2);
-            color: #86efac;
-            border: 1px solid #22c55e;
-        }
-
-        .status-badge.caution {
-            background: rgba(251, 146, 60, 0.2);
-            color: #fdba74;
-            border: 1px solid #fb923c;
-        }
-
-        .status-badge.poor {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid #ef4444;
-        }
-
-        .comparison-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .comparison-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .comparison-card {
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-
-        .comparison-card h3 {
-            color: #a78bfa;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        .price-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(139, 92, 246, 0.1);
-        }
-
-        .price-item:last-child {
-            border-bottom: none;
-        }
-
-        .price-item-label {
-            color: #cbd5e1;
-            font-size: 0.9rem;
-        }
-
-        .price-item-value {
-            color: #60a5fa;
-            font-weight: 600;
-        }
-
-        .chart-container {
-            background: rgba(15, 23, 42, 0.5);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-
-        .behavioral-section {
-            background: rgba(30, 27, 75, 0.5);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 40px;
-        }
-
-        .behavioral-section h2 {
-            color: #a78bfa;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .behavioral-section h2::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: linear-gradient(180deg, #a78bfa 0%, #60a5fa 100%);
-            border-radius: 2px;
-        }
-
-        .insight-card {
-            background: rgba(15, 23, 42, 0.6);
-            border-left: 3px solid #60a5fa;
-            padding: 18px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .insight-card:hover {
-            border-left-color: #a78bfa;
-            background: rgba(15, 23, 42, 0.8);
-        }
-
-        .insight-card h3 {
-            color: #60a5fa;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        .insight-card p {
-            color: #cbd5e1;
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        .warning-box {
-            background: rgba(251, 146, 60, 0.1);
-            border: 1px solid rgba(251, 146, 60, 0.3);
-            border-left: 3px solid #fb923c;
-            padding: 15px;
-            border-radius: 8px;
-            color: #fdba74;
-            margin-top: 15px;
-            font-size: 0.95rem;
-        }
-
-        .good-value-box {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-left: 3px solid #22c55e;
-            padding: 15px;
-            border-radius: 8px;
-            color: #86efac;
-            margin-top: 15px;
-            font-size: 0.95rem;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(139, 92, 246, 0.2);
-            color: #64748b;
-            font-size: 0.9rem;
-        }
-
-        .tier-badge {
-            display: inline-block;
-            background: rgba(139, 92, 246, 0.2);
-            border: 1px solid rgba(139, 92, 246, 0.4);
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            margin-left: 8px;
-            color: #a78bfa;
-        }
-
-        .chart-wrapper {
-            width: 100%;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .recharts-wrapper {
-            width: 100%;
-            height: 100%;
-        }
-
-        .no-data {
-            color: #94a3b8;
-            text-align: center;
-            padding: 40px 20px;
-            font-style: italic;
-        }
-
-        .premium-badge {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-    </style>
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  .mk { transition: none; }
+}
+</style>
 </head>
 <body>
-    <div id="root"></div>
+<a class="skiplink" href="#calc">Skip to the calculator</a>
 
-    <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
-        const { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } = Recharts;
+<div class="press" id="press" aria-hidden="true">
+  <span class="press-crop pc-tl"></span><span class="press-crop pc-tr"></span>
+  <span class="press-crop pc-bl"></span><span class="press-crop pc-br"></span>
+  <svg class="press-reg pr-t" viewBox="0 0 32 32"><use href="#reg"/></svg>
+  <svg class="press-reg pr-b" viewBox="0 0 32 32"><use href="#reg"/></svg>
+  <svg class="press-reg pr-l" viewBox="0 0 32 32"><use href="#reg"/></svg>
+  <svg class="press-reg pr-r" viewBox="0 0 32 32"><use href="#reg"/></svg>
+  <div class="press-sheet">
+    <div class="press-word">
+      <span class="pw pw-y">Battle pass<br>ROI</span>
+      <span class="pw pw-c">Battle pass<br>ROI</span>
+      <span class="pw pw-m">Battle pass<br>ROI</span>
+      <span class="pw pw-k">Battle pass<br>ROI</span>
+    </div>
+    <p class="press-sub">An unofficial season value guide</p>
+  </div>
+  <div class="press-bar">
+    <i style="background:#00a6e2"></i><i style="background:#e0007a"></i><i style="background:#ffe500"></i><i style="background:#101114"></i>
+    <i style="background:#3b62b8"></i><i style="background:#e5302f"></i><i style="background:#1fa04a"></i>
+    <i style="background:#4a4c52"></i><i style="background:#8a8d93"></i><i style="background:#c3c6ca"></i>
+  </div>
+</div>
 
-        const GAMES_DATA = {
-            fortnite: {
-                name: 'Fortnite',
-                tiers: 100,
-                freePass: false,
-                paidPrice: 9.99,
-                estimatedHours: 75,
-                estimatedValue: 150,
-                itemCount: 100,
-                avgItemPrice: 1.50,
-            },
-            apex: {
-                name: 'Apex Legends',
-                tiers: 110,
-                freePass: true,
-                paidPrice: 9.99,
-                estimatedHours: 100,
-                estimatedValue: 160,
-                itemCount: 110,
-                avgItemPrice: 1.45,
-            },
-            valorant: {
-                name: 'Valorant',
-                tiers: 50,
-                freePass: true,
-                paidPrice: 10.00,
-                estimatedHours: 50,
-                estimatedValue: 120,
-                itemCount: 50,
-                avgItemPrice: 2.40,
-            },
-            rocketleague: {
-                name: 'Rocket League',
-                tiers: 70,
-                freePass: true,
-                paidPrice: 9.99,
-                estimatedHours: 60,
-                estimatedValue: 100,
-                itemCount: 70,
-                avgItemPrice: 1.43,
-            },
-            codwarzone: {
-                name: 'COD Warzone',
-                tiers: 100,
-                freePass: false,
-                paidPrice: 19.99,
-                estimatedHours: 120,
-                estimatedValue: 200,
-                itemCount: 100,
-                avgItemPrice: 2.00,
-            },
-        };
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="reg" viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M16 1v30M1 16h30" stroke="currentColor" stroke-width="2"/>
+      <path d="M16 7a9 9 0 0 1 9 9h-9zM16 25a9 9 0 0 1-9-9h9z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
 
-        function BattlePassROI() {
-            const [selectedGame, setSelectedGame] = useState('fortnite');
-            const [hoursPerWeek, setHoursPerWeek] = useState(10);
-            const [isPremium, setIsPremium] = useState(true);
-            const [currentWeek, setCurrentWeek] = useState(1);
+<header class="mast">
+  <div class="wrap mast-in">
+    <a class="wordmark" href="#verdict"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#reg"/></svg><span>Battle Pass ROI</span></a>
+    <p class="mast-meta"><span class="m1">Unofficial season value guide</span><span class="dot" aria-hidden="true"></span><span class="m2">Every estimate is editable</span></p>
+  </div>
+</header>
 
-            const gameData = GAMES_DATA[selectedGame];
+<nav class="tabs" aria-label="Chapters">
+  <a class="tab t-verdict" href="#verdict" aria-current="true">Verdict</a>
+  <a class="tab t-walk" href="#walkthrough">Walkthrough</a>
+  <a class="tab t-shop" href="#shop">Shop math</a>
+  <a class="tab t-beast" href="#bestiary">Bestiary</a>
+  <a class="tab t-app" href="#appendix">Appendix</a>
+</nav>
 
-            const calculations = useMemo(() => {
-                const hoursPerTier = gameData.estimatedHours / gameData.tiers;
-                const weeksToComplete = gameData.estimatedHours / hoursPerWeek;
-                const completionPercentage = Math.min((hoursPerWeek * currentWeek) / gameData.estimatedHours * 100, 100);
-                const tiersUnlocked = Math.min(Math.floor((hoursPerWeek * currentWeek) / hoursPerTier), gameData.tiers);
+<main id="main">
 
-                const costPerTier = isPremium ? gameData.paidPrice / gameData.tiers : 0;
-                const costPerItem = isPremium ? gameData.paidPrice / gameData.itemCount : 0;
+<section class="title-page" id="verdict" aria-labelledby="verdict-h">
+  <div class="wrap">
+    <div class="sheet">
+      <span class="crop crop-tl" aria-hidden="true"></span><span class="crop crop-tr" aria-hidden="true"></span>
+      <span class="crop crop-bl" aria-hidden="true"></span><span class="crop crop-br" aria-hidden="true"></span>
+      <div class="tp-grid">
+        <div class="tp-main">
+          <h1 class="verdict" id="verdict-h">
+            <span class="sr-only" id="verdict-sr">Verdict: worth it.</span>
+            <span class="v-plate v-c" aria-hidden="true"></span>
+            <span class="v-plate v-m" aria-hidden="true"></span>
+            <span class="v-k" aria-hidden="true"><span class="v-line"><span class="v-in">Worth</span></span><span class="v-line"><span class="v-in">it.</span></span></span>
+          </h1>
+          <span class="v-probe" id="v-probe" aria-hidden="true">Probably</span>
+          <p class="verdict-copy" id="verdict-copy">You'd clear all 100 tiers in week 8 of a 12-week season.</p>
+          <p class="madlib" id="calc">
+            I play
+            <span class="hl"><select class="sel" id="in-game" aria-label="Game">
+              <option value="fortnite">Fortnite</option>
+              <option value="apex">Apex Legends</option>
+              <option value="valorant">Valorant</option>
+              <option value="rocketleague">Rocket League</option>
+              <option value="warzone">COD Warzone</option>
+            </select></span>
+            about
+            <span class="scrub-group"><button class="step" type="button" data-scrub="hours" data-dir="-1" aria-label="One hour less"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><span class="scrub hl" id="in-hours"><span class="scrub-v">10</span></span><button class="step" type="button" data-scrub="hours" data-dir="1" aria-label="One hour more"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M10 5v10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></span>
+            hours a week. I'd
+            <button class="switch hl" type="button" id="in-pass" role="switch" aria-checked="true" aria-label="Buy the premium pass"><span class="switch-v">buy the premium pass</span></button>
+            and actually use
+            <span class="scrub-group"><button class="step" type="button" data-scrub="want" data-dir="-1" aria-label="Five percent fewer"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button><span class="scrub hl" id="in-want"><span class="scrub-v">25%</span></span><button class="step" type="button" data-scrub="want" data-dir="1" aria-label="Five percent more"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 10h10M10 5v10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button></span>
+            of its cosmetics.
+          </p>
+          <p class="hint" id="hint">Drag a highlighted number sideways, or focus it and use the arrow keys.</p>
+        </div>
+        <aside class="tp-side" aria-labelledby="stats-h">
+          <h2 class="block-h" id="stats-h">Season stat block</h2>
+          <table class="stats">
+            <tbody>
+              <tr><th scope="row">Tier at season end</th><td class="v"><span class="num" id="s-tier">100</span><span class="of"> / <span id="s-tiers">100</span></span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+              <tr><th scope="row">Pass finished</th><td class="v" id="s-finish">Week 8 of 12</td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+              <tr><th scope="row">Extra play needed</th><td class="v"><span id="s-extra">None</span><small id="s-extra-wk"></small></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+              <tr><th scope="row">Real value to you</th><td class="v"><span class="num" id="s-real">$37.50</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+              <tr><th scope="row">Pass price</th><td class="v"><span class="num" id="s-price">$9.99</span></td><td class="src"><span class="tag" id="s-price-tag">est.</span></td></tr>
+              <tr><th scope="row">Your ROI</th><td class="v"><span class="num" id="s-roi">+275%</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+              <tr><th scope="row">Cost per hour of play</th><td class="v"><span class="num" id="s-cph">$0.13</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+            </tbody>
+          </table>
+          <div class="tier-sheet" id="tier-sheet" aria-hidden="true"></div>
+          <p class="tier-key" id="tier-key">Each dot is a tier. Filled dots unlock before the season ends.</p>
+        </aside>
+      </div>
+      <a class="next" href="#walkthrough">Turn to the walkthrough <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v13M4 10.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+</section>
 
-                const valueIfBuyingDirectly = gameData.itemCount * gameData.avgItemPrice;
-                const valueUnlocked = tiersUnlocked * (gameData.paidPrice / gameData.tiers) / costPerTier;
+<section class="chapter ch-cyan" id="walkthrough" aria-labelledby="wt-h">
+  <div class="plate">
+    <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">4</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Walkthrough</span><span class="rh-f">5</span></span></p>
+      <h2 class="ch-title" id="wt-h">Walkthrough</h2>
+      <div class="opener">
+        <p class="ch-dek" id="wt-dek">Week by week through the season at the hours you actually play.</p>
+        <nav class="toc" aria-labelledby="wt-toc wt-h">
+          <h3 class="toc-h" id="wt-toc">In this chapter</h3>
+          <ol>
+            <li><a href="#stage"><span class="toc-n">Route map</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-route">100 tiers, 12 weeks</span><span class="tag" id="toc-route-tag">est.</span></a></li>
+            <li><a href="#note-pace"><span class="toc-n"><span class="co" aria-hidden="true">1</span>Pace</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-pace">6.3 h a week</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#note-end"><span class="toc-n"><span class="co" aria-hidden="true">2</span>Season end</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-end">Done in week 8</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#note-skip"><span class="toc-n"><span class="co" aria-hidden="true">3</span>Tier skips</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-skip">None to buy</span><span class="tag tag-calc">derived</span></a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <canvas class="ht" aria-hidden="true"></canvas>
+  <div class="wrap ch-body">
+    <div class="stage" id="stage">
+      <div class="readout">
+        <p class="ro"><span class="ro-l">Week <span class="tag tag-yours">yours</span></span><span class="ro-n" id="ro-week">12</span><span class="ro-of" id="ro-weeks">of 12</span></p>
+        <p class="ro"><span class="ro-l">Tier <span class="tag tag-calc">derived</span></span><span class="ro-n" id="ro-tier">100</span><span class="ro-of" id="ro-tiers">of 100</span></p>
+        <p class="ro-note" id="ro-note" aria-live="off"></p>
+        <button class="btn" type="button" id="play"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 4.2v11.6L15.5 10z" fill="currentColor"/></svg><span>Play the season</span></button>
+      </div>
+      <div class="map" id="map">
+        <svg class="route" id="route" role="img" aria-label="Season route"></svg>
+        <div class="weekbar">
+          <label class="wb-l" for="week">Scrub through the season</label>
+          <input class="range" type="range" id="week" min="0" max="12" step="0.05" value="12">
+          <div class="wb-ticks" id="wb-ticks" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <div class="note" id="note-pace"><h3><span class="co" aria-hidden="true">1</span>Pace</h3><p id="n-pace"></p></div>
+      <div class="note" id="note-end"><h3><span class="co" aria-hidden="true">2</span>Season end</h3><p id="n-end"></p></div>
+      <div class="note" id="note-skip"><h3><span class="co" aria-hidden="true">3</span>Tier skips</h3><p id="n-skip"></p></div>
+    </div>
+  </div>
+</section>
 
-                const roi = isPremium ? ((valueIfBuyingDirectly - gameData.paidPrice) / gameData.paidPrice * 100) : 0;
+<section class="chapter ch-magenta" id="shop" aria-labelledby="shop-h">
+  <div class="plate">
+    <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">10</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Shop math</span><span class="rh-f">11</span></span></p>
+      <h2 class="ch-title" id="shop-h">Shop math</h2>
+      <div class="opener">
+        <p class="ch-dek">What the cosmetics are worth to you, not to the store.</p>
+        <nav class="toc" aria-labelledby="shop-toc shop-h">
+          <h3 class="toc-h" id="shop-toc">In this chapter</h3>
+          <ol>
+            <li><a href="#ledger"><span class="toc-n">The ledger</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-ledger">$37.50 of $150.00</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#tiles-fig"><span class="toc-n">Item tiles</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-tiles">25 of 100 you’d use</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#roi"><span class="toc-n">Return</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-roi">+275% for you</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#cph"><span class="toc-n">Cost per hour</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-cph">$0.13 an hour</span><span class="tag tag-calc">derived</span></a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <canvas class="ht" aria-hidden="true"></canvas>
+  <div class="wrap ch-body">
+    <p class="free-note" id="free-note" hidden>You're on the free track, so nothing below costs you anything. This is the math for the premium pass you'd be skipping.</p>
+    <div class="shop-grid">
+      <table class="ledger" id="ledger">
+        <caption class="sr-only">How the sticker value of the pass becomes its real value to you</caption>
+        <tbody>
+          <tr><td class="op" aria-hidden="true"></td><td class="lbl" id="l-items">100 cosmetics at $1.50 each<small>Sticker value: what the store says it's all worth</small></td><td class="amt"><span class="num" id="l-sticker">$150.00</span></td><td class="src"><span class="tag">est.</span></td></tr>
+          <tr><td class="op" aria-hidden="true">×</td><td class="lbl" id="l-unlock">100% unlocked by season end<small>Tiers you reach at your pace</small></td><td class="amt"><span class="num" id="l-unlocked">$150.00</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+          <tr class="real"><td class="op" aria-hidden="true">×</td><td class="lbl"><span id="l-want"><span class="hl swiped">25%</span> you'd actually use</span><small>Real value: what you'd equip</small></td><td class="amt"><span class="num" id="l-real">$37.50</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+          <tr><td class="op" aria-hidden="true">−</td><td class="lbl">Pass price</td><td class="amt"><span class="num" id="l-price">$9.99</span></td><td class="src"><span class="tag">est.</span></td></tr>
+          <tr class="sum"><td class="op" aria-hidden="true">=</td><td class="lbl" id="l-sum-l">You come out ahead</td><td class="amt"><span class="num" id="l-net">+$27.51</span><span class="pct" id="l-pct">+275% return</span></td><td class="src"><span class="tag tag-calc">derived</span></td></tr>
+        </tbody>
+      </table>
+      <figure class="tiles-fig" id="tiles-fig">
+        <div class="tiles" id="tiles" aria-hidden="true"></div>
+        <figcaption class="tiles-key">
+          <span><i class="k-want"></i>Unlocked, and you'd use it</span>
+          <span><i class="k-skip"></i>Unlocked, never equipped</span>
+          <span><i class="k-lock"></i>Expires with the season</span>
+        </figcaption>
+      </figure>
+    </div>
+    <div class="roi-pair" id="roi">
+      <div class="roi roi-box">
+        <h3 class="sub-h">On the box <span class="tag tag-calc">derived</span></h3>
+        <p class="roi-n"><span class="num" id="roi-sticker">+1,402%</span><span class="strike" id="strike" aria-hidden="true"></span></p>
+        <p class="roi-c">Every cosmetic valued at store price, every tier finished. The number a pass is marketed on.</p>
+      </div>
+      <div class="roi roi-you">
+        <h3 class="sub-h">For you <span class="tag tag-calc">derived</span></h3>
+        <p class="roi-n"><span class="num" id="roi-you">+275%</span></p>
+        <p class="roi-c" id="roi-you-c">Only what you unlock this season and would actually equip.</p>
+      </div>
+    </div>
+    <div class="ruler-block" id="cph">
+      <h3 class="sub-h">Cost per hour of play</h3>
+      <p class="rb-dek" id="rb-dek">Games aren't investments. The honest metric is what each hour of fun costs, next to what you'd pay for other entertainment.</p>
+      <div class="ruler" id="ruler" role="img" aria-label="Cost per hour comparison">
+        <div class="ruler-ticks" id="ruler-ticks"></div>
+        <div class="mk mk-movie" id="mk-movie"><span class="mk-pin"></span><span class="mk-l">Movie ticket, $15 for 2.5 h <b>$6.00/h</b><span class="tag">est.</span></span></div>
+        <div class="mk mk-you" id="mk-you"><span class="mk-pin"></span><span class="mk-l">This pass <b id="mk-you-v">$0.13/h</b><span class="tag tag-calc">derived</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-                return {
-                    hoursPerTier,
-                    weeksToComplete,
-                    completionPercentage,
-                    tiersUnlocked,
-                    costPerTier,
-                    costPerItem,
-                    valueIfBuyingDirectly,
-                    valueUnlocked,
-                    roi,
-                    willComplete: completionPercentage >= 100,
-                };
-            }, [selectedGame, hoursPerWeek, isPremium, currentWeek]);
+<section class="chapter ch-black" id="bestiary" aria-labelledby="best-h">
+  <div class="plate">
+    <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">16</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Bestiary</span><span class="rh-f">17</span></span></p>
+      <h2 class="ch-title" id="best-h">Bestiary</h2>
+      <div class="opener">
+        <p class="ch-dek">Four traps live in every battle pass. They're ranked by how hard each one hits your season.</p>
+        <nav class="toc" aria-labelledby="best-toc best-h">
+          <h3 class="toc-h" id="best-toc">In this chapter</h3>
+          <ol id="toc-beasts">
+            <li data-key="sunk"><a href="#trap-sunk"><span class="toc-n">Sunk cost fallacy</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li data-key="fomo"><a href="#trap-fomo"><span class="toc-n">Fear of missing out</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li data-key="endow"><a href="#trap-endow"><span class="toc-n">Endowment effect</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li data-key="loss"><a href="#trap-loss"><span class="toc-n">Loss aversion</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="sr-only"></span></span></a></li>
+            <li class="toc-clear"><a href="#clear"><span class="toc-n">Clear conditions</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-clear">2 of 3 met</span><span class="tag tag-calc">derived</span></a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <div class="wrap ch-body">
+    <div class="beasts" id="beasts"></div>
+  </div>
+  <canvas class="ht" aria-hidden="true"></canvas>
+</section>
 
-            const completionData = useMemo(() => {
-                const weeks = Math.ceil(calculations.weeksToComplete);
-                const data = [];
-                for (let w = 1; w <= Math.min(weeks + 2, 52); w++) {
-                    const completion = Math.min((hoursPerWeek * w) / gameData.estimatedHours * 100, 100);
-                    const tiers = Math.min(Math.floor((hoursPerWeek * w) / calculations.hoursPerTier), gameData.tiers);
-                    data.push({
-                        week: w,
-                        completion: Math.round(completion),
-                        tiers: tiers,
-                    });
-                }
-                return data;
-            }, [hoursPerWeek, gameData, calculations.hoursPerTier]);
+<section class="clear" id="clear" aria-labelledby="clear-h">
+  <div class="wrap">
+    <div class="clear-grid">
+      <div class="clear-intro">
+        <h2 id="clear-h">Clear conditions</h2>
+        <p>A pass is good value when all four hold. Three are math. The last one is yours to answer.</p>
+      </div>
+      <ul class="conds" id="conds"></ul>
+    </div>
+  </div>
+</section>
 
-            const costComparisonData = useMemo(() => {
-                if (!isPremium) {
-                    return [
-                        { name: 'Battle Pass\n(Free)', cost: 0, color: '#22c55e' },
-                        { name: 'Buy Individual\nItems', cost: calculations.valueIfBuyingDirectly, color: '#ef4444' },
-                    ];
-                }
-                return [
-                    { name: 'Battle Pass\n(Paid)', cost: gameData.paidPrice, color: '#a78bfa' },
-                    { name: 'Buy Individual\nItems', cost: calculations.valueIfBuyingDirectly, color: '#ef4444' },
-                    { name: 'Your Savings', cost: Math.max(0, calculations.valueIfBuyingDirectly - gameData.paidPrice), color: '#22c55e' },
-                ];
-            }, [isPremium, gameData.paidPrice, calculations.valueIfBuyingDirectly]);
+<section class="chapter ch-gray" id="appendix" aria-labelledby="app-h">
+  <div class="plate">
+    <div class="wrap">
+      <p class="rh" aria-hidden="true"><span class="rh-v"><span class="rh-f">24</span><span><span class="rh-guide">Battle Pass ROI, </span><span class="rh-game">Fortnite</span> season</span></span><span><span>Appendix</span><span class="rh-f">25</span></span></p>
+      <h2 class="ch-title" id="app-h">Appendix</h2>
+      <div class="opener">
+        <p class="ch-dek">Every number in this guide, where it came from, and how to change it.</p>
+        <nav class="toc" aria-labelledby="app-toc app-h">
+          <h3 class="toc-h" id="app-toc">In this chapter</h3>
+          <ol>
+            <li><a href="#all-games"><span class="toc-n">All five games</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-games">2 of 5 worth it</span><span class="tag tag-calc">derived</span></a></li>
+            <li><a href="#tune-block"><span class="toc-n">Tune the estimates</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v" id="toc-tune">As printed</span><span class="tag" id="toc-tune-tag">est.</span></a></li>
+            <li><a href="#findings"><span class="toc-n">From the thesis</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v">4 findings</span></a></li>
+            <li><a href="#method"><span class="toc-n">Method</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v">8 formulas</span></a></li>
+            <li><a href="#sources"><span class="toc-n">Sources</span><span class="toc-lead" aria-hidden="true"></span><span class="toc-v">5 works</span></a></li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <canvas class="ht" aria-hidden="true"></canvas>
+  <div class="wrap ch-body app-grid">
+    <div class="app-block app-compare" id="all-games">
+      <h3>All five games at your pace</h3>
+      <p id="cmp-dek">Your hours and want-rate, run through every preset. Select a game to load it.</p>
+      <div class="table-scroll">
+        <table class="data compare" id="compare">
+          <thead><tr><th scope="col">Game</th><th scope="col">Verdict <span class="tag tag-calc">derived</span></th><th scope="col" class="r">Your ROI <span class="tag tag-calc">derived</span></th><th scope="col" class="r">Per hour <span class="tag tag-calc">derived</span></th><th scope="col" class="r">Tier at end <span class="tag tag-calc">derived</span></th><th scope="col" class="r">Finished <span class="tag tag-calc">derived</span></th><th scope="col" class="r">Season <span class="tag">est.</span></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="cmp-prov">Season length is an estimate. Every other column is derived from it and your numbers. Swipe the table for more.</p>
+    </div>
+    <div class="app-block app-tune" id="tune-block">
+      <h3>Tune the estimates</h3>
+      <p id="tune-dek">Presets are 2023 estimates. If your season differs, change it. Edited numbers turn into yours.</p>
+      <div class="table-scroll">
+        <table class="data tune" id="tune">
+          <thead><tr><th scope="col">Assumption</th><th scope="col">Value</th><th scope="col">Source</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="tune-actions">
+        <button class="btn btn-ghost" type="button" id="reset"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 9.5a6 6 0 1 0 1.9-4.4M4 3.5v3.8h3.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Reset to estimates</button>
+      </div>
+    </div>
+    <div class="app-block app-findings" id="findings">
+      <h3>From the thesis</h3>
+      <ul class="findings">
+        <li><b>200–300%</b>How much players typically overvalue a cosmetic once they've unlocked it (endowment effect).</li>
+        <li><b>40–60%</b>The extra players pay for time-gated items over permanently available ones that look the same.</li>
+        <li><b>26%</b>Higher satisfaction among players who complete 70% or more of a pass, whatever their ROI.</li>
+        <li><b>~35%</b>Drop in impulsive loot box spending after battle passes arrived, with steadier seasonal spending in its place.</li>
+      </ul>
+    </div>
+    <div class="app-block app-method" id="method">
+      <h3>Method</h3>
+      <dl class="method">
+        <dt>Hours per tier</dt><dd>Hours to finish ÷ tiers</dd>
+        <dt>Tier at season end</dt><dd>Lesser of all tiers and ⌊(hours a week × season weeks) ÷ hours per tier⌋</dd>
+        <dt>Sticker value</dt><dd>Cosmetics × average item price</dd>
+        <dt>Real value</dt><dd>Cosmetics unlocked by season end × average item price × share you'd use</dd>
+        <dt>Your ROI</dt><dd>(Real value − pass price) ÷ pass price</dd>
+        <dt>ROI on the box</dt><dd>(Sticker value − pass price) ÷ pass price</dd>
+        <dt>Cost per hour</dt><dd>Pass price ÷ hours played while the pass still pays out</dd>
+        <dt>Verdict</dt><dd>Worth it when you finish and the real value covers the price. Probably not when neither holds. Close call otherwise.</dd>
+      </dl>
+      <p style="margin-top:14px;color:var(--ink-3);font-size:.875rem;max-width:62ch">Progress is modeled as steady per hour of play. XP events and weekly challenges usually speed it up, so read the forecast as a floor.</p>
+    </div>
+    <div class="app-block app-sources" id="sources">
+      <h3>Sources</h3>
+      <ol class="sources">
+        <li>Cromaz, M. (2023). <cite>The Transition from Loot Boxes to Battle Passes in Video Games: Economic Models, Player Behavior, and Long-Term Monetization Sustainability.</cite> Reed College.</li>
+        <li>Arkes, H. R., &amp; Blumer, C. (1985). The psychology of sunk cost. <cite>Organizational Behavior and Human Decision Processes.</cite></li>
+        <li>Duhachek, A., et al. (2012). Emotional responses to unattained goals and implications for consumer choice.</li>
+        <li>Zuboff, S. (2019). <cite>The Age of Surveillance Capitalism.</cite></li>
+        <li>Newzoo (2022). <cite>Global Games Market Report.</cite></li>
+      </ol>
+    </div>
+  </div>
+</section>
 
-            const passTypeData = useMemo(() => {
-                return [
-                    { name: 'Pass Cost', value: isPremium ? gameData.paidPrice : 0, fill: '#a78bfa' },
-                    { name: 'Perceived Value', value: calculations.valueIfBuyingDirectly, fill: '#60a5fa' },
-                ];
-            }, [isPremium, gameData.paidPrice, calculations.valueIfBuyingDirectly]);
+</main>
 
-            const getCompletionStatus = () => {
-                const pct = calculations.completionPercentage;
-                if (pct >= 100) return { text: '✓ ACHIEVABLE', class: 'good' };
-                if (pct >= 75) return { text: '⚠ CHALLENGING', class: 'caution' };
-                if (pct >= 50) return { text: '✗ DIFFICULT', class: 'poor' };
-                return { text: '✗ NOT ACHIEVABLE', class: 'poor' };
-            };
+<footer class="colophon">
+  <div class="wrap">
+    <div class="colorbar" aria-hidden="true">
+      <i style="background:#00a6e2"></i><i style="background:#e0007a"></i><i style="background:#ffe500"></i><i style="background:#101114"></i>
+      <i style="background:#3b62b8"></i><i style="background:#e5302f"></i><i style="background:#1fa04a"></i>
+      <i style="background:#4a4c52"></i><i style="background:#8a8d93"></i><i style="background:#c3c6ca"></i><i style="background:#e8ff3a"></i>
+    </div>
+    <div class="col-grid">
+      <div class="col-mark"><a class="wordmark" href="#verdict"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#reg"/></svg><span>Battle Pass ROI</span></a></div>
+      <div class="col-credit">
+        <p>Built by Matthew Cromaz from his economics thesis on the move from loot boxes to battle passes (Reed College, 2023).</p>
+        <p>Unofficial and unaffiliated. Game names belong to their publishers. Prices, hours and season lengths are estimates you can change in the appendix. Nothing here is financial advice.</p>
+      </div>
+      <div class="col-actions">
+        <button class="btn" type="button" id="share"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 11.5a3.5 3.5 0 0 0 5 0l2.5-2.5a3.5 3.5 0 0 0-5-5L9.8 5.2M11.5 8.5a3.5 3.5 0 0 0-5 0L4 11a3.5 3.5 0 0 0 5 5l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Copy a link to your numbers</button>
+        <button class="btn btn-ghost" type="button" id="replay"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#reg"/></svg>Run the press again</button>
+        <p class="share-status" id="share-status" role="status"></p>
+      </div>
+    </div>
+  </div>
+</footer>
 
-            const status = getCompletionStatus();
+<p class="sr-only" id="live" aria-live="polite"></p>
 
-            useEffect(() => {
-                if (currentWeek > Math.ceil(calculations.weeksToComplete) && calculations.weeksToComplete > 0) {
-                    setCurrentWeek(Math.ceil(calculations.weeksToComplete));
-                }
-            }, [selectedGame, hoursPerWeek]);
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js"></script>
+<script>
+(function () {
+  'use strict';
 
-            return (
-                <div className="container">
-                    <div className="header">
-                        <h1>⚔️ Battle Pass ROI Calculator</h1>
-                        <p>Calculate whether a battle pass is worth your time and money</p>
-                    </div>
+  /* ================= data ================= */
+  // 2023 thesis dataset estimates. Season length is a typical-season estimate.
+  var GAMES = {
+    fortnite:     { name: 'Fortnite',      price: 9.99,  tiers: 100, hours: 75,  weeks: 12, items: 100, itemPrice: 1.50 },
+    apex:         { name: 'Apex Legends',  price: 9.99,  tiers: 110, hours: 100, weeks: 13, items: 110, itemPrice: 1.45 },
+    valorant:     { name: 'Valorant',      price: 10.00, tiers: 50,  hours: 50,  weeks: 8,  items: 50,  itemPrice: 2.40 },
+    rocketleague: { name: 'Rocket League', price: 9.99,  tiers: 70,  hours: 60,  weeks: 13, items: 70,  itemPrice: 1.43 },
+    warzone:      { name: 'COD Warzone',   price: 19.99, tiers: 100, hours: 120, weeks: 9,  items: 100, itemPrice: 2.00 }
+  };
+  var ORDER = ['fortnite', 'apex', 'valorant', 'rocketleague', 'warzone'];
+  var FIELDS = [
+    { key: 'price',     label: 'Premium pass price',    unit: '$', step: 0.01, min: 0.5,  max: 200, int: false, src: '2023 thesis set' },
+    { key: 'tiers',     label: 'Tiers in the pass',     step: 1,    min: 5,    max: 300, int: true,  src: '2023 thesis set' },
+    { key: 'hours',     label: 'Hours to finish',       step: 1,    min: 5,    max: 600, int: true,  src: '2023 thesis set' },
+    { key: 'weeks',     label: 'Season length, weeks',  step: 1,    min: 2,    max: 30,  int: true,  src: 'Typical season' },
+    { key: 'items',     label: 'Cosmetics in the pass', step: 1,    min: 1,    max: 400, int: true,  src: '2023 thesis set' },
+    { key: 'itemPrice', label: 'Average item price',    unit: '$', step: 0.05, min: 0.05, max: 50,  int: false, src: '2023 thesis set' }
+  ];
+  var MOVIE_PER_HOUR = 15 / 2.5;
+  var VERDICTS = {
+    worth: ['Worth', 'it.'],
+    close: ['Close', 'call.'],
+    not:   ['Probably', 'not.'],
+    free:  ['No', 'spend.']
+  };
+  var VERDICT_LABEL = { worth: 'Worth it', close: 'Close call', not: 'Probably not', free: 'No spend' };
 
-                    <div className="content-grid">
-                        {/* INPUT SECTION */}
-                        <div className="section">
-                            <h2>Game & Settings</h2>
+  /* ================= utils ================= */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var clamp = function (v, a, b) { return Math.min(b, Math.max(a, v)); };
+  var G = window.gsap;
+  var ST = window.ScrollTrigger;
+  var reduceQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var coarseQ = window.matchMedia('(pointer: coarse)');
+  var root = document.documentElement;
+  if (G && ST) G.registerPlugin(ST);
+  function moving() { return !!G && !reduceQ.matches; }
 
-                            <div className="form-group">
-                                <label htmlFor="game-select">Select Your Game</label>
-                                <select
-                                    id="game-select"
-                                    value={selectedGame}
-                                    onChange={(e) => setSelectedGame(e.target.value)}
-                                >
-                                    {Object.entries(GAMES_DATA).map(([key, game]) => (
-                                        <option key={key} value={key}>
-                                            {game.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+  function money(v) {
+    var a = Math.abs(v);
+    var s = a >= 1000 ? Math.round(a).toLocaleString('en-US') : a.toFixed(2);
+    return (v < -0.004 ? '−$' : '$') + s;
+  }
+  function signedMoney(v) { return (v >= -0.004 ? '+' : '−') + '$' + (Math.abs(v) >= 1000 ? Math.round(Math.abs(v)).toLocaleString('en-US') : Math.abs(v).toFixed(2)); }
+  function pct(v) { var n = Math.round(v * 100); return (n >= 0 ? '+' : '−') + Math.abs(n).toLocaleString('en-US') + '%'; }
+  function hrs(v) { return v < 10 ? String(Math.round(v * 10) / 10) : String(Math.round(v)); }
+  function mult(x) { return (x >= 10 ? Math.round(x) : x.toFixed(1)) + '×'; }
+  function plural(n, one, many) { return n === 1 ? one : many; }
 
-                            <div className="form-group">
-                                <label htmlFor="hours-input">
-                                    Hours Per Week
-                                    <span className="tier-badge">{hoursPerWeek}h</span>
-                                </label>
-                                <input
-                                    id="hours-input"
-                                    type="range"
-                                    min="1"
-                                    max="50"
-                                    value={hoursPerWeek}
-                                    onChange={(e) => setHoursPerWeek(Number(e.target.value))}
-                                    style={{ cursor: 'pointer' }}
-                                />
-                                <div style={{ marginTop: '8px', color: '#94a3b8', fontSize: '0.9rem' }}>
-                                    {hoursPerWeek * 4} hours/month
-                                </div>
-                            </div>
+  /* ================= state ================= */
+  var edits = {};
+  var state = { game: 'fortnite', hpw: 10, want: 25, premium: true };
+  readHash();
+  var R = null;          // current results
+  var weekVal = null;    // walkthrough playhead, in weeks
+  var playing = null;
+  var lastVerdict = null;
+  var pinned = false;
 
-                            <div className="form-group">
-                                <label style={{ display: 'flex', gap: '12px', cursor: 'pointer' }}>
-                                    <input
-                                        type="checkbox"
-                                        checked={isPremium}
-                                        onChange={(e) => setIsPremium(e.target.checked)}
-                                        style={{ width: 'auto', cursor: 'pointer' }}
-                                    />
-                                    <span>
-                                        Purchase Premium Pass
-                                        {isPremium && <span className="premium-badge"> ${gameData.paidPrice.toFixed(2)}</span>}
-                                    </span>
-                                </label>
-                            </div>
+  function settings(key) {
+    var o = {}, k;
+    for (k in GAMES[key]) o[k] = GAMES[key][k];
+    if (edits[key]) for (k in edits[key]) o[k] = edits[key][k];
+    return o;
+  }
 
-                            <div className="form-group">
-                                <label htmlFor="week-slider">
-                                    View Progress at Week
-                                    <span className="tier-badge">Week {currentWeek}</span>
-                                </label>
-                                <input
-                                    id="week-slider"
-                                    type="range"
-                                    min="1"
-                                    max={Math.max(Math.ceil(calculations.weeksToComplete) + 5, 10)}
-                                    value={currentWeek}
-                                    onChange={(e) => setCurrentWeek(Number(e.target.value))}
-                                    style={{ cursor: 'pointer' }}
-                                />
-                            </div>
+  function compute(key, hpw, wantPct, premium) {
+    var a = settings(key);
+    var T = Math.round(a.tiers), W = Math.round(a.weeks), H = a.hours;
+    var want = wantPct / 100;
+    var price = premium ? a.price : 0;
+    var hpt = H / T;
+    var seasonHours = hpw * W;
+    var tiersEnd = Math.min(T, Math.floor(seasonHours / hpt + 1e-6));
+    var finishes = tiersEnd >= T;
+    var finishWeek = H / hpw;
+    var completion = Math.min(1, seasonHours / H);
+    var gap = Math.max(0, H - seasonHours);
+    var items = Math.round(a.items);
+    var itemsUnlocked = Math.round(tiersEnd / T * items);
+    var sticker = items * a.itemPrice;
+    var unlockedValue = itemsUnlocked * a.itemPrice;
+    var real = unlockedValue * want;
+    var net = real - price;
+    var hoursOnPass = Math.min(seasonHours, H);
+    var verdict;
+    if (!premium) verdict = 'free';
+    else if (finishes && real >= price) verdict = 'worth';
+    else if (!finishes && real < price) verdict = 'not';
+    else verdict = 'close';
+    return {
+      key: key, a: a, name: a.name, T: T, W: W, H: H, hpw: hpw, want: want, wantPct: wantPct,
+      premium: premium, price: price, listPrice: a.price, hpt: hpt, seasonHours: seasonHours,
+      tiersEnd: tiersEnd, finishes: finishes, finishWeek: finishWeek, finishWk: Math.max(1, Math.ceil(finishWeek - 1e-6)),
+      completion: completion, gap: gap, gapWeekly: gap / W, items: items, itemsUnlocked: itemsUnlocked,
+      sticker: sticker, unlockedValue: unlockedValue, real: real, net: net,
+      roi: premium && price > 0 ? net / price : null,
+      stickerRoi: a.price > 0 ? (sticker - a.price) / a.price : null,
+      hoursOnPass: hoursOnPass, cph: premium && hoursOnPass > 0 ? price / hoursOnPass : 0,
+      verdict: verdict, missed: T - tiersEnd
+    };
+  }
+  function tierAt(r, w) { return Math.min(r.T, (w * r.hpw) / r.hpt); }
 
-                            <div style={{ marginTop: '30px', padding: '20px', background: 'rgba(15, 23, 42, 0.5)', borderRadius: '8px', border: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                                <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '8px' }}>GAME INFO</div>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', color: '#e2e8f0', fontSize: '0.9rem' }}>
-                                    <div>
-                                        <div style={{ color: '#64748b' }}>Total Tiers</div>
-                                        <div style={{ color: '#a78bfa', fontWeight: 600 }}>{gameData.tiers}</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ color: '#64748b' }}>Est. Hours</div>
-                                        <div style={{ color: '#60a5fa', fontWeight: 600 }}>{gameData.estimatedHours}h</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ color: '#64748b' }}>Items Unlocked</div>
-                                        <div style={{ color: '#a78bfa', fontWeight: 600 }}>{gameData.itemCount}</div>
-                                    </div>
-                                    <div>
-                                        <div style={{ color: '#64748b' }}>Est. Value</div>
-                                        <div style={{ color: '#60a5fa', fontWeight: 600 }}>${gameData.estimatedValue}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+  /* ================= copy ================= */
+  function verdictCopy(r) {
+    if (r.verdict === 'free') return 'The free track costs nothing. At ' + hrs(r.hpw) + ' hours a week you’d reach tier <b>' + r.tiersEnd + '</b> of ' + r.T + ' on it. The cost to watch for is the mid-season prompt to upgrade.';
+    if (r.finishes && r.real >= r.price) return 'You’d clear all ' + r.T + ' tiers in <b>week ' + r.finishWk + '</b> of a ' + r.W + '-week season, and the cosmetics you’d actually use are worth about <b>' + money(r.real) + '</b>, ' + mult(r.real / r.price) + ' the ' + money(r.price) + ' you pay.';
+    if (r.finishes) return 'You’d clear all ' + r.T + ' tiers by <b>week ' + r.finishWk + '</b>, but the cosmetics you’d actually use come to about <b>' + money(r.real) + '</b>, less than the ' + money(r.price) + ' you pay.';
+    if (r.real >= r.price) return 'You’d reach tier <b>' + r.tiersEnd + '</b> of ' + r.T + ' before the ' + r.W + '-week season ends. What you’d use from those tiers is worth about <b>' + money(r.real) + '</b>, so it pays off unfinished. Finishing would take ' + hrs(r.gapWeekly) + ' more hours a week.';
+    return 'You’d reach tier <b>' + r.tiersEnd + '</b> of ' + r.T + ' before the ' + r.W + '-week season ends, and what you’d actually use from it is worth about <b>' + money(r.real) + '</b>, less than the ' + money(r.price) + ' you pay.';
+  }
 
-                        {/* RESULTS SECTION */}
-                        <div className="section">
-                            <h2>Completion & ROI Analysis</h2>
+  var BEASTS = [
+    {
+      key: 'sunk', name: 'Sunk cost fallacy',
+      icon: '<circle cx="16" cy="11" r="6"/><path d="M16 8.5v5M14.3 10h3.4"/><path d="M3 20.5q3.25-2.5 6.5 0t6.5 0 6.5 0 6.5 0M3 26q3.25-2.5 6.5 0t6.5 0 6.5 0 6.5 0"/>',
+      attack: 'Keeps you playing “to get your money’s worth” after the money is already spent.',
+      weakness: 'Ask if you’d play tonight with no pass at all. Money already spent is no reason to spend more hours.',
+      threat: function (r) { if (!r.premium) return 1; if (r.finishes) return 2; return r.completion >= 0.7 ? 5 : 4; },
+      you: function (r) {
+        if (!r.premium) return 'You haven’t paid, so there’s nothing sunk yet. A mid-season upgrade is what creates it.';
+        if (r.finishes) return 'You finish on normal play, so there’s little to grind for. Watch for overtime on the last few tiers.';
+        return 'At <span class="hl swiped">' + hrs(r.hpw) + ' hours a week</span> you’d end the season <b>' + hrs(r.gap) + ' hours short</b>. That gap is exactly what sunk cost asks you to fill.';
+      }
+    },
+    {
+      key: 'fomo', name: 'Fear of missing out',
+      icon: '<path d="M8 3.5h16M8 28.5h16"/><path d="M9.5 3.5c0 7.5 13 7.5 13 12.5s-13 5-13 12.5M22.5 3.5c0 7.5-13 7.5-13 12.5s13 5 13 12.5"/><path d="M12.5 24.5h7"/>',
+      attack: 'Season timers, weekly challenges and “last chance” rewards make skipping feel like losing something forever.',
+      weakness: 'These items, or ones very like them, come back. The scarcity is a design decision, not a law of nature.',
+      threat: function (r) { if (!r.premium) return 3; if (r.finishes) return (r.W - r.finishWeek) < 1.5 ? 3 : 2; return r.missed / r.T <= 0.25 ? 5 : 4; },
+      you: function (r) {
+        if (r.finishes && r.premium) return 'You clear the pass in week ' + r.finishWk + ', so the countdown has little pull on you.';
+        if (r.finishes) return 'You’d reach the end of the free track. The premium rewards you skipped will be on display the whole way.';
+        return 'At <span class="hl swiped">' + hrs(r.hpw) + ' hours a week</span>, <b>' + r.missed + ' ' + plural(r.missed, 'tier expires', 'tiers expire') + '</b> at season end. Tier-skip offers are aimed at exactly that moment.';
+      }
+    },
+    {
+      key: 'endow', name: 'Endowment effect',
+      icon: '<path d="M8 12.5 12.5 6h7L24 12.5 16 27z"/><path d="M8 12.5h16M12.5 6l3.5 6.5L19.5 6M16 12.5V27"/>',
+      attack: 'An unlocked item feels worth more than the same item in a store. The thesis measured 200–300% overvaluation.',
+      weakness: 'Would you pay full price for this item if it weren’t sitting in your pass?',
+      threat: function (r) { var w = r.want; return w < 0.2 ? 5 : w < 0.4 ? 4 : w < 0.6 ? 3 : w < 0.8 ? 2 : 1; },
+      you: function (r) {
+        var skip = 100 - r.wantPct;
+        if (skip <= 0) return 'You’d use every cosmetic, so the sticker value is close to your real value.';
+        return 'You’d use <span class="hl swiped">' + r.wantPct + '%</span>. The other <b>' + skip + '%</b> still count toward the ' + money(r.sticker) + ' sticker value the pass is sold on.';
+      }
+    },
+    {
+      key: 'loss', name: 'Loss aversion',
+      icon: '<path d="M16 4v23M10.5 27.5h11"/><path d="M5 10.5 27 7"/><path d="M5 10.5 2 18h6zM27 7l-3 7.5h6z"/>',
+      attack: 'Missing a tier you could have had stings more than keeping the money feels good.',
+      weakness: 'Ask: do I want this item, or do I just want to avoid the regret of not having it?',
+      threat: function (r) { if (!r.premium) return 4; if (r.finishes) return 1; return r.completion >= 0.6 ? 5 : 3; },
+      you: function (r) {
+        if (!r.premium) return 'On the free track you’ll see every premium reward behind a lock. That view is the point.';
+        if (r.finishes) return 'You get everything, so there’s no visible loss to steer you.';
+        return 'At <span class="hl swiped">' + hrs(r.hpw) + ' hours a week</span> you finish the season <b>' + Math.round(r.completion * 100) + '% complete</b>, watching what you’re missing for the whole final stretch.';
+      }
+    }
+  ];
 
-                            <div className="results-grid">
-                                <div className="metric">
-                                    <div className="metric-label">Completion Forecast</div>
-                                    <div className="metric-value">{calculations.completionPercentage.toFixed(1)}%</div>
-                                    <div className="progress-bar">
-                                        <div
-                                            className="progress-fill"
-                                            style={{ width: `${calculations.completionPercentage}%` }}
-                                        ></div>
-                                    </div>
-                                    <div style={{ marginTop: '10px' }}>
-                                        <span className={`status-badge ${status.class}`}>{status.text}</span>
-                                    </div>
-                                </div>
+  /* ================= hash ================= */
+  function readHash() {
+    try {
+      var p = new URLSearchParams(location.hash.slice(1));
+      if (!p.has('g')) return;
+      var g = GAMES[p.get('g')] ? p.get('g') : 'fortnite';
+      var h = parseFloat(p.get('h')), u = parseFloat(p.get('u'));
+      state.game = g;
+      state.hpw = isFinite(h) ? clamp(Math.round(h), 1, 50) : 10;
+      state.want = isFinite(u) ? clamp(Math.round(u / 5) * 5, 0, 100) : 25;
+      state.premium = p.get('p') !== '0';
+      var e = {};
+      FIELDS.forEach(function (f) {
+        if (p.has(f.key)) { var v = parseFloat(p.get(f.key)); if (isFinite(v)) e[f.key] = clamp(f.int ? Math.round(v) : v, f.min, f.max); }
+      });
+      if (Object.keys(e).length) edits[g] = e;
+    } catch (_) {}
+  }
+  var hashTimer = 0;
+  function writeHash() {
+    clearTimeout(hashTimer);
+    hashTimer = setTimeout(function () {
+      var p = new URLSearchParams();
+      p.set('g', state.game); p.set('h', state.hpw); p.set('u', state.want); p.set('p', state.premium ? 1 : 0);
+      var e = edits[state.game] || {};
+      Object.keys(e).forEach(function (k) { p.set(k, e[k]); });
+      try { history.replaceState(null, '', '#' + p.toString()); } catch (_) {}
+    }, 250);
+  }
 
-                                <div className="metric">
-                                    <div className="metric-label">Weeks to Complete</div>
-                                    <div className="metric-value">{calculations.weeksToComplete.toFixed(1)}</div>
-                                    <div className="metric-subtext">
-                                        at {hoursPerWeek}h/week
-                                    </div>
-                                </div>
+  /* ================= number motion ================= */
+  function roll(el, to, fmt) {
+    if (!el) return;
+    var from = typeof el._v === 'number' ? el._v : to;
+    el._v = to;
+    if (!moving() || from === to || !isFinite(from) || !isFinite(to)) {
+      if (el._tw) el._tw.kill();
+      el.textContent = fmt(to);
+      return;
+    }
+    if (el._tw) el._tw.kill();
+    var o = { v: from };
+    el._tw = G.to(o, { v: to, duration: 0.6, ease: 'expo.out', onUpdate: function () { el.textContent = fmt(o.v); } });
+    misreg(el);
+  }
+  // Out-of-register flash: the cyan and magenta plates slip, then snap back.
+  function misreg(el) {
+    if (!moving() || !el.animate) return;
+    if (el._mr && el._mr.playState === 'running') return;
+    el._mr = el.animate([
+      { textShadow: '-3px -1px 0 rgba(0,166,226,.85), 3px 1px 0 rgba(224,0,122,.8)' },
+      { textShadow: '0 0 0 rgba(0,166,226,0), 0 0 0 rgba(224,0,122,0)' }
+    ], { duration: 420, easing: 'cubic-bezier(.16,1,.3,1)' });
+  }
+  function setText(el, txt) { if (el && el.textContent !== txt) { el.textContent = txt; misreg(el); } }
 
-                                <div className="metric">
-                                    <div className="metric-label">Current Tier Progress</div>
-                                    <div className="metric-value">{calculations.tiersUnlocked}/{gameData.tiers}</div>
-                                    <div className="metric-subtext">
-                                        Week {currentWeek} • {Math.round((calculations.tiersUnlocked / gameData.tiers) * 100)}% of pass
-                                    </div>
-                                </div>
+  /* ================= verdict ================= */
+  var vK = $('.v-k'), vC = $('.v-c'), vM = $('.v-m');
+  function verdictHTML(key, chars) {
+    return VERDICTS[key].map(function (line) {
+      var inner = chars ? line.split('').map(function (c) { return '<span class="ch">' + c + '</span>'; }).join('') : line;
+      return '<span class="v-line"><span class="v-in">' + inner + '</span></span>';
+    }).join('');
+  }
+  function setVerdict(key, animate) {
+    if (key === lastVerdict) return;
+    var first = lastVerdict === null;
+    lastVerdict = key;
+    vK.innerHTML = verdictHTML(key, true);
+    vC.innerHTML = vM.innerHTML = verdictHTML(key, false);
+    $('#verdict-sr').textContent = 'Verdict: ' + VERDICT_LABEL[key] + '.';
+    if (first || !animate || !moving()) return;
+    reprint();
+  }
+  function reprint() {
+    G.killTweensOf([vC, vM]);
+    var tl = G.timeline({ defaults: { ease: 'expo.out' } });
+    tl.set([vC, vM], { opacity: 1 })
+      .fromTo(vC, { x: '-0.06em', y: '-0.035em' }, { x: 0, y: 0, duration: 0.7 }, 0)
+      .fromTo(vM, { x: '0.05em', y: '0.04em' }, { x: 0, y: 0, duration: 0.7 }, 0)
+      .from($$('.ch', vK), { yPercent: 108, duration: 0.6, stagger: 0.028 }, 0.12)
+      .to([vC, vM], { opacity: 0, duration: 0.25, ease: 'power1.out' }, '>-0.1');
+  }
+  function fitVerdict() {
+    var host = $('.tp-main'), probe = $('#v-probe');
+    if (!host || !probe) return;
+    var w = host.clientWidth;
+    var pw = probe.getBoundingClientRect().width;
+    if (!pw) return;
+    var size = clamp(100 * (w * 0.97) / pw, 46, 176);
+    root.style.setProperty('--v-size', size.toFixed(1) + 'px');
+  }
 
-                                <div className="metric">
-                                    <div className="metric-label">Cost Per Tier</div>
-                                    <div className="metric-value">${calculations.costPerTier.toFixed(2)}</div>
-                                    <div className="metric-subtext">
-                                        {isPremium ? `vs $${gameData.avgItemPrice.toFixed(2)}/item` : 'Free Pass'}
-                                    </div>
-                                </div>
+  /* ================= title page ================= */
+  var tierSheet = $('#tier-sheet');
+  function buildTierSheet(T) {
+    if (tierSheet._T === T) return;
+    tierSheet._T = T;
+    var html = '';
+    for (var i = 0; i < T; i++) html += '<i style="--d:' + Math.min(i * 5, 420) + 'ms"></i>';
+    tierSheet.innerHTML = html;
+    tierSheet.style.gridTemplateColumns = 'repeat(' + (T > 60 ? 20 : 10) + ', minmax(0, 1fr))';
+  }
+  function renderTitle(r) {
+    setVerdict(r.verdict, true);
+    $('#verdict-copy').innerHTML = verdictCopy(r);
+    roll($('#s-tier'), r.tiersEnd, function (v) { return String(Math.round(v)); });
+    $('#s-tiers').textContent = r.T;
+    setText($('#s-finish'), r.finishes ? 'Week ' + r.finishWk + ' of ' + r.W : 'Not this season');
+    setText($('#s-extra'), r.gap <= 0 ? 'None' : hrs(r.gap) + ' h');
+    $('#s-extra-wk').textContent = r.gap <= 0 ? '' : hrs(r.gapWeekly) + ' h a week more';
+    roll($('#s-real'), r.real, money);
+    roll($('#s-price'), r.price, money);
+    var pt = $('#s-price-tag');
+    var priceEdited = edits[r.key] && 'price' in edits[r.key];
+    pt.textContent = !r.premium ? 'yours' : priceEdited ? 'yours' : 'est.';
+    pt.className = 'tag' + ((!r.premium || priceEdited) ? ' tag-yours' : '');
+    if (r.roi === null) { var ro = $('#s-roi'); if (ro._tw) ro._tw.kill(); ro._v = undefined; setText(ro, 'Free track'); }
+    else roll($('#s-roi'), r.roi, pct);
+    roll($('#s-cph'), r.cph, money);
 
-                                {isPremium && (
-                                    <>
-                                        <div className="metric">
-                                            <div className="metric-label">ROI (Return on Investment)</div>
-                                            <div className="metric-value">{calculations.roi.toFixed(0)}%</div>
-                                            <div className="metric-subtext">
-                                                vs buying items individually
-                                            </div>
-                                        </div>
+    buildTierSheet(r.T);
+    $$('i', tierSheet).forEach(function (d, i) {
+      var on = i < r.tiersEnd;
+      d.classList.toggle('on', on);
+      d.classList.toggle('miss', !on);
+    });
+    $('#tier-key').textContent = 'Each dot is a tier. Filled dots unlock before the season ends' + (r.missed ? '; ' + r.missed + ' ' + plural(r.missed, 'expires', 'expire') + ' unclaimed.' : '.');
 
-                                        <div className="metric">
-                                            <div className="metric-label">Potential Savings</div>
-                                            <div className="metric-value">${Math.max(0, calculations.valueIfBuyingDirectly - gameData.paidPrice).toFixed(2)}</div>
-                                            <div className="metric-subtext">
-                                                if you complete the pass
-                                            </div>
-                                        </div>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </div>
+    $('#in-game').value = r.key;
+    sizeSelect();
+    $('#in-hours .scrub-v').textContent = r.hpw;
+    $('#in-want .scrub-v').textContent = r.wantPct + '%';
+    var sw = $('#in-pass');
+    sw.setAttribute('aria-checked', r.premium ? 'true' : 'false');
+    $('.switch-v', sw).textContent = r.premium ? 'buy the premium pass' : 'stay on the free track';
+  }
 
-                    {/* CHARTS SECTION */}
-                    <div className="section">
-                        <h2>Completion Timeline</h2>
-                        <div className="chart-wrapper">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <LineChart data={completionData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
-                                    <XAxis
-                                        dataKey="week"
-                                        stroke="#64748b"
-                                        style={{ fontSize: '12px' }}
-                                    />
-                                    <YAxis
-                                        yAxisId="left"
-                                        stroke="#64748b"
-                                        style={{ fontSize: '12px' }}
-                                    />
-                                    <YAxis
-                                        yAxisId="right"
-                                        orientation="right"
-                                        stroke="#64748b"
-                                        style={{ fontSize: '12px' }}
-                                    />
-                                    <Tooltip
-                                        contentStyle={{
-                                            background: 'rgba(15, 23, 42, 0.95)',
-                                            border: '1px solid rgba(139, 92, 246, 0.5)',
-                                            borderRadius: '8px',
-                                            color: '#e2e8f0',
-                                        }}
-                                    />
-                                    <Legend />
-                                    <Line
-                                        yAxisId="left"
-                                        type="monotone"
-                                        dataKey="completion"
-                                        stroke="#a78bfa"
-                                        strokeWidth={3}
-                                        dot={{ fill: '#a78bfa', r: 4 }}
-                                        activeDot={{ r: 6 }}
-                                        name="Completion %"
-                                    />
-                                    <Line
-                                        yAxisId="right"
-                                        type="monotone"
-                                        dataKey="tiers"
-                                        stroke="#60a5fa"
-                                        strokeWidth={3}
-                                        dot={{ fill: '#60a5fa', r: 4 }}
-                                        activeDot={{ r: 6 }}
-                                        name="Tiers Unlocked"
-                                    />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
+  // a native select is as wide as its longest option; fit it to the chosen game instead
+  function sizeSelect() {
+    var s = $('#in-game');
+    var m = sizeSelect.m;
+    if (!m) {
+      m = sizeSelect.m = document.createElement('span');
+      m.setAttribute('aria-hidden', 'true');
+      m.style.cssText = 'position:absolute;left:0;top:0;visibility:hidden;white-space:pre;font-weight:800;pointer-events:none';
+      s.parentNode.appendChild(m);
+    }
+    m.textContent = s.options[s.selectedIndex].text;
+    s.style.width = Math.ceil(m.getBoundingClientRect().width + parseFloat(getComputedStyle(s).paddingRight) + 4) + 'px';
+  }
 
-                    {/* COST COMPARISON */}
-                    <div className="content-grid" style={{ marginTop: '40px' }}>
-                        <div className="section">
-                            <h2>Cost Breakdown</h2>
-                            <div className="comparison-container">
-                                <div className="comparison-card">
-                                    <h3>Battle Pass Route</h3>
-                                    <div className="price-item">
-                                        <span className="price-item-label">Pass Cost</span>
-                                        <span className="price-item-value">${isPremium ? gameData.paidPrice.toFixed(2) : '0.00'}</span>
-                                    </div>
-                                    <div className="price-item">
-                                        <span className="price-item-label">Items Unlocked</span>
-                                        <span className="price-item-value">{gameData.itemCount}</span>
-                                    </div>
-                                    <div className="price-item">
-                                        <span className="price-item-label">Cost Per Item</span>
-                                        <span className="price-item-value">${calculations.costPerItem.toFixed(3)}</span>
-                                    </div>
-                                    <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                                        <div className="price-item">
-                                            <span className="price-item-label" style={{ fontWeight: 600, color: '#cbd5e1' }}>Total Investment</span>
-                                            <span className="price-item-value" style={{ fontSize: '1.4rem' }}>${isPremium ? gameData.paidPrice.toFixed(2) : '0.00'}</span>
-                                        </div>
-                                    </div>
-                                </div>
+  /* ================= custom scrub sliders ================= */
+  function scrub(el, o) {
+    el.tabIndex = 0;
+    el.setAttribute('role', 'slider');
+    el.setAttribute('aria-label', o.label);
+    el.setAttribute('aria-valuemin', o.min);
+    el.setAttribute('aria-valuemax', o.max);
+    var start = null;
+    function sync() {
+      var v = o.get();
+      el.setAttribute('aria-valuenow', v);
+      el.setAttribute('aria-valuetext', o.text(v));
+    }
+    function commit(v) {
+      v = clamp(Math.round(v / o.step) * o.step, o.min, o.max);
+      if (v !== o.get()) o.set(v);
+      sync();
+    }
+    el.addEventListener('pointerdown', function (e) {
+      if (e.button !== 0) return;
+      start = { x: e.clientX, v: o.get(), id: e.pointerId, drag: false };
+      try { el.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    el.addEventListener('pointermove', function (e) {
+      if (!start || e.pointerId !== start.id) return;
+      var dx = e.clientX - start.x;
+      if (!start.drag && Math.abs(dx) > 3) { start.drag = true; el.classList.add('is-drag'); root.classList.add('is-scrubbing'); }
+      if (start.drag) commit(start.v + Math.round(dx / o.px) * o.step);
+    });
+    function end() {
+      if (!start) return;
+      if (!start.drag) el.focus();
+      el.classList.remove('is-drag'); root.classList.remove('is-scrubbing');
+      start = null;
+    }
+    el.addEventListener('pointerup', end);
+    el.addEventListener('pointercancel', end);
+    el.addEventListener('lostpointercapture', end);
+    el.addEventListener('keydown', function (e) {
+      var v = o.get(), s = o.step, n = null;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') n = v + s;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') n = v - s;
+      else if (e.key === 'PageUp') n = v + s * 5;
+      else if (e.key === 'PageDown') n = v - s * 5;
+      else if (e.key === 'Home') n = o.min;
+      else if (e.key === 'End') n = o.max;
+      if (n !== null) { e.preventDefault(); commit(n); }
+    });
+    sync();
+    return { sync: sync, commit: commit, o: o };
+  }
 
-                                <div className="comparison-card">
-                                    <h3>Buy Items Individually</h3>
-                                    <div className="price-item">
-                                        <span className="price-item-label">Avg Item Price</span>
-                                        <span className="price-item-value">${gameData.avgItemPrice.toFixed(2)}</span>
-                                    </div>
-                                    <div className="price-item">
-                                        <span className="price-item-label">Total Items</span>
-                                        <span className="price-item-value">{gameData.itemCount}</span>
-                                    </div>
-                                    <div className="price-item">
-                                        <span className="price-item-label">Individual Cost</span>
-                                        <span className="price-item-value">${calculations.valueIfBuyingDirectly.toFixed(2)}</span>
-                                    </div>
-                                    <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px solid rgba(139, 92, 246, 0.2)' }}>
-                                        <div className="price-item">
-                                            <span className="price-item-label" style={{ fontWeight: 600, color: '#cbd5e1' }}>Total Cost</span>
-                                            <span className="price-item-value" style={{ fontSize: '1.4rem' }}>${calculations.valueIfBuyingDirectly.toFixed(2)}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+  /* ================= walkthrough route ================= */
+  var NS = 'http://www.w3.org/2000/svg';
+  var svg = $('#route');
+  var route = { cols: 0, T: 0 };
+  function el(tag, attrs, parent) {
+    var n = document.createElementNS(NS, tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(n);
+    return n;
+  }
+  function buildRoute(r, force) {
+    var width = $('#map').clientWidth || 800;
+    var cols = width < 560 ? 10 : 20;
+    if (!force && cols === route.cols && r.T === route.T) return false;
+    route.cols = cols; route.T = r.T;
+    var S = 40, RG = 74, padX = 54, padTop = 52;
+    var rows = Math.ceil(r.T / cols);
+    var vbW = padX * 2 + (cols - 1) * S;
+    var scale = width / vbW;
+    var u = route.u = 1 / scale;   // one screen pixel, in route units
+    var padBot = 30 + 18 * u;      // room for callouts hanging under the last row
+    var vbH = padTop + padBot + (rows - 1) * RG;
+    route.font = 12.5 * u;
+    svg.setAttribute('viewBox', '0 0 ' + vbW + ' ' + vbH);
+    svg.innerHTML = '';
+    var defs = el('defs', {}, svg);
+    // a real halftone screen: round dots on a 45 degree grid, at a fixed pitch on screen
+    var pitch = 4.4 * u;
+    var pat = el('pattern', { id: 'screen', width: pitch, height: pitch, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    el('circle', { cx: pitch / 2, cy: pitch / 2, r: 1.25 * u, class: 'scr' }, pat);
 
-                            {isPremium && (
-                                <div style={{ marginTop: '25px' }}>
-                                    <div className="price-item" style={{ borderBottom: '2px solid rgba(139, 92, 246, 0.3)', paddingBottom: '15px' }}>
-                                        <span style={{ color: '#a78bfa', fontWeight: 600, fontSize: '1.1rem' }}>Your Savings</span>
-                                        <span style={{ color: '#22c55e', fontWeight: 700, fontSize: '1.4rem' }}>
-                                            ${Math.max(0, calculations.valueIfBuyingDirectly - gameData.paidPrice).toFixed(2)}
-                                        </span>
-                                    </div>
-                                    <div style={{ marginTop: '12px', color: '#86efac', fontSize: '0.9rem' }}>
-                                        ✓ You get {Math.round((calculations.valueIfBuyingDirectly / gameData.paidPrice) * 100)}% value for your money
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="section">
-                            <h2>Visual Comparison</h2>
-                            {costComparisonData.length > 0 && (
-                                <div className="chart-wrapper">
-                                    <ResponsiveContainer width="100%" height={300}>
-                                        <BarChart data={costComparisonData} margin={{ top: 5, right: 30, left: 0, bottom: 40 }}>
-                                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(139, 92, 246, 0.1)" />
-                                            <XAxis
-                                                dataKey="name"
-                                                stroke="#64748b"
-                                                style={{ fontSize: '12px' }}
-                                            />
-                                            <YAxis stroke="#64748b" style={{ fontSize: '12px' }} />
-                                            <Tooltip
-                                                contentStyle={{
-                                                    background: 'rgba(15, 23, 42, 0.95)',
-                                                    border: '1px solid rgba(139, 92, 246, 0.5)',
-                                                    borderRadius: '8px',
-                                                    color: '#e2e8f0',
-                                                }}
-                                                formatter={(value) => `$${value.toFixed(2)}`}
-                                            />
-                                            <Bar dataKey="cost" radius={[8, 8, 0, 0]}>
-                                                {costComparisonData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                                ))}
-                                            </Bar>
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* BEHAVIORAL ECONOMICS SECTION */}
-                    <div className="behavioral-section">
-                        <h2>Understanding Battle Pass Psychology</h2>
-
-                        <div className="insight-card">
-                            <h3>🎯 The Sunk Cost Fallacy</h3>
-                            <p>
-                                You've spent {isPremium ? '$' + gameData.paidPrice.toFixed(2) : 'time getting free tiers'}. It's tempting to keep playing "to get your money's worth," but this ignores future opportunity costs. <strong>Only continue if future enjoyment is the goal—not past spending.</strong>
-                            </p>
-                            {isPremium && (
-                                <div className="warning-box">
-                                    You're at risk of sunk cost thinking if you're grinding hours you wouldn't normally play just to "complete" the pass and justify the ${gameData.paidPrice.toFixed(2)} purchase.
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="insight-card">
-                            <h3>😰 FOMO (Fear of Missing Out) Mechanics</h3>
-                            <p>
-                                Battle passes are <em>designed</em> to create urgency: limited-time cosmetics, weekly challenges, seasonal resets. Game developers engineer a fear that you'll "miss out" if you don't play constantly. <strong>Real talk: These items return, or similar ones will.</strong> The perceived scarcity is often artificial.
-                            </p>
-                            {!calculations.willComplete && (
-                                <div className="warning-box">
-                                    ⚠️ At your current playtime ({hoursPerWeek}h/week), you won't complete this pass. FOMO might push you to buy tiers individually—resist. Ask: "Do I actually want these items, or do I want to avoid regret?"
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="insight-card">
-                            <h3>💎 The Endowment Effect</h3>
-                            <p>
-                                Once you unlock an item in the pass, you feel you "own" it and overvalue it compared to the same item you could buy directly. This inflates your perceived ROI. <strong>Counter it: Would you pay full price for these items if they weren't "locked" behind a pass?</strong> If not, you're paying for the psychological reward of unlocking, not the items themselves.
-                            </p>
-                        </div>
-
-                        <div className="insight-card">
-                            <h3>💰 What Actually Makes a "Good Value"</h3>
-                            <p>
-                                A battle pass is good value if:
-                            </p>
-                            <ul style={{ marginTop: '10px', marginLeft: '20px', color: '#cbd5e1' }}>
-                                <li>✓ You'll complete {calculations.willComplete ? '(you will!)' : '(you probably won\'t—reconsider)'} it with normal playtime</li>
-                                <li>✓ You genuinely like most of the cosmetics, not just "enough to justify the cost"</li>
-                                <li>✓ You're playing for fun, not grinding to maximize ROI</li>
-                                <li>✓ The cost per hour entertained is lower than other hobbies</li>
-                            </ul>
-                            {calculations.willComplete && isPremium && (
-                                <div className="good-value-box">
-                                    ✓ <strong>You're in a good position:</strong> You'll likely complete the pass with normal play. The value is real, not artificially created.
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="insight-card">
-                            <h3>📊 The Reality Check</h3>
-                            <p>
-                                <strong>Cost-per-hour analysis:</strong> You're spending ${isPremium ? (gameData.paidPrice / gameData.estimatedHours).toFixed(2) : '0.00'} per hour of gameplay to unlock these items. Is that worth it compared to buying skins directly? Compared to a movie ticket ($15 for 2.5 hours)? Compared to your favorite other hobby?
-                            </p>
-                            <p style={{ marginTop: '12px' }}>
-                                <strong>The honest metric:</strong> Not ROI, but <em>cost per hour of fun</em>. Games aren't investments—they're entertainment. If this pass costs you ${isPremium ? gameData.paidPrice.toFixed(2) : '0.00'} and you'll play {gameData.estimatedHours} hours, you're paying ${(isPremium ? gameData.paidPrice / gameData.estimatedHours : 0).toFixed(2)}/hour. Is that in line with what you'd pay for other entertainment?
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="footer">
-                        <p>
-                            Created as a portfolio piece exploring game design economics and behavioral decision-making.
-                            <br />
-                            This tool helps you make rational purchasing decisions in an ecosystem engineered for emotional ones.
-                        </p>
-                    </div>
-                </div>
-            );
+    // node positions (snake rows), plus a start point before tier 1
+    var pts = [{ x: padX - 30, y: padTop }];
+    for (var i = 0; i < r.T; i++) {
+      var row = Math.floor(i / cols), c = i % cols;
+      pts.push({ x: row % 2 === 0 ? padX + c * S : padX + (cols - 1 - c) * S, y: padTop + row * RG });
+    }
+    var d = 'M' + pts[0].x + ' ' + pts[0].y;
+    var lens = [0], total = 0;
+    for (var k = 1; k < pts.length; k++) {
+      var p0 = pts[k - 1], p1 = pts[k];
+      if (p0.y === p1.y) { d += ' L' + p1.x + ' ' + p1.y; total += Math.abs(p1.x - p0.x); }
+      else {
+        var rad = (p1.y - p0.y) / 2;
+        var sweep = p0.x > vbW / 2 ? 1 : 0;
+        d += ' A' + rad + ' ' + rad + ' 0 0 ' + sweep + ' ' + p1.x + ' ' + p1.y;
+        total += Math.PI * rad;
+      }
+      lens.push(total);
+    }
+    route.pts = pts; route.lens = lens; route.total = total; route.vbW = vbW; route.vbH = vbH; route.S = S; route.RG = RG;
+    route.miss = el('path', { d: d, class: 'r-miss', 'stroke-width': 24 * u }, svg);
+    el('path', { d: d, class: 'r-base' }, svg);
+    route.reach = el('path', { d: d, class: 'r-reach', 'stroke-dasharray': total + ' ' + total, 'stroke-dashoffset': total }, svg);
+    route.done = el('path', { d: d, class: 'r-done', 'stroke-dasharray': total + ' ' + total, 'stroke-dashoffset': total }, svg);
+    route.overlay = el('g', {}, svg);
+    route.head = el('g', { class: 'head' }, svg);
+    el('circle', { r: 15, class: 'head-hi' }, route.head);
+    el('circle', { r: 5, class: 'head-dot' }, route.head);
+    var g = el('g', {}, svg);
+    route.nodes = [];
+    for (var n = 1; n <= r.T; n++) {
+      var pt = pts[n], ms = n % 10 === 0 || n === r.T;
+      var node = ms
+        ? el('rect', { x: pt.x - 8, y: pt.y - 8, width: 16, height: 16, rx: 2, class: 'node' }, g)
+        : el('circle', { cx: pt.x, cy: pt.y, r: 6, class: 'node' }, g);
+      route.nodes.push(node);
+      if (ms) {
+        var t = el('text', { x: pt.x, y: pt.y + 17 + route.font * 0.95, 'text-anchor': 'middle', class: 'ms-label', 'font-size': route.font }, g);
+        t.textContent = n;
+      }
+    }
+    svg.appendChild(route.head);
+    route.mark = { tiersEnd: -1, on: -1, reach: -1 };
+    return true;
+  }
+  function lengthAt(tf) {
+    var i = Math.floor(tf), f = tf - i;
+    var a = route.lens[Math.min(i, route.T)], b = route.lens[Math.min(i + 1, route.T)];
+    return a + (b - a) * f;
+  }
+  function pointAt(len) {
+    // walk the analytic route rather than querying the DOM path
+    var L = route.lens, P = route.pts;
+    var k = 1;
+    while (k < L.length - 1 && L[k] < len) k++;
+    var p0 = P[k - 1], p1 = P[k], seg = L[k] - L[k - 1], f = seg ? (len - L[k - 1]) / seg : 0;
+    f = clamp(f, 0, 1);
+    if (p0.y === p1.y) return { x: p0.x + (p1.x - p0.x) * f, y: p0.y, nx: 0, ny: -1 };
+    var rad = (p1.y - p0.y) / 2, cy = p0.y + rad, right = p0.x > route.vbW / 2;
+    var ang = -Math.PI / 2 + Math.PI * f;
+    var x = right ? p0.x + Math.cos(ang) * rad : p0.x - Math.cos(ang) * rad;
+    var y = cy + Math.sin(ang) * rad;
+    return { x: x, y: y, nx: (x - p0.x) / rad, ny: (y - cy) / rad };
+  }
+  // nudge a centered label so it never runs past the map's edges
+  function keepInside(t) {
+    var w = 0;
+    try { w = t.getBBox().width; } catch (_) {}
+    if (!w) return;
+    var x = parseFloat(t.getAttribute('x'));
+    t.setAttribute('x', clamp(x, w / 2 + 4, route.vbW - w / 2 - 4));
+  }
+  function boxOf(t) {
+    try { var b = t.getBBox(); return b.width ? [b.x, b.y, b.x + b.width, b.y + b.height] : null; } catch (_) { return null; }
+  }
+  function renderOverlay(r) {
+    var o = route.overlay;
+    o.innerHTML = '';
+    var fs = route.font, u = route.u;
+    var boxes = [];   // everything already printed on the map, as [x0, y0, x1, y1] in route units
+    var hits = function (b) { return boxes.some(function (a) { return b[0] < a[2] && b[2] > a[0] && b[1] < a[3] && b[3] > a[1]; }); };
+    // season wall or finish flag
+    if (r.tiersEnd < r.T) {
+      var len = Math.max(6, lengthAt(tierAt(r, r.W)));
+      var q = pointAt(len);
+      route.miss.setAttribute('stroke-dasharray', (route.total - len) + ' ' + route.total);
+      route.miss.setAttribute('stroke-dashoffset', -len);
+      route.miss.style.display = '';
+      var wall = el('g', { class: 'wallg' }, o);
+      // the wall stands across the route: along the path's normal
+      el('line', { x1: q.x - q.nx * 22, y1: q.y - q.ny * 22, x2: q.x + q.nx * 22, y2: q.y + q.ny * 22, class: 'wall' }, wall);
+      var lx = clamp(q.x, 60, route.vbW - 60);
+      var lab = el('text', { x: lx, y: q.y - 28, 'text-anchor': 'middle', class: 'wall-l', 'font-size': fs * 1.02 }, wall);
+      lab.textContent = 'Season ends';
+      keepInside(lab);
+      boxes.push([q.x - 4, q.y - 22, q.x + 4, q.y + 22]);
+      route.wall = wall;
+      route.wallPt = q;
+    } else {
+      route.miss.style.display = 'none';
+      var fp = route.pts[r.T];
+      var flag = el('g', { class: 'wallg' }, o);
+      el('line', { x1: fp.x, y1: fp.y - 8, x2: fp.x, y2: fp.y - 38, class: 'wk-tick', 'stroke-width': 2.4 }, flag);
+      el('path', { d: 'M' + fp.x + ' ' + (fp.y - 38) + 'l18 6-18 6z', class: 'flag' }, flag);
+      var fl = el('text', { x: clamp(fp.x, 60, route.vbW - 60), y: fp.y - 44, 'text-anchor': 'middle', class: 'wall-l', 'font-size': fs * 1.02 }, flag);
+      fl.textContent = 'Done in week ' + r.finishWk;
+      keepInside(fl);
+      var fb = boxOf(fl);
+      if (fb) boxes.push(fb);
+      route.wall = flag;
+      route.wallPt = fp;
+    }
+    if (lab) { var lb = boxOf(lab); if (lb) boxes.push(lb); }
+    // milestone numbers sit under every tenth node
+    for (var m = 1; m <= r.T; m++) {
+      if (m % 10 && m !== r.T) continue;
+      var mp = route.pts[m], mw = String(m).length * 0.62 * fs;
+      boxes.push([mp.x - mw / 2, mp.y + 15, mp.x + mw / 2, mp.y + 17 + fs]);
+    }
+    // numbered callouts hang under the route; the notes beneath the map carry the same numbers
+    var rr = 10.5 * u, stem = 8 * u, pad = 2 * u;
+    var spots = [
+      { k: 1, n: clamp(Math.floor(tierAt(r, 1) + 1e-6), 1, r.T) },
+      { k: 2, n: r.finishes ? r.T : Math.max(1, r.tiersEnd) },
+      { k: 3, n: r.finishes ? Math.max(1, Math.round(r.T / 2)) : Math.round((r.tiersEnd + 1 + r.T) / 2) }
+    ];
+    var rowOf = function (n) { return Math.floor((n - 1) / route.cols); };
+    spots.forEach(function (s) {
+      var at = null, first = null;
+      // nearest free node, staying on the anchor's own row when it can
+      var near = [0, 1, -1, 2, -2, 3, -3, 4, -4]
+        .map(function (d) { return s.n + d; })
+        .filter(function (n) { return n >= 1 && n <= r.T; })
+        .sort(function (a, b) { return (rowOf(a) !== rowOf(s.n)) - (rowOf(b) !== rowOf(s.n)); });
+      near.some(function (n) {
+        var p = route.pts[n], cy = p.y + 6 + stem + rr;
+        var c = { p: p, cy: cy, b: [p.x - rr - pad, cy - rr - pad, p.x + rr + pad, cy + rr + pad] };
+        if (!first) first = c;
+        if (hits(c.b)) return false;
+        at = c;
+        return true;
+      });
+      at = at || first;
+      boxes.push(at.b);
+      var g = el('g', { class: 'co-g' }, o);
+      el('line', { x1: at.p.x, y1: at.p.y + 7, x2: at.p.x, y2: at.cy - rr, class: 'co-s', 'stroke-width': 1.5 * u }, g);
+      el('circle', { cx: at.p.x, cy: at.cy, r: rr, class: 'co-c' }, g);
+      var ct = el('text', { x: at.p.x, y: at.cy, dy: '.36em', 'text-anchor': 'middle', class: 'co-t', 'font-size': 12.5 * u }, g);
+      ct.textContent = s.k;
+    });
+    // week flags, skipping any that would print over a label or a callout
+    var lastT = -99;
+    for (var w = 1; w <= r.W; w++) {
+      var tw = Math.floor(tierAt(r, w) + 1e-6);
+      if (tw < 1 || tw - lastT < 2.6 || (tw >= r.T && lastT >= r.T)) continue;
+      // leave room for the season wall / finish flag label
+      if (Math.abs(tw - (r.finishes ? r.T : r.tiersEnd)) < 3.5) continue;
+      var p = route.pts[tw];
+      var up = p.y - 11, ww = String(w).length * 0.62 * fs + 0.7 * fs;
+      if (hits([p.x - ww / 2, up - 12 - fs, p.x + ww / 2, up])) continue;
+      lastT = tw;
+      el('line', { x1: p.x, y1: up, x2: p.x, y2: up - 9, class: 'wk-tick' }, o);
+      var t = el('text', { x: p.x, y: up - 12, 'text-anchor': 'middle', class: 'wk', 'font-size': fs * 0.92 }, o);
+      t.textContent = 'W' + w;
+    }
+    svg.setAttribute('aria-label', r.name + ' season route: ' + r.T + ' tiers over ' + r.W + ' weeks. ' +
+      (r.finishes ? 'You finish in week ' + r.finishWk + '.' : 'The season ends at tier ' + r.tiersEnd + '; ' + r.missed + ' tiers expire in the shaded stretch.') +
+      ' Callout 1 marks your first week, 2 ' + (r.finishes ? 'the week you finish' : 'where the season ends') + ', 3 ' + (r.finishes ? 'the middle of the pass' : 'the tiers left to buy') + '.');
+  }
+  function setWeek(w, opts) {
+    if (!R || !route.nodes) return;
+    opts = opts || {};
+    var prev = weekVal === null ? R.W : weekVal;
+    w = clamp(w, 0, R.W);
+    weekVal = w;
+    var tf = tierAt(R, w);
+    var on = Math.floor(tf + 1e-6);
+    var L = lengthAt(tf);
+    route.done.setAttribute('stroke-dashoffset', route.total - L);
+    // the reachable trail runs just through the season wall so the two inks visibly overprint
+    var endLen = lengthAt(tierAt(R, R.W)) + (R.finishes ? 0 : 7);
+    route.reach.setAttribute('stroke-dashoffset', route.total - Math.min(route.total, endLen));
+    var pt = pointAt(L);
+    route.head.setAttribute('transform', 'translate(' + pt.x.toFixed(2) + ' ' + pt.y.toFixed(2) + ')');
+    if (on !== route.mark.on || R.tiersEnd !== route.mark.tiersEnd) {
+      var forward = on > route.mark.on && on - route.mark.on <= 3 && route.mark.on >= 0;
+      for (var i = 0; i < route.nodes.length; i++) {
+        var n = route.nodes[i], k = i + 1;
+        var cls = k <= on ? 'node on' : k <= R.tiersEnd ? 'node reach' : 'node miss';
+        if (n.getAttribute('class') !== cls) {
+          n.setAttribute('class', cls);
+          if (forward && k <= on && moving() && n.animate) n.animate([{ transform: 'scale(1.7)' }, { transform: 'scale(1)' }], { duration: 380, easing: 'cubic-bezier(.16,1,.3,1)' });
         }
+      }
+      route.mark.on = on; route.mark.tiersEnd = R.tiersEnd;
+    }
+    if (prev < R.W - 1e-3 && w >= R.W - 1e-3) slam();
+    // readout
+    var wk = Math.ceil(w - 1e-6);
+    $('#ro-week').textContent = wk;
+    $('#ro-weeks').textContent = 'of ' + R.W;
+    $('#ro-tier').textContent = on;
+    $('#ro-tiers').textContent = 'of ' + R.T;
+    var note;
+    if (w <= 0) note = 'Day one. The pass needs about <b>' + hrs(R.hpt) + ' hours a tier</b>.';
+    else if (on >= R.T) note = 'Finished. Every tier claimed in week <b>' + R.finishWk + '</b>.';
+    else if (w >= R.W - 1e-3) note = 'Season over. <b>' + R.missed + ' ' + plural(R.missed, 'tier', 'tiers') + '</b> expire unclaimed.';
+    else note = '<b>' + (R.T - on) + '</b> tiers to go. ' + (R.finishes ? 'You’re on pace to finish.' : 'At this pace the season ends at tier ' + R.tiersEnd + '.');
+    var rn = $('#ro-note');
+    if (rn._h !== note) { rn.innerHTML = note; rn._h = note; }
+    var range = $('#week');
+    if (!opts.fromRange) range.value = w;
+    range.style.setProperty('--p', (w / R.W * 100) + '%');
+    range.setAttribute('aria-valuetext', 'Week ' + wk + ' of ' + R.W + ', tier ' + on);
+  }
+  function slam() {
+    if (!moving() || !route.wall) return;
+    var q = route.wallPt;
+    G.fromTo(route.wall, { scale: 0.2, transformOrigin: q.x + 'px ' + q.y + 'px', opacity: 0 }, { scale: 1, opacity: 1, duration: 0.65, ease: 'expo.out', overwrite: true });
+  }
+  function renderWeekTicks(r) {
+    var host = $('#wb-ticks'), html = '';
+    var every = r.W > 16 ? 4 : r.W > 10 ? 2 : 1;
+    var tick = function (w, label) {
+      var x = w / r.W * 100;
+      var t = x <= 0 ? 'transform:none' : x >= 100 ? 'transform:translateX(-100%)' : '';
+      return '<span style="left:' + x + '%;' + t + '">' + label + '</span>';
+    };
+    for (var w = 0; w <= r.W; w += every) html += tick(w, w === 0 ? 'Start' : 'W' + w);
+    if (r.W % every) html += tick(r.W, 'W' + r.W);
+    host.innerHTML = html;
+  }
+  function renderWalkthrough(r, rebuilt) {
+    $('#wt-dek').textContent = 'Week by week through a ' + r.W + '-week ' + r.name + ' season at ' + hrs(r.hpw) + ' hours a week.';
+    var range = $('#week');
+    range.max = r.W;
+    renderOverlay(r);
+    renderWeekTicks(r);
+    if (weekVal === null || rebuilt === 'game') weekVal = pinned ? 0 : r.W;
+    route.mark.on = -1;
+    setWeek(Math.min(weekVal, r.W));
+    var needed = r.H / r.W;
+    $('#n-pace').innerHTML = 'The pass needs about ' + Math.round(r.H) + ' hours: <b>' + hrs(needed) + ' hours a week</b> across ' + r.W + ' weeks. You play ' + hrs(r.hpw) + (r.hpw >= needed - 1e-6 ? ', which is enough.' : ', so you fall ' + hrs(r.gapWeekly) + ' hours short every week.');
+    if (r.finishes) {
+      var spare = r.W - r.finishWk;
+      $('#n-end').innerHTML = spare > 0
+        ? 'You’d finish in week ' + r.finishWk + '. The <b>' + spare + ' ' + plural(spare, 'week', 'weeks') + '</b> after that are play the pass no longer pays you for.'
+        : 'You’d finish in the final week, with <b>no slack</b> for a missed session.';
+      $('#n-skip').innerHTML = 'XP events and weekly challenges speed things up. This forecast assumes steady progress, so treat it as a floor.';
+    } else {
+      $('#n-end').innerHTML = 'The season closes at tier ' + r.tiersEnd + '. The last <b>' + r.missed + ' ' + plural(r.missed, 'tier expires', 'tiers expire') + '</b> with it.';
+      $('#n-skip').innerHTML = 'Tier skips are sold for exactly this gap. Buying <b>' + r.missed + '</b> of them is the purchase the countdown is designed to prompt.';
+    }
+  }
 
-        ReactDOM.render(<BattlePassROI />, document.getElementById('root'));
-    </script>
+  /* ================= shop math ================= */
+  var tilesHost = $('#tiles');
+  function wanted(i, w) { return Math.floor((i + 1) * w + 1e-9) > Math.floor(i * w + 1e-9); }
+  function renderShop(r) {
+    var s = r.premium ? r : compute(r.key, r.hpw, r.wantPct, true);
+    $('#free-note').hidden = r.premium;
+    $('#l-items').firstChild.textContent = s.items + ' cosmetics at ' + money(s.a.itemPrice) + ' each';
+    $('#l-unlock').firstChild.textContent = Math.round(s.itemsUnlocked / s.items * 100) + '% unlocked by season end';
+    $('#l-want').innerHTML = '<span class="hl swiped">' + s.wantPct + '%</span> you’d actually use';
+    roll($('#l-sticker'), s.sticker, money);
+    roll($('#l-unlocked'), s.unlockedValue, money);
+    roll($('#l-real'), s.real, money);
+    roll($('#l-price'), -s.price, money);
+    roll($('#l-net'), s.net, signedMoney);
+    setText($('#l-sum-l'), s.net >= 0 ? 'You come out ahead' : 'You come out behind');
+    setText($('#l-pct'), pct(s.roi) + ' return');
+    roll($('#roi-sticker'), s.stickerRoi, pct);
+    roll($('#roi-you'), s.roi, pct);
+    $('#roi-you-c').textContent = 'Only what you unlock this season (' + s.tiersEnd + ' of ' + s.T + ' tiers) and would actually equip (' + s.wantPct + '%).';
+
+    // tiles
+    if (tilesHost._n !== s.items) {
+      tilesHost._n = s.items;
+      var h = '';
+      for (var i = 0; i < s.items; i++) h += '<i></i>';
+      tilesHost.innerHTML = h;
+      tilesHost.style.setProperty('--tc', s.items > 120 ? 15 : 10);
+      tilesHost.style.setProperty('--tc2', s.items > 60 ? 20 : 10);
+    }
+    var flipped = 0;
+    $$('i', tilesHost).forEach(function (t, i) {
+      var cls = i < s.itemsUnlocked ? (wanted(i, s.want) ? 'want' : 'unused') : 'lock';
+      if (t.className !== cls) {
+        var had = t.className;
+        t.className = cls;
+        if (had && moving() && t.animate) {
+          t.animate([{ transform: 'rotateY(90deg)' + (cls === 'lock' ? ' scale(.78)' : '') }, { transform: 'rotateY(0deg)' + (cls === 'lock' ? ' scale(.78)' : '') }],
+            { duration: 320, delay: Math.min(flipped * 6, 360), easing: 'cubic-bezier(.16,1,.3,1)', fill: 'backwards' });
+          flipped++;
+        }
+      }
+    });
+
+    // cost-per-hour ruler (log scale $0.01 to $10)
+    var pos = function (v) { return (Math.log10(clamp(v, 0.01, 10)) + 2) / 3 * 100; };
+    var you = $('#mk-you'), mv = $('#mk-movie');
+    var yp = r.premium ? pos(r.cph) : 0;
+    you.style.setProperty('--x', yp + '%');
+    mv.style.setProperty('--x', pos(MOVIE_PER_HOUR) + '%');
+    you._x = yp; mv._x = pos(MOVIE_PER_HOUR);
+    $('#mk-you-v').textContent = (r.premium ? money(r.cph) : '$0.00') + '/h';
+    $('.mk-l', you).firstChild.textContent = r.premium ? 'This pass ' : 'Free track ';
+    edgeMarkers();
+    var ratio = r.premium && r.cph > 0 ? MOVIE_PER_HOUR / r.cph : 0;
+    $('#rb-dek').textContent = r.premium
+      ? 'Games aren’t investments, so the honest metric is what an hour of play costs. At ' + money(r.cph) + ' an hour, this pass is ' + (ratio >= 1 ? mult(ratio) + ' cheaper' : mult(1 / ratio) + ' pricier') + ' than a movie ticket.'
+      : 'On the free track an hour of play costs nothing. The premium pass would cost ' + money(s.cph) + ' an hour at your pace.';
+    $('#ruler').setAttribute('aria-label', 'Cost per hour: this pass ' + money(r.cph) + ' an hour; a movie ticket about $6.00 an hour.');
+  }
+  // keep marker labels inside the ruler: anchor them left or right near the ends
+  function edgeMarkers() {
+    var rw = $('#ruler').clientWidth;
+    [$('#mk-you'), $('#mk-movie')].forEach(function (mk) {
+      var half = $('.mk-l', mk).offsetWidth / 2, x = rw * (mk._x || 0) / 100;
+      var l = x < half, r = !l && rw - x < half;
+      mk.classList.toggle('edge-l', l);
+      mk.classList.toggle('edge-r', r);
+    });
+  }
+  function buildRuler() {
+    var host = $('#ruler-ticks'), h = '';
+    for (var dec = -2; dec <= 1; dec++) {
+      for (var m = 1; m <= 9; m++) {
+        var v = m * Math.pow(10, dec);
+        if (v > 10.0001) break;
+        var x = (Math.log10(v) + 2) / 3 * 100;
+        var major = m === 1;
+        h += '<span class="' + (major ? 'major' : '') + '" style="left:' + x + '%"></span>';
+        if (major) h += '<em style="left:' + x + '%' + (x <= 0 ? ';transform:none' : x >= 100 ? ';transform:translateX(-100%)' : '') + '">' + (v < 1 ? '$' + v.toFixed(2) : '$' + v) + '</em>';
+      }
+    }
+    host.innerHTML = h;
+  }
+
+  /* ================= bestiary ================= */
+  var beastsHost = $('#beasts');
+  function buildBeasts() {
+    beastsHost.innerHTML = BEASTS.map(function (b) {
+      return '<article class="beast" id="trap-' + b.key + '" data-key="' + b.key + '" aria-labelledby="b-' + b.key + '">' +
+        '<span class="beast-rule" aria-hidden="true"></span>' +
+        '<div class="beast-head">' +
+          '<svg class="beast-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + b.icon + '</svg>' +
+          '<h3 id="b-' + b.key + '">' + b.name + '</h3>' +
+          '<p class="threat"><span class="pips" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="threat-t"></span></p>' +
+        '</div>' +
+        '<dl><div><dt>Attack</dt><dd>' + b.attack + '</dd></div><div><dt>Weakness</dt><dd>' + b.weakness + '</dd></div></dl>' +
+        '<p class="beast-you"></p>' +
+      '</article>';
+    }).join('');
+  }
+  var orderTimer = 0;
+  function renderBeasts(r) {
+    var scored = BEASTS.map(function (b, i) { return { b: b, i: i, t: b.threat(r) }; });
+    scored.forEach(function (s) {
+      var a = $('.beast[data-key="' + s.b.key + '"]', beastsHost);
+      var row = $('#toc-beasts li[data-key="' + s.b.key + '"]');
+      $$('.pips i', a).concat($$('.pips i', row)).forEach(function (p, k) { p.classList.toggle('on', k % 5 < s.t); });
+      $('.threat-t', a).textContent = 'Threat to you: ' + s.t + ' of 5';
+      $('.sr-only', row).textContent = 'threat ' + s.t + ' of 5';
+      var you = 'In your season: ' + s.b.you(r);
+      var yp = $('.beast-you', a);
+      if (yp._h !== you) { yp.innerHTML = you; yp._h = you; }
+    });
+    clearTimeout(orderTimer);
+    orderTimer = setTimeout(function () { reorderBeasts(scored); }, 280);
+  }
+  function reorderBeasts(scored) {
+    scored.sort(function (x, y) { return y.t - x.t || x.i - y.i; });
+    var els = scored.map(function (s) { return $('.beast[data-key="' + s.b.key + '"]', beastsHost); });
+    var toc = $('#toc-beasts');
+    scored.forEach(function (s) { toc.appendChild($('li[data-key="' + s.b.key + '"]', toc)); });
+    toc.appendChild($('.toc-clear', toc));
+    var current = $$('.beast', beastsHost);
+    var same = els.every(function (e, i) { return current[i] === e; });
+    if (same) return;
+    var before = new Map();
+    current.forEach(function (e) { before.set(e, e.getBoundingClientRect().top); });
+    els.forEach(function (e) { beastsHost.appendChild(e); });
+    if (!moving()) return;
+    els.forEach(function (e) {
+      var dy = before.get(e) - e.getBoundingClientRect().top;
+      if (Math.abs(dy) > 1) G.fromTo(e, { y: dy }, { y: 0, duration: 0.75, ease: 'expo.out', overwrite: true });
+    });
+  }
+
+  /* ================= clear conditions ================= */
+  var funChecked = false;
+  // each condition prints its own outcome as a sentence in the guide's voice
+  function renderConds(r) {
+    var hl = function (t) { return '<span class="hl swiped">' + t + '</span>'; };
+    var list = [
+      r.finishes
+        ? { met: true, text: 'you\u2019d clear all ' + r.T + ' tiers by week ' + r.finishWk + ' on the ' + hl(hrs(r.hpw) + ' hours a week') + ' you already play.' }
+        : { met: false, text: 'at ' + hl(hrs(r.hpw) + ' hours a week') + ' you\u2019d stop at tier ' + r.tiersEnd + ' of ' + r.T + ' when the ' + r.W + '-week season ends.' },
+      r.wantPct >= 50
+        ? { met: true, text: 'you\u2019d use ' + hl(r.wantPct + '%') + ' of the cosmetics, more than half.' }
+        : { met: false, text: 'you\u2019d use ' + hl(r.wantPct + '%') + ' of the cosmetics, less than half.' },
+      !r.premium
+        ? { met: true, text: 'on the free track an hour of play costs nothing.' }
+        : r.cph < MOVIE_PER_HOUR
+          ? { met: true, text: 'an hour of play costs ' + money(r.cph) + ', under a movie ticket\u2019s $6.00.' }
+          : { met: false, text: 'an hour of play costs ' + money(r.cph) + ', more than a movie ticket\u2019s $6.00.' }
+    ];
+    var met = list.filter(function (c) { return c.met; }).length;
+    setText($('#toc-clear'), met + ' of ' + list.length + ' met');
+    var host = $('#conds');
+    var html = list.map(function (c) {
+      return '<li class="cond ' + (c.met ? 'met' : 'unmet') + '"><p class="c-text"><b class="c-state">' + (c.met ? 'Met:' : 'Not met:') + '</b> ' + c.text + '</p></li>';
+    }).join('');
+    html += '<li class="cond cond-you"><input type="checkbox" id="fun"' + (funChecked ? ' checked' : '') + '><label class="c-text" for="fun">You\u2019re playing for fun, not to make the numbers work. That one is yours to tick.</label></li>';
+    if (host._h !== html) {
+      host.innerHTML = html; host._h = html;
+      $('#fun').addEventListener('change', function (e) { funChecked = e.target.checked; host._h = ''; });
+    }
+  }
+
+  /* ================= appendix ================= */
+  function renderCompare(r) {
+    var body = $('#compare tbody'), worth = 0;
+    body.innerHTML = ORDER.map(function (k) {
+      var c = compute(k, r.hpw, r.wantPct, r.premium);
+      if (c.verdict === 'worth') worth++;
+      return '<tr data-game="' + k + '" class="' + (k === r.key ? 'cur' : '') + '">' +
+        '<td class="g"><button type="button" aria-pressed="' + (k === r.key) + '">' + c.name + '</button></td>' +
+        '<td class="vd ' + c.verdict + '">' + VERDICT_LABEL[c.verdict] + '</td>' +
+        '<td class="r">' + (c.roi === null ? 'Free' : pct(c.roi)) + '</td>' +
+        '<td class="r">' + money(c.cph) + '</td>' +
+        '<td class="r">' + c.tiersEnd + ' / ' + c.T + '</td>' +
+        '<td class="r">' + (c.finishes ? 'Week ' + c.finishWk : 'No') + '</td>' +
+        '<td class="r">' + c.W + ' wk</td></tr>';
+    }).join('');
+    setText($('#toc-games'), r.premium ? worth + ' of ' + ORDER.length + ' worth it' : 'All on the free track');
+    $('#cmp-dek').textContent = 'Your ' + hrs(r.hpw) + ' hours a week and ' + r.wantPct + '% want-rate, run through every preset' + (r.premium ? '' : ' on the free track') + '. Select a game to load it.';
+  }
+  function renderTune(r) {
+    var body = $('#tune tbody');
+    var e = edits[r.key] || {};
+    var focused = document.activeElement && document.activeElement.closest && document.activeElement.closest('#tune');
+    if (focused && body._game === r.key) {
+      $$('tr', body).forEach(function (tr) { tr.classList.toggle('edited', tr.dataset.key in e); $('.srcnote', tr).textContent = tr.dataset.key in e ? 'Yours' : tr.dataset.src; });
+      return;
+    }
+    body._game = r.key;
+    body.innerHTML = FIELDS.map(function (f) {
+      var v = f.key in e ? e[f.key] : GAMES[r.key][f.key];
+      var id = 'tune-' + f.key;
+      return '<tr data-key="' + f.key + '" data-src="' + f.src + '" class="' + (f.key in e ? 'edited' : '') + '">' +
+        '<th scope="row"><label for="' + id + '">' + f.label + '</label></th>' +
+        '<td><span class="unit" aria-hidden="true">' + (f.unit || '') + '</span>' +
+        '<input id="' + id + '" type="number" inputmode="decimal" step="' + f.step + '" min="' + f.min + '" max="' + f.max + '" value="' + (f.int ? v : Number(v).toFixed(2)) + '"></td>' +
+        '<td class="srcnote">' + (f.key in e ? 'Yours' : f.src) + '</td></tr>';
+    }).join('');
+    $('#tune-dek').textContent = r.name + ' presets are estimates from the 2023 thesis set; season length is a typical season. Edited numbers turn into yours.';
+  }
+
+  /* ================= chapter openers ================= */
+  function renderOpeners(r) {
+    $$('.rh-game').forEach(function (g) { g.textContent = r.name; });
+    var e = edits[r.key] || {};
+    var mine = 'tiers' in e || 'weeks' in e;
+    setText($('#toc-route'), r.T + ' tiers, ' + r.W + ' weeks');
+    var rt = $('#toc-route-tag');
+    rt.textContent = mine ? 'yours' : 'est.';
+    rt.className = 'tag' + (mine ? ' tag-yours' : '');
+    setText($('#toc-pace'), hrs(r.H / r.W) + ' h a week');
+    setText($('#toc-end'), r.finishes ? 'Done in week ' + r.finishWk : 'Ends at tier ' + r.tiersEnd);
+    setText($('#toc-skip'), r.finishes ? 'None to buy' : r.missed + ' ' + plural(r.missed, 'tier', 'tiers') + ' to buy');
+    var s = r.premium ? r : compute(r.key, r.hpw, r.wantPct, true);
+    var used = 0;
+    for (var i = 0; i < s.itemsUnlocked; i++) if (wanted(i, s.want)) used++;
+    setText($('#toc-ledger'), money(s.real) + ' of ' + money(s.sticker));
+    setText($('#toc-tiles'), used + ' of ' + s.items + ' you’d use');
+    setText($('#toc-roi'), pct(s.roi) + ' for you');
+    setText($('#toc-cph'), r.premium ? money(r.cph) + ' an hour' : 'Free');
+    var n = Object.keys(e).length, tt = $('#toc-tune-tag');
+    setText($('#toc-tune'), n ? n + ' ' + plural(n, 'edit', 'edits') : 'As printed');
+    tt.textContent = n ? 'yours' : 'est.';
+    tt.className = 'tag' + (n ? ' tag-yours' : '');
+  }
+
+  /* ================= render ================= */
+  var liveTimer = 0;
+  function render(why) {
+    R = compute(state.game, state.hpw, state.want, state.premium);
+    renderTitle(R);
+    var rebuilt = buildRoute(R, why === 'game' || why === 'resize');
+    renderWalkthrough(R, why === 'game' ? 'game' : rebuilt);
+    renderShop(R);
+    renderBeasts(R);
+    renderConds(R);
+    renderCompare(R);
+    renderTune(R);
+    renderOpeners(R);
+    hoursCtl.sync(); wantCtl.sync();
+    writeHash();
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(function () {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = verdictCopy(R);
+      $('#live').textContent = VERDICT_LABEL[R.verdict] + '. ' + tmp.textContent;
+    }, 700);
+  }
+
+  /* ================= controls ================= */
+  var hoursCtl = scrub($('#in-hours'), {
+    label: 'Hours you play per week', min: 1, max: 50, step: 1, px: 7,
+    get: function () { return state.hpw; },
+    set: function (v) { state.hpw = v; render(); },
+    text: function (v) { return v + ' hours a week'; }
+  });
+  var wantCtl = scrub($('#in-want'), {
+    label: 'Share of the cosmetics you would actually use', min: 0, max: 100, step: 5, px: 9,
+    get: function () { return state.want; },
+    set: function (v) { state.want = v; render(); },
+    text: function (v) { return v + ' percent'; }
+  });
+  $$('.step').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var c = b.dataset.scrub === 'hours' ? hoursCtl : wantCtl;
+      c.commit(c.o.get() + c.o.step * Number(b.dataset.dir));
+    });
+  });
+  if (coarseQ.matches) $('#hint').textContent = 'Tap − or + beside a highlighted number, or drag the number sideways.';
+  $('#in-game').addEventListener('change', function (e) { state.game = e.target.value; if (playing) playing.kill(); render('game'); });
+  $('#in-pass').addEventListener('click', function () { state.premium = !state.premium; render(); });
+  $('#week').addEventListener('input', function (e) { if (playing) { playing.kill(); playing = null; } setWeek(parseFloat(e.target.value), { fromRange: true }); });
+  $('#play').addEventListener('click', function () {
+    if (!R) return;
+    if (playing) playing.kill();
+    if (!moving()) { setWeek(R.W); return; }
+    var o = { w: weekVal >= R.W - 0.01 ? 0 : weekVal };
+    var btn = this;
+    btn.setAttribute('aria-pressed', 'true');
+    playing = G.to(o, {
+      w: R.W, ease: 'none', duration: clamp((R.W - o.w) * 0.34, 1.2, 5),
+      onUpdate: function () { setWeek(o.w); },
+      onComplete: function () { playing = null; btn.removeAttribute('aria-pressed'); }
+    });
+  });
+  $('#compare tbody').addEventListener('click', function (e) {
+    var tr = e.target.closest('tr[data-game]');
+    if (!tr) return;
+    state.game = tr.dataset.game;
+    render('game');
+  });
+  $('#tune tbody').addEventListener('input', function (e) {
+    var tr = e.target.closest('tr[data-key]');
+    if (!tr) return;
+    var f = FIELDS.filter(function (x) { return x.key === tr.dataset.key; })[0];
+    var v = parseFloat(e.target.value);
+    if (!isFinite(v)) return;
+    v = clamp(f.int ? Math.round(v) : v, f.min, f.max);
+    edits[state.game] = edits[state.game] || {};
+    if (Math.abs(v - GAMES[state.game][f.key]) < 1e-9) delete edits[state.game][f.key];
+    else edits[state.game][f.key] = v;
+    var structural = f.key === 'tiers' || f.key === 'weeks' || f.key === 'items';
+    render(structural ? 'game' : undefined);
+  });
+  $('#tune tbody').addEventListener('focusout', function (e) {
+    if (!e.relatedTarget || !e.relatedTarget.closest('#tune')) { $('#tune tbody')._game = null; renderTune(R); }
+  });
+  $('#reset').addEventListener('click', function () { delete edits[state.game]; $('#tune tbody')._game = null; render('game'); });
+  $('#share').addEventListener('click', function () {
+    var status = $('#share-status');
+    writeHash();
+    setTimeout(function () {
+      var url = location.href;
+      var done = function () { status.textContent = 'Link copied. It opens with your game, hours and edits.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function () { status.textContent = 'Copy the address bar to share: it already holds your numbers.'; });
+      else status.textContent = 'Copy the address bar to share: it already holds your numbers.';
+    }, 280);
+  });
+
+  /* ================= chapter tabs ================= */
+  var lenis = null;
+  function goTo(id) {
+    var t = document.getElementById(id);
+    if (!t) return;
+    // the pinned stage starts 9% down the viewport: land there, on day one of the season.
+    // Measure from its pin spacer, which stays in the flow while the stage is pinned.
+    var off = 0;
+    if (id === 'stage' && pinned) {
+      if (t.parentNode.classList.contains('pin-spacer')) t = t.parentNode;
+      off = -Math.round(window.innerHeight * 0.09);
+    }
+    if (lenis) lenis.scrollTo(t, { offset: off, duration: 1.2, easing: function (x) { return x === 1 ? 1 : 1 - Math.pow(2, -10 * x); } });
+    else t.scrollIntoView({ behavior: reduceQ.matches ? 'auto' : 'smooth' });
+  }
+  $$('a[href^="#"]').forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    if (!id || id === 'calc') return;
+    a.addEventListener('click', function (e) { if (!document.getElementById(id)) return; e.preventDefault(); goTo(id); });
+  });
+  function setTab(id) {
+    $$('.tab').forEach(function (t) { t.setAttribute('aria-current', t.getAttribute('href') === '#' + id ? 'true' : 'false'); });
+  }
+  if ('IntersectionObserver' in window) {
+    var ids = ['verdict', 'walkthrough', 'shop', 'bestiary', 'appendix'];
+    var vis = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { vis[en.target.id] = en.isIntersecting ? en.intersectionRect.height : 0; });
+      var best = ids.reduce(function (b, id) { return (vis[id] || 0) > (vis[b] || 0) ? id : b; }, 'verdict');
+      setTab(best);
+    }, { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+    ids.forEach(function (id) { var s = document.getElementById(id); if (s) io.observe(s); });
+  }
+
+  /* ================= halftone ramps ================= */
+  function drawHT(cv, p) {
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var W = Math.round(w * dpr), H = Math.round(h * dpr);
+    if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+    var c = cv.getContext('2d');
+    c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c.clearRect(0, 0, w, h);
+    if (!cv._color) {
+      var prev = cv.previousElementSibling, sec = cv.closest('.chapter');
+      var src = prev && prev.classList.contains('plate') ? prev : sec;
+      cv._color = getComputedStyle(src).backgroundColor;
+    }
+    c.fillStyle = cv._color;
+    var pitch = w < 600 ? 9 : 12;
+    var reach = 0.3 + 0.7 * p;
+    var cols = Math.ceil(w / pitch) + 2;
+    for (var j = 0; ; j++) {
+      var y = j * pitch;
+      var t = 1 - y / (h * reach);
+      if (t <= 0 || y > h + pitch) break;
+      var r = pitch * 0.74 * Math.pow(t, 1.25);
+      if (r < 0.35) continue;
+      var off = (j % 2) * pitch / 2;
+      c.beginPath();
+      for (var i = -1; i < cols; i++) { var x = i * pitch + off; c.moveTo(x + r, y); c.arc(x, y, r, 0, Math.PI * 2); }
+      c.fill();
+    }
+    cv._p = p;
+  }
+  function drawAllHT() { $$('.ht').forEach(function (cv) { drawHT(cv, typeof cv._p === 'number' ? cv._p : 1); }); }
+
+  /* ================= motion: press, entrance, scroll scenes ================= */
+  var pressHTML = $('#press') ? $('#press').outerHTML : '';
+  var fontsReady = Promise.race([
+    document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve(),
+    new Promise(function (res) { setTimeout(res, 1300); })
+  ]);
+
+  function runPress(force) {
+    var press = $('#press');
+    if (!press) return Promise.resolve(false);
+    if (!moving() || (!force && !root.classList.contains('press-on'))) {
+      press.remove(); root.classList.remove('press-on');
+      return Promise.resolve(false);
+    }
+    try { sessionStorage.setItem('bp-press', '1'); } catch (_) {}
+    press.style.animation = 'none';
+    return new Promise(function (resolve) {
+      var word = $('.press-word', press);
+      var tl = G.timeline({
+        defaults: { ease: 'expo.out' },
+        onComplete: function () { press.remove(); root.classList.remove('press-on'); }
+      });
+      tl.set(word, { opacity: 1, '--wd': 70 })
+        .from($$('.press-crop', press), { scale: 0, duration: 0.7, stagger: 0.06, transformOrigin: '50% 50%' }, 0)
+        .from($$('.press-reg', press), { rotate: -120, scale: 0.4, opacity: 0, duration: 0.9, stagger: 0.05 }, 0.05)
+        .from($$('.press-bar i', press), { scaleY: 0, transformOrigin: '50% 100%', duration: 0.5, stagger: 0.03 }, 0.15)
+        .fromTo($$('.pw-y, .pw-c, .pw-m', press), { opacity: 0 }, { opacity: 1, duration: 0.35, stagger: 0.06, ease: 'power1.out' }, 0.2)
+        .fromTo($('.pw-y', press), { x: '-0.62em', y: '0.26em' }, { x: 0, y: 0, duration: 1.3, ease: 'expo.inOut' }, 0.2)
+        .fromTo($('.pw-c', press), { x: '0.52em', y: '-0.3em' }, { x: 0, y: 0, duration: 1.3, ease: 'expo.inOut' }, 0.24)
+        .fromTo($('.pw-m', press), { x: '-0.28em', y: '-0.46em' }, { x: 0, y: 0, duration: 1.3, ease: 'expo.inOut' }, 0.28)
+        .to(word, { '--wd': 150, duration: 1.3, ease: 'expo.inOut' }, 0.2)
+        .to($('.pw-k', press), { opacity: 1, duration: 0.22, ease: 'power2.out' }, 1.3)
+        .to([$('.pw-y', press), $('.pw-c', press), $('.pw-m', press)], { opacity: 0, duration: 0.3 }, 1.45)
+        .to($('.press-sub', press), { opacity: 1, duration: 0.5 }, 1.4)
+        .addLabel('trim', 1.95)
+        .to(press, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.85, ease: 'expo.inOut' }, 'trim');
+      tl.call(resolve, null, 'trim+=0.12');
+      var skip = function () {
+        ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (t) { window.removeEventListener(t, skip); });
+        if (tl.time() < tl.labels.trim - 0.05) tl.seek(tl.labels.trim - 0.05, false);
+      };
+      ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (t) { window.addEventListener(t, skip, { passive: true }); });
+      tl.pause();
+      fontsReady.then(function () { tl.play(); });
+    });
+  }
+
+  function enterTitle() {
+    var grid = $('.tp-grid');
+    grid.style.animation = 'none';
+    grid.style.visibility = 'visible';
+    if (!moving()) { $$('.hl').forEach(function (h) { h.classList.add('swiped'); }); return; }
+    var tl = G.timeline({ defaults: { ease: 'expo.out' } });
+    tl.from($$('.ch', vK), { yPercent: 108, duration: 0.95, stagger: 0.04 }, 0)
+      .fromTo([vC, vM], { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'power1.out' }, 0.85)
+      .fromTo(vC, { x: '-0.07em', y: '-0.04em' }, { x: 0, y: 0, duration: 0.9 }, 0)
+      .fromTo(vM, { x: '0.06em', y: '0.05em' }, { x: 0, y: 0, duration: 0.9 }, 0)
+      .from('#verdict-copy', { opacity: 0, y: 16, duration: 0.8 }, 0.35)
+      .from('.madlib', { opacity: 0, y: 20, duration: 0.85 }, 0.45)
+      .call(function () { $$('.title-page .hl').forEach(function (h, i) { setTimeout(function () { h.classList.add('swiped'); }, i * 110); }); }, null, 0.75)
+      .from('.block-h', { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.8 }, 0.3)
+      .from($$('.stats tr'), { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.75, stagger: 0.055 }, 0.4)
+      .fromTo($$('#tier-sheet i'), { scale: 0 }, {
+        scale: function (i, d) { return d.classList.contains('miss') ? 0.72 : 1; },
+        duration: 0.5, stagger: { amount: 0.55 }, clearProps: 'transform'
+      }, 0.6)
+      .from($$('.crop'), { opacity: 0, duration: 0.6, stagger: 0.05 }, 0.1)
+      .from('.hint, .next, .tier-key', { opacity: 0, duration: 0.6 }, 1.1);
+    $$('.hl').forEach(function (h) { if (!h.closest('.title-page')) h.classList.add('swiped'); });
+  }
+
+  function scenes() {
+    if (!G || !ST) { drawAllHT(); return; }
+    var mm = G.matchMedia();
+    mm.add({
+      motion: '(prefers-reduced-motion: no-preference)',
+      reduce: '(prefers-reduced-motion: reduce)',
+      pin: '(min-width: 900px) and (min-height: 720px)'
+    }, function (ctx) {
+      var c = ctx.conditions;
+      if (c.reduce) { drawAllHT(); return; }
+
+      // chapter plates roll in like an ink pass; titles widen on the variable axis
+      $$('.chapter').forEach(function (ch, i) {
+        var plate = $('.plate', ch), title = $('.ch-title', ch), opener = $$('.opener > *', ch);
+        if (!ch.classList.contains('ch-black')) {
+          G.fromTo(plate, { clipPath: i % 2 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)' },
+            { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', scrollTrigger: { trigger: plate, start: 'top 94%', end: 'top 42%', scrub: 0.5 } });
+        }
+        G.fromTo(title, { '--wd': 52 }, { '--wd': 125, ease: 'none', scrollTrigger: { trigger: plate, start: 'top 90%', end: 'top 28%', scrub: 0.5 } });
+        G.from(opener, { opacity: 0, y: 18, duration: 0.8, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: plate, start: 'top 58%', toggleActions: 'play none none reverse' } });
+      });
+
+      // halftone ramps dissolve each plate into the paper
+      $$('.ht').forEach(function (cv) {
+        var o = { p: 0 };
+        drawHT(cv, 0);
+        G.to(o, { p: 1, ease: 'none', onUpdate: function () { drawHT(cv, o.p); }, scrollTrigger: { trigger: cv, start: 'top bottom', end: 'top 40%', scrub: 0.4 } });
+      });
+
+      // walkthrough: pin the map and let the scroll play the season
+      if (c.pin) {
+        pinned = true;
+        var proxy = { p: 0 };
+        setWeek(0);
+        G.fromTo(proxy, { p: 0 }, {
+          p: 1, ease: 'none',
+          scrollTrigger: { trigger: '#stage', start: 'top 9%', end: '+=140%', pin: true, scrub: 0.45, anticipatePin: 1 },
+          onUpdate: function () { if (!playing) setWeek(proxy.p * R.W); }
+        });
+      } else if (R) {
+        pinned = false;
+        setWeek(R.W);
+      }
+      G.from('.route', { opacity: 0, y: 24, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: '#stage', start: 'top 80%' } });
+
+      // shop: the ledger prints line by line, the sticker ROI gets struck out
+      G.from('#ledger tr', { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.9, ease: 'expo.out', stagger: 0.1, scrollTrigger: { trigger: '#ledger', start: 'top 78%' } });
+      G.from('#tiles i', { scale: 0, rotateY: 90, duration: 0.6, ease: 'expo.out', stagger: { amount: 0.7, grid: 'auto', from: 'start' }, clearProps: 'transform', scrollTrigger: { trigger: '#tiles', start: 'top 82%' } });
+      G.fromTo('#strike', { scaleX: 0 }, { scaleX: 1, duration: 0.75, ease: 'expo.inOut', delay: 0.35, scrollTrigger: { trigger: '.roi-pair', start: 'top 72%' } });
+      G.from('.roi-n', { yPercent: 30, opacity: 0, duration: 0.9, ease: 'expo.out', stagger: 0.12, scrollTrigger: { trigger: '.roi-pair', start: 'top 78%' } });
+      G.from('.mk', { opacity: 0, duration: 0.6, stagger: 0.15, scrollTrigger: { trigger: '#ruler', start: 'top 85%' } });
+
+      // bestiary: each entry's rule draws, then the entry settles
+      $$('.beast').forEach(function (b) {
+        var tl = G.timeline({ scrollTrigger: { trigger: b, start: 'top 84%' }, defaults: { ease: 'expo.out' } });
+        tl.from($('.beast-rule', b), { scaleX: 0, duration: 0.9 })
+          .from($('.beast-icon', b), { rotate: -25, scale: 0.6, opacity: 0, duration: 0.7 }, 0.1)
+          .fromTo($('h3', b), { '--wd': 60, opacity: 0 }, { '--wd': 118, opacity: 1, duration: 0.9 }, 0.12)
+          .from($$('.pips i', b), { scale: 0, duration: 0.45, stagger: 0.05 }, 0.3)
+          .from([$('dl', b), $('.beast-you', b)], { opacity: 0, y: 14, duration: 0.7, stagger: 0.08 }, 0.25);
+      });
+      G.from('.cond', { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.8, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: '#conds', start: 'top 80%' } });
+      G.from('.colorbar i', { scaleY: 0, transformOrigin: '50% 100%', duration: 0.5, ease: 'expo.out', stagger: 0.04, scrollTrigger: { trigger: '.colophon', start: 'top 92%' } });
+
+      return function () { pinned = false; };
+    });
+  }
+
+  function smoothScroll() {
+    if (!window.Lenis || !G || !ST || reduceQ.matches) return;
+    lenis = new window.Lenis({ lerp: 0.11, smoothWheel: true });
+    lenis.on('scroll', ST.update);
+    G.ticker.add(function (t) { lenis.raf(t * 1000); });
+    G.ticker.lagSmoothing(0);
+  }
+
+  $('#replay').addEventListener('click', function () {
+    if (!moving()) return;
+    if (!$('#press')) document.body.insertAdjacentHTML('afterbegin', pressHTML);
+    var p = $('#press');
+    p.style.clipPath = 'inset(0% 0% 0% 0%)';
+    root.classList.add('press-on');
+    if (lenis) lenis.scrollTo(0, { immediate: true }); else window.scrollTo(0, 0);
+    runPress(true).then(function () { lastVerdict = null; setVerdict(R.verdict, false); enterTitle(); });
+  });
+
+  /* ================= boot ================= */
+  buildBeasts();
+  buildRuler();
+  render('game');
+  fontsReady.then(function () {
+    fitVerdict();
+    sizeSelect();
+    edgeMarkers();
+    buildRoute(R, true);
+    renderWalkthrough(R, true);
+    if (ST) ST.refresh();
+  });
+  fitVerdict();
+  smoothScroll();
+  scenes();
+  runPress(false).then(enterTitle);
+
+  var rz = 0, lastW = window.innerWidth;
+  window.addEventListener('resize', function () {
+    clearTimeout(rz);
+    rz = setTimeout(function () {
+      fitVerdict();
+      sizeSelect();
+      if (window.innerWidth !== lastW) {
+        lastW = window.innerWidth;
+        if (buildRoute(R, false)) renderWalkthrough(R, true);
+      }
+      $$('.ht').forEach(function (cv) { cv._color = null; });
+      drawAllHT();
+      edgeMarkers();
+    }, 150);
+  });
+  reduceQ.addEventListener && reduceQ.addEventListener('change', function () { location.reload(); });
+})();
+</script>
 </body>
 </html>

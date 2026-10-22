@@ -1,0 +1,7 @@
+# local tooling and QA artifacts
+.DS_Store
+.claude/launch.json
+.playwright-mcp/
+.impeccable/review/
+.impeccable/hook.cache.json
+.impeccable/config.local.json
